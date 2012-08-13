@@ -1,4 +1,4 @@
-ext.jmeArchivesBaseName = 'worldwar'
+ext.jmeArchivesBaseName = 'sheepwar'
 
 configurations {
     refProvide
