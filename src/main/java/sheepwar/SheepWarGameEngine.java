@@ -5,6 +5,7 @@ import javax.microedition.midlet.MIDlet;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.key.KeyCode;
+import cn.ohyeah.stb.key.KeyState;
 
 /**
  * 游戏引擎
@@ -33,7 +34,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public ShowGame showGame;
 	public int status;
-	public int mainIndex, playingIndex;
+	public int mainIndex, playingIndex,shopIndex,archiIndex;
 
 	protected void loop() {
 
@@ -48,7 +49,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			processGamePlaying();// 游戏中的操作
 			break;
 		case STATUS_GAME_SHOP: // 道具商城
-			// processShop();
+			 processShop();
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
 			break;
@@ -71,10 +72,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			showGamePlaying(g);
 			break;
 		case STATUS_GAME_SHOP: // 道具商城
-			// TODO showGameShop
+			 showGameShop(g);
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
-			// TODO showGameArchi
+			 showGameArchi();
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
 			break;
@@ -114,9 +115,17 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void showGamePlaying(Graphics g) {
 		showGame.drawGamePlaying(g, playingIndex);
 	}
+	/*画出商店*/
+	private void showGameShop(Graphics g) {
+		showGame.drawGameShop(g,shopIndex);
+
+	}
+	/*画出成就系统*/
+	private void showGameArchi() {
+		showGame.drawGameArchi(g,archiIndex);
+	}
 
 	private void processGameMenu() {
-
 		if (keyState.containsAndRemove(KeyCode.UP)) {
 			mainIndex = (mainIndex + 6 - 1) % 6;
 		} else if (keyState.containsAndRemove(KeyCode.DOWN)) {
@@ -127,7 +136,6 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		if (keyState.containsAndRemove(KeyCode.BACK)) { // 返回键直接退出
 		}
-
 	}
 
 	private void processGamePlaying() {
@@ -141,18 +149,50 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			keyState.remove(KeyCode.NUM5);
 		}
 	}
-
+	
+	private void processShop() {
+		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
+			keyState.remove(KeyCode.NUM0);
+			keyState.remove(KeyCode.BACK);
+			showGame.clearShop();
+		}
+		if (keyState.contains(KeyCode.UP)) {
+			keyState.remove(KeyCode.UP);
+		}
+		if (keyState.contains(KeyCode.DOWN)) {
+			keyState.remove(KeyCode.DOWN);
+		}
+		if (keyState.contains(KeyCode.LEFT)) {
+			keyState.remove(KeyCode.LEFT);
+		}
+		if (keyState.contains(KeyCode.RIGHT)) {
+			keyState.remove(KeyCode.RIGHT);
+		}
+		if (keyState.contains(KeyCode.OK)) {
+			showGame.clearMainMenu();
+			keyState.remove(KeyCode.OK);
+		}
+	}	
+/*注意和界面按钮的顺序一致*/
 	private void processSubMenu() {
 		if (mainIndex == 0) { //新游戏
 			status = STATUS_GAME_PLAYING;
-		} else if (mainIndex == 1) {// 继续游戏
-		} else if (mainIndex == 2){ //游戏排行
-		} else if (mainIndex == 3) {// 游戏商城
-		} else if (mainIndex == 4) {// 游戏简介
-		} else if (mainIndex == 5) {// 退出
+			
+		} else if (mainIndex == 1) {// 道具商城
+			status=STATUS_GAME_SHOP;
+			
+		} else if (mainIndex == 2){ //成就系统
+			status=STATUS_GAME_ARCHI;
+			
+		} else if (mainIndex == 3) {// 排行榜
+			status=STATUS_GAME_RANKING;
+			
+		} else if (mainIndex == 4) {// 游戏帮助
+			status=STATUS_GAME_HELP;
+			
+		}else if(mainIndex==5){//退出游戏
 			exit = true;
-		}
-		mainIndex=0;
+		} 
+		showGame.clearMainMenu();
 	}
-
 }

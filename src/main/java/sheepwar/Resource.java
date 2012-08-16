@@ -24,6 +24,27 @@ public class Resource implements Common {
 	public static short id_playing_tree = NUMS++;
 	public static short id_game_bg = NUMS++;
 	
+	public static short id_shop_balance = NUMS++;//商城界面
+	public static short id_shop_big = NUMS++;//商城界面
+	public static short id_shop_figure = NUMS++;//商城界面
+	public static short id_shop_go_pay = NUMS++;//商城界面
+	public static short id_shop_midding = NUMS++;//商城界面
+	public static short id_shop_out_base = NUMS++;//商城界面
+	public static short id_shop_out = NUMS++;//商城界面
+	public static short id_shop_small_base = NUMS++;//商城界面
+	public static short id_shop_small = NUMS++;//商城界面
+	public static short id_shop = NUMS++;//商城界面
+	
+	public static short id_achievement = NUMS++;//成就系统
+	public static short id_achievement_left_right = NUMS++;
+	public static short id_achievement_left_right1 = NUMS++;
+	public static short id_achievement_long = NUMS++;
+	public static short id_achievement_long1 = NUMS++;
+	public static short id_achievement_out1 = NUMS++;
+	public static short id_achievement_points = NUMS++;
+	public static short id_archivement_hoof = NUMS++;
+	public static short id_archivement_hoof1 = NUMS++;
+	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
 		"/main_menu.png",
@@ -34,6 +55,26 @@ public class Resource implements Common {
 		"/playing_step.png",
 		"/playing_tree.png",
 		"/game_bg.jpg",
+		"/shop_balance.png",//商城界面图片资源
+		"/shop_big.png",
+		"/shop_figure.png",
+		"/shop_go_pay.png",
+		"/shop_midding.png",
+		"/shop_out_base.png",
+		"/shop_out.png",
+		"/shop_small_base.png",
+		"/shop_small.png",
+		"/shop.png",
+		"/achievement.png",//成就系统图片--big midding共享
+		"/achievement_left_right.png",
+		"/achievement_left_right1.png",
+		"/achievement_long.png",
+		"/achievement_long1.png",
+		"/achievement_out1.png",
+		"/achievement_points.png",
+		"/archivement_hoof.png",
+		"/archivement_hoof1.png",
+		
 	};
 	
 	private static final Image[] images = new Image[NUMS];
