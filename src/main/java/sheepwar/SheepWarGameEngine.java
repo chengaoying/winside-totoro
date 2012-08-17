@@ -34,7 +34,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public ShowGame showGame;
 	public int status;
-	public int mainIndex, playingIndex,shopIndex,archiIndex;
+	public int mainIndex, playingIndex,shopIndex,archiIndex,rankingIndex,helpIndex;
 
 	protected void loop() {
 
@@ -54,7 +54,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		case STATUS_GAME_ARCHI:// 游戏成就
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
-			// processRanking();
+//			 processRanking();
 			break;
 		case STATUS_GAME_HELP:// 游戏帮助
 			// processHelp();
@@ -75,11 +75,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			 showGameShop(g);
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
-			 showGameArchi();
+			 showGameArchi(g);
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
+			showRanking(g);
 			break;
 		case STATUS_GAME_HELP:// 游戏帮助
+			showHelp(g);
 			break;
 		}
 	}
@@ -115,16 +117,26 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void showGamePlaying(Graphics g) {
 		showGame.drawGamePlaying(g, playingIndex);
 	}
+	
 	/*画出商店*/
 	private void showGameShop(Graphics g) {
 		showGame.drawGameShop(g,shopIndex);
-
 	}
+	
 	/*画出成就系统*/
-	private void showGameArchi() {
+	private void showGameArchi(Graphics g) {
 		showGame.drawGameArchi(g,archiIndex);
 	}
-
+	
+	/*画出排行榜*/
+	private void showRanking(Graphics g) {
+		showGame.showRanking(g, rankingIndex);
+	}
+	
+	/*画出帮助*/
+	private void showHelp(Graphics g) {
+        showGame.showHelp(g,helpIndex);
+	}
 	private void processGameMenu() {
 		if (keyState.containsAndRemove(KeyCode.UP)) {
 			mainIndex = (mainIndex + 6 - 1) % 6;

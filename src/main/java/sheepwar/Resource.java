@@ -23,17 +23,20 @@ public class Resource implements Common {
 	public static short id_playing_step = NUMS++;
 	public static short id_playing_tree = NUMS++;
 	public static short id_game_bg = NUMS++;
+	public static short id_playing_lunzi = NUMS++; //滑轮
+	public static short id_playing_shenzi = NUMS++;//绳子
+	public static short id_playing_shenzi1 = NUMS++;
 	
 	public static short id_shop_balance = NUMS++;//商城界面
-	public static short id_shop_big = NUMS++;//商城界面
-	public static short id_shop_figure = NUMS++;//商城界面
-	public static short id_shop_go_pay = NUMS++;//商城界面
-	public static short id_shop_midding = NUMS++;//商城界面
-	public static short id_shop_out_base = NUMS++;//商城界面
-	public static short id_shop_out = NUMS++;//商城界面
-	public static short id_shop_small_base = NUMS++;//商城界面
-	public static short id_shop_small = NUMS++;//商城界面
-	public static short id_shop = NUMS++;//商城界面
+	public static short id_shop_big = NUMS++;
+	public static short id_shop_figure = NUMS++;
+	public static short id_shop_go_pay = NUMS++;
+	public static short id_shop_midding = NUMS++;
+	public static short id_shop_out_base = NUMS++;
+	public static short id_shop_out = NUMS++;
+	public static short id_shop_small_base = NUMS++;
+	public static short id_shop_small = NUMS++;
+	public static short id_shop = NUMS++;
 	
 	public static short id_achievement = NUMS++;//成就系统
 	public static short id_achievement_left_right = NUMS++;
@@ -45,6 +48,13 @@ public class Resource implements Common {
 	public static short id_archivement_hoof = NUMS++;
 	public static short id_archivement_hoof1 = NUMS++;
 	
+	public static short id_current_ranking = NUMS++;//排行界面
+	public static short id_ranking_option = NUMS++;
+	public static short id_ranking_option1 = NUMS++;
+	public static short id_ranking_stripe = NUMS++;
+	public static short id_ranking = NUMS++;
+	public static short id_ranking_show = NUMS++;
+	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
 		"/main_menu.png",
@@ -55,6 +65,9 @@ public class Resource implements Common {
 		"/playing_step.png",
 		"/playing_tree.png",
 		"/game_bg.jpg",
+		"/playing_lunzi.png",//绳子“微分化”可以活动
+		"/playing_shenzi.png",
+		"/playing_shenzi1.png",
 		"/shop_balance.png",//商城界面图片资源
 		"/shop_big.png",
 		"/shop_figure.png",
@@ -74,7 +87,12 @@ public class Resource implements Common {
 		"/achievement_points.png",
 		"/archivement_hoof.png",
 		"/archivement_hoof1.png",
-		
+		"/current_ranking.jpg",//排行图片资源
+		"/ranking_option.png",
+		"/ranking_option1.png",
+		"/ranking_stripe.jpg",  //条纹图片
+		"/ranking.png",
+		"/ranking_show.jpg",
 	};
 	
 	private static final Image[] images = new Image[NUMS];

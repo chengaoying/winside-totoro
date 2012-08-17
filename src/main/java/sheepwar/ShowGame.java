@@ -51,6 +51,9 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_playing_step);
 		Resource.freeImage(Resource.id_playing_tree);
 		Resource.freeImage(Resource.id_game_bg);
+		Resource.freeImage(Resource.id_playing_lunzi);
+		Resource.freeImage(Resource.id_playing_shenzi);
+		Resource.freeImage(Resource.id_playing_shenzi1);
 	}
 	
 	/*清商城界面*/
@@ -64,15 +67,48 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_shop_midding);
 		Resource.freeImage(Resource.id_shop_out);
 	}
-
+	/*清 成就系统界面*/
+    public void clearGameArchi(){
+    	Resource.freeImage(Resource.id_game_bg);
+    	Resource.freeImage(Resource.id_shop_midding);
+    	Resource.freeImage(Resource.id_shop_big);
+    	Resource.freeImage(Resource.id_shop_go_pay);
+    	Resource.freeImage(Resource.id_achievement);
+    	Resource.freeImage(Resource.id_achievement_left_right);
+    	Resource.freeImage(Resource.id_achievement_left_right1);
+    	Resource.freeImage(Resource.id_achievement_long);
+    	Resource.freeImage(Resource.id_achievement_long1);
+    	Resource.freeImage(Resource.id_achievement_out1);
+    	Resource.freeImage(Resource.id_achievement_points);
+    	Resource.freeImage(Resource.id_archivement_hoof);
+    	Resource.freeImage(Resource.id_archivement_hoof1);
+    }
+    
+    /*清除排行系统界面*/
+    public void clearRanking() {
+    	Resource.freeImage(Resource.id_game_bg);
+    	Resource.freeImage(Resource.id_achievement_out1);
+    	Resource.freeImage(Resource.id_shop_big);
+    	Resource.freeImage(Resource.id_achievement_left_right);
+    	Resource.freeImage(Resource.id_current_ranking);
+    	Resource.freeImage(Resource.id_ranking_option);
+    	Resource.freeImage(Resource.id_ranking_option1);
+    	Resource.freeImage(Resource.id_ranking_stripe);
+    	Resource.freeImage(Resource.id_ranking);
+    	Resource.freeImage(Resource.id_ranking_show);
+	}
+    
 	public void drawGamePlaying(Graphics g, int index) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
 		Image playing_cloudbig = Resource.loadImage(Resource.id_playing_cloudbig);
 		Image playing_cloudsmall = Resource.loadImage(Resource.id_playing_cloudsmall);// {404,164}
 		Image playing_lawn = Resource.loadImage(Resource.id_playing_lawn);// {0,499}
-		Image playing_step = Resource.loadImage(Resource.id_playing_step);// {377,153},{377,240}{377,324}{377,409}
+		Image playing_step = Resource.loadImage(Resource.id_playing_step);// {377,153},{377,240}{377,324}{377,409} Y 相差89
 		Image playing_tree = Resource.loadImage(Resource.id_playing_tree);// {0,72}
+		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);//{374,132}
+		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi);
+		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -95,10 +131,10 @@ public class ShowGame implements Common {
 		
 		g.drawImage(playing_lawn, 0, 499, TopLeft);
 		g.drawImage(playing_tree, 0, 72, TopLeft);
-		g.drawImage(playing_step, 377, 153, TopLeft);
-		g.drawImage(playing_step, 377, 240, TopLeft);
-		g.drawImage(playing_step, 377, 324, TopLeft);
-		g.drawImage(playing_step, 377, 409, TopLeft);
+		g.drawImage(playing_lunzi, 374,132, TopLeft);
+		for(int i=0;i<4;i++){
+			g.drawImage(playing_step, 377, 153+i*89, TopLeft);
+		}
 		g.drawImage(playing_menu, 491, 0, TopLeft);
 		
 	}
@@ -120,18 +156,14 @@ public class ShowGame implements Common {
 		g.drawImage(shop, 217, 18, TopLeft);
 		g.drawImage(shop_big, 29, 103, TopLeft);
 		g.drawImage(shop_balance, 46, 454, TopLeft);
-		g.drawImage(shop_small, 42, 115, TopLeft);
-		g.drawImage(shop_small, 42, 195, TopLeft);
-		g.drawImage(shop_small, 42, 279, TopLeft);
-		g.drawImage(shop_small, 42, 361, TopLeft);
-		g.drawImage(shop_small, 223, 115, TopLeft);
-		g.drawImage(shop_small, 223, 195, TopLeft);
-		g.drawImage(shop_small, 223, 279, TopLeft);
-		g.drawImage(shop_small, 223, 361, TopLeft);
+		for(int i=0;i<4;i++){//以后可以减少硬编码
+			g.drawImage(shop_small, 42, 115+i*82, TopLeft);//上下相差 82
+			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
+		}
 		g.drawImage(shop_midding, 434, 103, TopLeft);
 		g.drawImage(shop_go_pay, 457, 381, TopLeft);
 		g.drawImage(shop_out, 457, 429, TopLeft);
-		drawNum(g, 10, 103,452);
+		drawNum(g, 10, 103,452);//TODO 添加数字
 	}
 	
 	/*画出成就系统*/
@@ -141,7 +173,7 @@ public class ShowGame implements Common {
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{235,102}
 		Image shop_go_pay = Resource.loadImage(Resource.id_shop_go_pay);//{457,381}//{51,123},{51,178},{51,232},{51,286},{51,342},{51,396}
 		Image achievement = Resource.loadImage(Resource.id_achievement);//{270,19}
-		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);
+		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{458,441}
 		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);
 		Image achievement_long = Resource.loadImage(Resource.id_achievement_long);//{247,114},{247,198},{247,277},{247,361},{}
 		Image achievement_long1 = Resource.loadImage(Resource.id_achievement_long1);
@@ -153,24 +185,50 @@ public class ShowGame implements Common {
 		g.drawImage(achievement, 270, 19, TopLeft);
 		g.drawImage(shop_midding, 28, 102, TopLeft);
 		g.drawImage(achievement_out1, 55, 451, TopLeft);
-		g.drawImage(shop_go_pay, 51, 123, TopLeft);
-		g.drawImage(shop_go_pay, 51, 178, TopLeft);
-		g.drawImage(shop_go_pay, 51, 232, TopLeft);
-		g.drawImage(shop_go_pay, 51, 286, TopLeft);
-		g.drawImage(shop_go_pay, 51, 342, TopLeft);
-		g.drawImage(shop_go_pay, 51, 396, TopLeft);
+		for(int i=0;i<6;i++){  //成就左侧条目
+			g.drawImage(shop_go_pay, 51, 123+i*55, TopLeft);//Y坐标相差55
+		}
 		g.drawImage(shop_big, 235, 102, TopLeft);
 		g.drawImage(achievement_points, 250, 448, TopLeft);
-		g.drawImage(achievement_long, 247, 114, TopLeft);
-		g.drawImage(archivement_hoof, 539, 130, TopLeft);
-		g.drawImage(achievement_long, 247, 197, TopLeft);
-		g.drawImage(archivement_hoof, 539, 211, TopLeft);
-		g.drawImage(achievement_long, 247, 278, TopLeft);
-		g.drawImage(archivement_hoof, 539, 293, TopLeft);
-		g.drawImage(achievement_long, 247, 361, TopLeft);
-		g.drawImage(archivement_hoof, 539, 378, TopLeft);
+		g.drawImage(achievement_left_right,458,441, TopLeft);
+		for(int i=0;i<4;i++){//成就右侧条目
+			g.drawImage(achievement_long, 247, 114+i*83, TopLeft);//Y坐标相差83
+			g.drawImage(archivement_hoof, 539, 130+i*83, TopLeft);
+		}
 	}
 	
+	/*画出排行榜*/
+	public void showRanking(Graphics g, int rankingIndex) {
+		Image game_bg = Resource.loadImage(Resource.id_game_bg);
+		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{61,462}
+		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{233,101}
+		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{457,440}
+		Image current_ranking=Resource.loadImage(Resource.id_current_ranking);//{253,448}
+		Image ranking_option=Resource.loadImage(Resource.id_ranking_option);//{39,112} Y相差54 
+		Image ranking_option1=Resource.loadImage(Resource.id_ranking_option1);
+		Image ranking_stripe=Resource.loadImage(Resource.id_ranking_stripe);//{241,151}  条高度57
+		Image ranking=Resource.loadImage(Resource.id_ranking);//{232,18}
+		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
+		g.drawImage(game_bg, 0, 0, TopLeft);
+		g.drawImage(achievement_out1, 61,462, TopLeft);
+		for(int i=0;i<3;i++){//排行左侧条目
+			g.drawImage(ranking_option, 39, 112+i*54, TopLeft);
+		}
+		g.drawImage(shop_big, 233,101, TopLeft);
+		g.drawImage(ranking_show,241,108, TopLeft);
+		for(int i=0;i<5;i++){
+			g.drawImage(ranking_stripe,241,151+i*57, TopLeft);
+		}
+		g.drawImage(current_ranking, 253,448, TopLeft);
+		g.drawImage(ranking, 232,18, TopLeft);
+		g.drawImage(achievement_left_right, 457,440, TopLeft);
+	}
+	
+	/*画出帮助界面*/
+	public void showHelp(Graphics g,int helpIndex) {
+		// TODO Auto-generated method stub
+
+	}
 	/*游戏中的数字*/
 	private void drawNum(Graphics g, int num, int x, int y) {
 		Image imgNumeber = Resource.loadImage(Resource.id_shop_figure);
