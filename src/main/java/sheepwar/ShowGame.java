@@ -24,7 +24,6 @@ public class ShowGame implements Common {
 	public void drawMainMenu(Graphics g, int index) {
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
-
 		g.drawImage(main_bg, 0, 0, 0);
 		for (int i = 0; i < menuAxis.length; ++i) {
 			g.drawRegion(main_menu,
@@ -67,6 +66,7 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_shop_midding);
 		Resource.freeImage(Resource.id_shop_out);
 	}
+	
 	/*清 成就系统界面*/
     public void clearGameArchi(){
     	Resource.freeImage(Resource.id_game_bg);
@@ -107,8 +107,8 @@ public class ShowGame implements Common {
 		Image playing_step = Resource.loadImage(Resource.id_playing_step);// {377,153},{377,240}{377,324}{377,409} Y 相差89
 		Image playing_tree = Resource.loadImage(Resource.id_playing_tree);// {0,72}
 		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);//{374,132}
-		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi);
-		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1);
+		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
+		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -128,13 +128,15 @@ public class ShowGame implements Common {
 		}
 		g.drawRegion(playing_cloudsmall, 0, 0, playing_cloudsmall.getWidth(), playing_cloudsmall.getHeight(), 
 				0, tempx2, tempy2, TopLeft);
-		
 		g.drawImage(playing_lawn, 0, 499, TopLeft);
 		g.drawImage(playing_tree, 0, 72, TopLeft);
-		g.drawImage(playing_lunzi, 374,132, TopLeft);
-		for(int i=0;i<4;i++){
+		g.drawImage(playing_shenzi1, 399, 135, TopLeft);
+		for(int i=0;i<4;i++){   //阶梯
 			g.drawImage(playing_step, 377, 153+i*89, TopLeft);
 		}
+		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), playing_shenzi.getHeight(),//上下移动的绳子
+				0, 379, 154, TopLeft);
+		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
 		
 	}
@@ -156,7 +158,7 @@ public class ShowGame implements Common {
 		g.drawImage(shop, 217, 18, TopLeft);
 		g.drawImage(shop_big, 29, 103, TopLeft);
 		g.drawImage(shop_balance, 46, 454, TopLeft);
-		for(int i=0;i<4;i++){//以后可以减少硬编码
+		for(int i=0;i<4;i++){                      //以后可以减少硬编码
 			g.drawImage(shop_small, 42, 115+i*82, TopLeft);//上下相差 82
 			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
 		}
@@ -227,8 +229,8 @@ public class ShowGame implements Common {
 	/*画出帮助界面*/
 	public void showHelp(Graphics g,int helpIndex) {
 		// TODO Auto-generated method stub
-
 	}
+	
 	/*游戏中的数字*/
 	private void drawNum(Graphics g, int num, int x, int y) {
 		Image imgNumeber = Resource.loadImage(Resource.id_shop_figure);

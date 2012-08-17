@@ -138,23 +138,25 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
         showGame.showHelp(g,helpIndex);
 	}
 	private void processGameMenu() {
-		if (keyState.containsAndRemove(KeyCode.UP)) {
+		if (keyState.contains(KeyCode.UP)) {
 			mainIndex = (mainIndex + 6 - 1) % 6;
-		} else if (keyState.containsAndRemove(KeyCode.DOWN)) {
+		} else if (keyState.contains(KeyCode.DOWN)) {
 			mainIndex = (mainIndex + 1) % 6;
-		} else if (keyState.containsAndRemove(KeyCode.OK)) {
+		} else if (keyState.contains(KeyCode.OK)) {
 			processSubMenu();
 			showGame.clearMainMenu();
 		}
-		if (keyState.containsAndRemove(KeyCode.BACK)) { // 返回键直接退出
+		if (keyState.contains(KeyCode.BACK)) { // 返回键直接退出
 		}
 	}
 
 	private void processGamePlaying() {
-		if (keyState.containsMoveEventAndRemove(KeyCode.UP)) {
+		if (keyState.contains(KeyCode.UP)) {
+			keyState.remove(KeyCode.UP);
 			moveRole(0);//
-		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
-			// moveRole(1);
+		} else if (keyState.contains(KeyCode.DOWN)) {
+			keyState.remove(KeyCode.DOWN);
+			moveRole(1);
 		} else if (keyState.contains(KeyCode.OK) && own.status != 1) { // 普通攻击
 			keyState.remove(KeyCode.OK);
 		} else if (keyState.contains(KeyCode.NUM5) && own.status != 1) { // 时光闹钟
