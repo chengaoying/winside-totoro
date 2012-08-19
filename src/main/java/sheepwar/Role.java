@@ -8,7 +8,7 @@ public class Role {
 	int nonceLife;		//生命值
 	int money; 			//金币数
 	int lifeNum; 		//生命数
-	float speed;		//移动速度
+	int speed;			//移动速度
 	int scores; 		//积分
 //	int scores2;		//用于计算功勋的积分
 	int skill; 			//技能，

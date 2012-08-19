@@ -98,6 +98,7 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_ranking_show);
 	}
     
+    private int index, flag;
 	public void drawGamePlaying(Graphics g, int index) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
@@ -109,6 +110,7 @@ public class ShowGame implements Common {
 		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);//{374,132}
 		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}
+		Image wolf = Resource.loadImage(Resource.id_wolf_run); //{399, 135}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -139,6 +141,14 @@ public class ShowGame implements Common {
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
 		
+		
+		if(flag>2){
+			index = (index+1)%6;
+			flag=0;
+		}else{
+			flag++;
+		}
+		g.drawRegion(wolf, index*wolf.getWidth()/6, 0, wolf.getWidth()/6, wolf.getHeight(), 0, 50, 50, TopLeft);
 	}
 	/*画商店界面*/
 	public void drawGameShop(Graphics g,int shopIndex) {
@@ -161,6 +171,7 @@ public class ShowGame implements Common {
 		for(int i=0;i<4;i++){                      //以后可以减少硬编码
 			g.drawImage(shop_small, 42, 115+i*82, TopLeft);//上下相差 82
 			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
+			//怎么样在small图片上加上购买按钮
 		}
 		g.drawImage(shop_midding, 434, 103, TopLeft);
 		g.drawImage(shop_go_pay, 457, 381, TopLeft);

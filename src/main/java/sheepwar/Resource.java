@@ -54,6 +54,7 @@ public class Resource implements Common {
 	public static short id_ranking_stripe = NUMS++;
 	public static short id_ranking = NUMS++;
 	public static short id_ranking_show = NUMS++;
+	public static short id_wolf_run = NUMS++;
 	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
@@ -93,6 +94,7 @@ public class Resource implements Common {
 		"/ranking_stripe.jpg",  //ÌõÎÆÍ¼Æ¬
 		"/ranking.png",
 		"/ranking_show.jpg",
+		"/wolf_run.png",
 	};
 	
 	private static final Image[] images = new Image[NUMS];
