@@ -17,6 +17,7 @@ public interface Common {
 	public final static int STATUS_GAME_EXIT = 7;		//ÍË³öÓÎÏ·
 	
 	public final static short TopLeft = Graphics.LEFT|Graphics.TOP;
+	
 	public final static int ScrW = SheepWarGameEngine.ScrW;
 	public final static int ScrH = SheepWarGameEngine.ScrH;
 }

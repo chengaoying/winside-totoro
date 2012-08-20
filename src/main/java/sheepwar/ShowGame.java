@@ -2,6 +2,7 @@ package sheepwar;
 
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+
 import cn.ohyeah.stb.util.RandomValue;
 
 /**
@@ -53,6 +54,8 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_playing_lunzi);
 		Resource.freeImage(Resource.id_playing_shenzi);
 		Resource.freeImage(Resource.id_playing_shenzi1);
+		Resource.freeImage(Resource.id_playing_prop_memu);
+		Resource.freeImage(Resource.id_playing_stop);   //游戏暂停按钮
 	}
 	
 	/*清商城界面*/
@@ -111,6 +114,8 @@ public class ShowGame implements Common {
 		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}
 		Image wolf = Resource.loadImage(Resource.id_wolf_run); //{399, 135}
+		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
+		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -140,16 +145,24 @@ public class ShowGame implements Common {
 				0, 379, 154, TopLeft);
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
-		
-		
-		if(flag>2){
-			index = (index+1)%6;
-			flag=0;
-		}else{
-			flag++;
+		for(int i=0;i<4;i++){// 游戏中的左侧框内容---道具内容
+			g.drawImage(playing_prop_memu, 497,185+i*68, TopLeft);
+//			drawProp(g, i, x, y);
+			g.drawImage(playing_prop_memu, 564,185+i*68, TopLeft);
 		}
-		g.drawRegion(wolf, index*wolf.getWidth()/6, 0, wolf.getWidth()/6, wolf.getHeight(), 0, 50, 50, TopLeft);
+		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
+//		System.out.println("createRole对象:"+createRole);
+//		createRole.showWolf(g, index, flag);
+//		createRole.showWolf(g,index,flag);
+//		if(flag>2){
+//			index = (index+1)%6;
+//			flag=0;
+//		}else{
+//			flag++;
+//		}
+//		g.drawRegion(wolf, index*wolf.getWidth()/6, 0, wolf.getWidth()/6, wolf.getHeight(), 0, 50, 50, TopLeft);
 	}
+	
 	/*画商店界面*/
 	public void drawGameShop(Graphics g,int shopIndex) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
@@ -250,5 +263,15 @@ public class ShowGame implements Common {
 			g.drawRegion(imgNumeber, (number.charAt(i) - '0') * imgNumeber.getWidth()/10, 0, 
 					imgNumeber.getWidth()/10, imgNumeber.getHeight(), 0, x + i * (imgNumeber.getWidth()/10 + 1), y, 0);
 		}
+	}
+	
+	private void drawProp(Graphics g,int num,int x,int y){
+		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
+		String number=String.valueOf(num);
+		for(byte i=0;i<number.length();i++){
+			g.drawRegion(playing_prop, (number.charAt(i) - '0')* playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8,
+					playing_prop.getHeight(), 0, x + i * (playing_prop.getWidth()/8 + 1), y, 0);
+		}
+		
 	}
 }

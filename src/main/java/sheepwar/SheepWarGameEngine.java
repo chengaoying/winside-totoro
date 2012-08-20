@@ -5,7 +5,6 @@ import javax.microedition.midlet.MIDlet;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.key.KeyCode;
-import cn.ohyeah.stb.key.KeyState;
 
 /**
  * 游戏引擎
@@ -14,6 +13,7 @@ import cn.ohyeah.stb.key.KeyState;
  */
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;
+	public Role wolf;
 	public static boolean isMove = true;//
 
 	public static boolean isSupportFavor = false;
@@ -110,9 +110,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
-		showGame = new ShowGame();
-		own = createRole.createSheep();
 		status = STATUS_MAIN_MENU; // 进入游戏菜单
+		showGame = new ShowGame();
+		createRole = new CreateRole();
+		own = createRole.createSheep();
+		wolf = createRole.createWolf();
+//		System.out.println("wolf:"+wolf);
 	}
 
 	private void showGameMenu(Graphics g) {
@@ -152,6 +155,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			showGame.clearMainMenu();
 		}
 		if (keyState.contains(KeyCode.BACK)) { // 返回键直接退出
+			exit = true;
+			showGame.clearMainMenu();
 		}
 	}
 
@@ -179,13 +184,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			}else if(mainOrgame==1){
 			status=STATUS_GAME_PLAYING;
 			}
-			shopX=0;shopY=0;
+			shopX = 0;shopY = 0;
 			showGame.clearShop();
 		}
 		if (keyState.contains(KeyCode.UP)) {
 			keyState.remove(KeyCode.UP);
 			if(shopY>0){
-				shopY=shopY-1;
+				shopY = shopY-1;
 			}
 		}
 		if (keyState.contains(KeyCode.DOWN)) {
@@ -197,13 +202,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		if (keyState.contains(KeyCode.LEFT)) {
 			keyState.remove(KeyCode.LEFT);
 			if(shopX>0){
-				shopX=shopX-1;
+				shopX = shopX-1;
 			}
 		}
 		if (keyState.contains(KeyCode.RIGHT)) {
 			keyState.remove(KeyCode.RIGHT);
 			if(shopX<2){
-				shopX=shopX+1;
+				shopX = shopX+1;
 			}
 		}
 		if (keyState.contains(KeyCode.OK)) {
@@ -223,6 +228,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			status = STATUS_GAME_PLAYING;
 			
 		} else if (mainIndex == 1) {// 道具商城
+			showGame.clearGamePlaying();
 			status=STATUS_GAME_SHOP;
 			
 		} else if (mainIndex == 2){ //成就系统
