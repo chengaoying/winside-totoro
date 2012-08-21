@@ -14,7 +14,6 @@ import cn.ohyeah.stb.key.KeyCode;
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;
 	public Role wolf;
-	public static boolean isMove = true;//
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
@@ -56,6 +55,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			 processShop();
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
+			//TODO
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
 //			 processRanking();
@@ -90,16 +90,20 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 
-	private void moveRole(int i) {
-		switch (i) {
+	private void moveRole(int towards) {
+		switch (towards) {
 		case 0: // 往上--主角
-			
+			if(own.mapy>=164){//吊篮上极限坐标164
+				own.mapy -= own.speed;
+			}
 			break;
 		case 1: // 往下--主角
-
+			own.direction = 1;
+			if(own.mapy + own.height<460){//吊篮下极限坐标原450--问题：增加Y坐标极限会出现area out of Iamge ?
+				own.mapy += own.speed;
+			}
 			break;
 		}
-
 	}
 
 	private void showInit(Graphics g) {
@@ -123,7 +127,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void showGamePlaying(Graphics g) {
-		showGame.drawGamePlaying(g, playingIndex);
+		showGame.drawGamePlaying(g, playingIndex, own);
 	}
 	
 	/*画出商店*/
@@ -161,17 +165,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void processGamePlaying() {
-		if (keyState.contains(KeyCode.UP)) {
-			keyState.remove(KeyCode.UP);
+		if (keyState.containsMoveEventAndRemove(KeyCode.UP)) {
 			moveRole(0);//
-		} else if (keyState.contains(KeyCode.DOWN)) {
-			keyState.remove(KeyCode.DOWN);
+		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
 			moveRole(1);
-		} else if (keyState.contains(KeyCode.OK)) { // 普通攻击
-			keyState.remove(KeyCode.OK);
+		} else if (keyState.containsAndRemove(KeyCode.OK)) { // 普通攻击
 			
-		} else if (keyState.contains(KeyCode.NUM5)) { // 时光闹钟
-			keyState.remove(KeyCode.NUM5);
+		} else if (keyState.containsAndRemove(KeyCode.NUM5)) { // 时光闹钟
 		}
 	}
 	/*商城操作*/
@@ -222,7 +222,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			}
 		}
 	}	
-/*注意和界面按钮的顺序一致*/
+	
+	/*注意和界面按钮的顺序一致*/
 	private void processSubMenu() {
 		if (mainIndex == 0) { //新游戏
 			status = STATUS_GAME_PLAYING;

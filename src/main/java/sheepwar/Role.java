@@ -3,7 +3,7 @@ public class Role {
 	int id; 			//ID  判断羊||狼
 	int mapx; 			//在地图上的横坐标
 	int mapy; 			//在地图上的纵坐标
-	int direction; 		//移动方向
+	int direction; 		//移动方向 0 向上，1向下
 	int status;  		//状态(0活动状态, 1死状态)
 	int nonceLife;		//生命值
 	int money; 			//金币数
@@ -12,6 +12,7 @@ public class Role {
 	int scores; 		//积分
 //	int scores2;		//用于计算功勋的积分
 	int skill; 			//技能，
-
-
+	
+	int height;        //角色自身高度
+	int width;          //角色自身宽度
 }

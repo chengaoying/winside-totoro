@@ -53,6 +53,7 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_game_bg);
 		Resource.freeImage(Resource.id_playing_lunzi);
 		Resource.freeImage(Resource.id_playing_shenzi);
+		Resource.freeImage(Resource.id_playing_lift);
 		Resource.freeImage(Resource.id_playing_shenzi1);
 		Resource.freeImage(Resource.id_playing_prop_memu);
 		Resource.freeImage(Resource.id_playing_stop);   //游戏暂停按钮
@@ -102,7 +103,8 @@ public class ShowGame implements Common {
 	}
     
     private int index, flag;
-	public void drawGamePlaying(Graphics g, int index) {
+//    public CreateRole createRole=new CreateRole();
+	public void drawGamePlaying(Graphics g, int index, Role own) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
 		Image playing_cloudbig = Resource.loadImage(Resource.id_playing_cloudbig);
@@ -112,8 +114,10 @@ public class ShowGame implements Common {
 		Image playing_tree = Resource.loadImage(Resource.id_playing_tree);// {0,72}
 		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);//{374,132}
 		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
-		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}
+		Image playing_lift = Resource.loadImage(Resource.id_playing_lift); //{342,303}
+		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}//横放的绳子
 		Image wolf = Resource.loadImage(Resource.id_wolf_run); //{399, 135}
+		Image playing_sheep = Resource.loadImage(Resource.id_playing_sheep); //{399, 135}
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
 		g.drawImage(game_bg, 0, 0, TopLeft);
@@ -141,20 +145,28 @@ public class ShowGame implements Common {
 		for(int i=0;i<4;i++){   //阶梯
 			g.drawImage(playing_step, 377, 153+i*89, TopLeft);
 		}
-		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), playing_shenzi.getHeight(),//上下移动的绳子
-				0, 379, 154, TopLeft);
+		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), (own.mapy-154),//上下移动的绳子
+				0, 379, 154, TopLeft);     //竖直绳子 的纵坐标 154
+//		System.out.println("创建角色对象："+createRole);
+//		createRole.showSheep(g);
+//		g.drawRegion(playing_sheep, 366, 307, playing_sheep.getWidth(), playing_sheep.getHeight(), 0, 
+//				366, 10, TopLeft);
+		
+		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
+				0, 342, 154+(own.mapy-154), TopLeft);
+		
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
-		for(int i=0;i<4;i++){// 游戏中的左侧框内容---道具内容
+		for(int i=0;i<4;i++){                         //游戏中的左侧框内容---道具内容
 			g.drawImage(playing_prop_memu, 497,185+i*68, TopLeft);
-//			drawProp(g, i, x, y);
+			drawProp(g, i, 497+5,185+i*(68+3));                  //第一列对应原图片中的前四个
 			g.drawImage(playing_prop_memu, 564,185+i*68, TopLeft);
+			drawProp(g, i+4, 564+5,185+i*(68+2));                //第二列对应原图片中的后四个
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
-//		System.out.println("createRole对象:"+createRole);
-//		createRole.showWolf(g, index, flag);
+		//		System.out.println("createRole对象:"+createRole);
 //		createRole.showWolf(g,index,flag);
-//		if(flag>2){
+//		if(flag>2){    //狼的效果图
 //			index = (index+1)%6;
 //			flag=0;
 //		}else{
@@ -183,6 +195,7 @@ public class ShowGame implements Common {
 		g.drawImage(shop_balance, 46, 454, TopLeft);
 		for(int i=0;i<4;i++){                      //以后可以减少硬编码
 			g.drawImage(shop_small, 42, 115+i*82, TopLeft);//上下相差 82
+			drawProp(g, i, 42, 115);
 			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
 			//怎么样在small图片上加上购买按钮
 		}
@@ -265,13 +278,13 @@ public class ShowGame implements Common {
 		}
 	}
 	
+	/*游戏中左侧道具的图片----数字转化为图片*/
 	private void drawProp(Graphics g,int num,int x,int y){
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
 		String number=String.valueOf(num);
 		for(byte i=0;i<number.length();i++){
 			g.drawRegion(playing_prop, (number.charAt(i) - '0')* playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8,
-					playing_prop.getHeight(), 0, x + i * (playing_prop.getWidth()/8 + 1), y, 0);
+					playing_prop.getHeight(), 0, x+i * (playing_prop.getWidth()/8 + 1), y, 0);
 		}
-		
 	}
 }

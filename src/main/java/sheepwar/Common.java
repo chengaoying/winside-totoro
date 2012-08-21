@@ -20,4 +20,11 @@ public interface Common {
 	
 	public final static int ScrW = SheepWarGameEngine.ScrW;
 	public final static int ScrH = SheepWarGameEngine.ScrH;
+	
+	public static int gameMapX = 640;                 //游戏区域的宽度
+	public static int gameMapY = 531;                  //游戏区域的高度
+	
+	public static int sheepMapY = 290;                     //364-74:羊上下移动的限制范围
+	
+	
 }

@@ -26,10 +26,12 @@ public class Resource implements Common {
 	public static short id_playing_stop = NUMS++;
 	public static short id_game_bg = NUMS++;
 	public static short id_playing_prop_memu = NUMS++;
-	public static short id_playing_prop = NUMS++;//左侧菜单商品栏
-	public static short id_playing_lunzi = NUMS++; //滑轮
-	public static short id_playing_shenzi = NUMS++;//绳子
+	public static short id_playing_prop = NUMS++;      //左侧菜单商品栏
+	public static short id_playing_lunzi = NUMS++;     //滑轮
+	public static short id_playing_shenzi = NUMS++;    //绳子
+	public static short id_playing_lift = NUMS++;      //羊的吊篮
 	public static short id_playing_shenzi1 = NUMS++;
+	public static short id_playing_sheep = NUMS++;
 	
 	public static short id_shop_balance = NUMS++;//商城界面
 	public static short id_shop_big = NUMS++;
@@ -76,7 +78,9 @@ public class Resource implements Common {
 		"/playing_prop.png",
 		"/playing_lunzi.png",//绳子“微分化”可以活动
 		"/playing_shenzi.png",
+		"/playing_lift.png",     //羊的吊篮
 		"/playing_shenzi1.png",
+		"/playing_sheep.png",
 		
 		"/shop_balance.png",//商城界面图片资源
 		"/shop_big.png",
@@ -120,6 +124,7 @@ public class Resource implements Common {
 		}
 		return images[id];
 	}
+	
 	/*释放图片*/
 	public static void freeImage(int id){
 		images[id] = null;
