@@ -32,6 +32,8 @@ public class Resource implements Common {
 	public static short id_playing_lift = NUMS++;      //羊的吊篮
 	public static short id_playing_shenzi1 = NUMS++;
 	public static short id_playing_sheep = NUMS++;
+	public static short id_sheep_eye = NUMS++;
+	public static short id_sheep_hand = NUMS++;
 	
 	public static short id_shop_balance = NUMS++;//商城界面
 	public static short id_shop_big = NUMS++;
@@ -42,6 +44,7 @@ public class Resource implements Common {
 	public static short id_shop_out = NUMS++;
 	public static short id_shop_small_base = NUMS++;
 	public static short id_shop_small = NUMS++;
+	public static short id_price_quantity = NUMS++;
 	public static short id_shop = NUMS++;
 	
 	public static short id_achievement = NUMS++;//成就系统
@@ -62,11 +65,13 @@ public class Resource implements Common {
 	public static short id_ranking_show = NUMS++;
 	public static short id_wolf_run = NUMS++;
 	
+	public static short id_game_help = NUMS++;     //游戏帮助
+	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
 		"/main_menu.png",
 		
-		"/playing_menu.png",//游戏中的 界面
+		"/playing_menu.png",             //游戏中的 界面
 		"/playing_cloudbig.png",
 		"/playing_cloudsmall.png",
 		"/playing_lawn.png",
@@ -81,8 +86,10 @@ public class Resource implements Common {
 		"/playing_lift.png",     //羊的吊篮
 		"/playing_shenzi1.png",
 		"/playing_sheep.png",
+		"/sheep_eye.png",
+		"/sheep_hand.png",
 		
-		"/shop_balance.png",//商城界面图片资源
+		"/shop_balance.png",            //商城界面图片资源
 		"/shop_big.png",
 		"/shop_figure.png",
 		"/shop_go_pay.png",
@@ -91,9 +98,10 @@ public class Resource implements Common {
 		"/shop_out.png",
 		"/shop_small_base.png",
 		"/shop_small.png",
+		"/price_quantity.png",
 		"/shop.png",
 		
-		"/achievement.png",//成就系统图片--big midding共享
+		"/achievement.png",             //成就系统图片--big midding共享
 		"/achievement_left_right.png",
 		"/achievement_left_right1.png",
 		"/achievement_long.png",
@@ -103,13 +111,15 @@ public class Resource implements Common {
 		"/archivement_hoof.png",
 		"/archivement_hoof1.png",
 		
-		"/current_ranking.jpg",//排行图片资源
+		"/current_ranking.jpg",       //排行图片资源
 		"/ranking_option.png",
 		"/ranking_option1.png",
-		"/ranking_stripe.jpg",  //条纹图片
+		"/ranking_stripe.jpg",        //条纹图片
 		"/ranking.png",
 		"/ranking_show.jpg",
 		"/wolf_run.png",
+		
+		"/game_help.png",              //游戏帮助
 	};
 	
 	private static final Image[] images = new Image[NUMS];

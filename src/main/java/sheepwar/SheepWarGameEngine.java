@@ -36,7 +36,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public int status;
 	public int mainIndex, playingIndex,shopIndex,archiIndex,rankingIndex,helpIndex;
 	
-	private int mainOrgame=-1;//返回商城界面：0返回主界面，1返回游戏中的界面
+	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
 	private int shopX=0,shopY=0;
 
 	protected void loop() {
@@ -99,7 +99,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			break;
 		case 1: // 往下--主角
 			own.direction = 1;
-			if(own.mapy + own.height<460){//吊篮下极限坐标原450--问题：增加Y坐标极限会出现area out of Iamge ?
+			if(own.mapy + own.height<460){//吊篮下极限坐标原460--问题：增加Y坐标极限会出现area out of Iamge ?
 				own.mapy += own.speed;
 			}
 			break;
@@ -114,12 +114,11 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
-		status = STATUS_MAIN_MENU; // 进入游戏菜单
+		status = STATUS_MAIN_MENU;                            // 进入游戏菜单
 		showGame = new ShowGame();
 		createRole = new CreateRole();
 		own = createRole.createSheep();
 		wolf = createRole.createWolf();
-//		System.out.println("wolf:"+wolf);
 	}
 
 	private void showGameMenu(Graphics g) {
@@ -132,7 +131,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*画出商店*/
 	private void showGameShop(Graphics g) {
-		showGame.drawGameShop(g,shopIndex);
+		showGame.drawGameShop(g,shopX,shopY);
 	}
 	
 	/*画出成就系统*/
@@ -179,10 +178,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
 			keyState.remove(KeyCode.NUM0);
 			keyState.remove(KeyCode.BACK);
-			if(mainOrgame==0){
+			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
 				status=STATUS_MAIN_MENU;
-			}else if(mainOrgame==1){
-			status=STATUS_GAME_PLAYING;
+			}else if(mainOrgame==1){     //返回游戏中的界面
+				status=STATUS_GAME_PLAYING;
 			}
 			shopX = 0;shopY = 0;
 			showGame.clearShop();
@@ -212,13 +211,11 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			}
 		}
 		if (keyState.contains(KeyCode.OK)) {
-//			showGame.clearMainMenu();
 			keyState.remove(KeyCode.OK);
+			showGame.clearMainMenu();
 			if(shopX==2){//进入充值
 				showGame.clearShop();
-				//processRecharge()进行购买操作
 			}else{
-//				propety.purchaseProp(own, shopX, shopY, engineService); //购买道具      own instanceof Role
 			}
 		}
 	}	
