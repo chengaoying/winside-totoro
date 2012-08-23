@@ -55,13 +55,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			 processShop();
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
-			//TODO
+			processArchi();
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
-//			 processRanking();
+			 processRanking();
 			break;
 		case STATUS_GAME_HELP:// 游戏帮助
-			// processHelp();
+			 processHelp();
 			break;
 		}
 
@@ -150,16 +150,20 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 	private void processGameMenu() {
 		if (keyState.contains(KeyCode.UP)) {
+			keyState.remove(KeyCode.UP);
 			mainIndex = (mainIndex + 6 - 1) % 6;
 		} else if (keyState.contains(KeyCode.DOWN)) {
+			keyState.remove(KeyCode.DOWN);
 			mainIndex = (mainIndex + 1) % 6;
 		} else if (keyState.contains(KeyCode.OK)) {
-			processSubMenu();
+			keyState.remove(KeyCode.OK);
 			showGame.clearMainMenu();
+			processSubMenu();
 		}
 		if (keyState.contains(KeyCode.BACK)) { // 返回键直接退出
-			exit = true;
+			keyState.remove(KeyCode.BACK);
 			showGame.clearMainMenu();
+			exit = true;
 		}
 	}
 
@@ -170,19 +174,40 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			moveRole(1);
 		} else if (keyState.containsAndRemove(KeyCode.OK)) { // 普通攻击
 			
-		} else if (keyState.containsAndRemove(KeyCode.NUM5)) { // 时光闹钟
+		}else if(keyState.contains(KeyCode.NUM1)){    //时光闹钟
+			keyState.remove(KeyCode.NUM1);
+		}else if(keyState.contains(KeyCode.NUM2)){ //捕狼网
+			keyState.remove(KeyCode.NUM2);
+		}else if(keyState.contains(KeyCode.NUM3)){//盾牌
+			keyState.remove(KeyCode.NUM3);
+		}else if(keyState.contains(KeyCode.NUM4)){//激光枪
+			keyState.remove(KeyCode.NUM4);
+		}else if(keyState.contains(KeyCode.NUM5)){//驱散竖琴（平底锅将弃之）
+			keyState.remove(KeyCode.NUM5);
+		}else if(keyState.contains(KeyCode.NUM6)){//
+			keyState.remove(KeyCode.NUM6);
+		}else if(keyState.contains(KeyCode.NUM7)){
+			keyState.remove(KeyCode.NUM7);
+		}else if(keyState.contains(KeyCode.NUM8)){//木偶->可以增加一条生命
+			keyState.remove(KeyCode.NUM8);
+		}
+		else if (keyState.containsAndRemove(KeyCode.NUM0)) { // 按0返回-----完善后应改为0键暂停！
+			status=STATUS_MAIN_MENU;
+			showGame.clearGamePlaying();
 		}
 	}
+	
 	/*商城操作*/
 	private void processShop() {
 		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
 			keyState.remove(KeyCode.NUM0);
 			keyState.remove(KeyCode.BACK);
-			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
-				status=STATUS_MAIN_MENU;
-			}else if(mainOrgame==1){     //返回游戏中的界面
-				status=STATUS_GAME_PLAYING;
-			}
+//			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
+//				status=STATUS_MAIN_MENU;
+//			}else if(mainOrgame==1){     //返回游戏中的界面
+//				status=STATUS_GAME_PLAYING;
+//			}
+			status=STATUS_MAIN_MENU;          //TODO 判断返回游戏中还是主界面
 			shopX = 0;shopY = 0;
 			showGame.clearShop();
 		}
@@ -213,12 +238,48 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		if (keyState.contains(KeyCode.OK)) {
 			keyState.remove(KeyCode.OK);
 			showGame.clearMainMenu();
-			if(shopX==2){//进入充值
+			if(shopX==2 && shopY==0){//进入充值
 				showGame.clearShop();
-			}else{
+			}
+			if(shopX==2 && shopY==1){
+//				if(mainOrgame==0){//返回主界面
+//					showGame.clearShop();
+//					status=STATUS_MAIN_MENU;
+//				}else if(mainOrgame==1){//返回游戏中的界面
+//					showGame.clearShop();
+//					status=STATUS_GAME_PLAYING;
+//				}
+				showGame.clearShop();
+				status=STATUS_MAIN_MENU;
 			}
 		}
-	}	
+	}
+	
+	/*成就操作*/
+	private void processArchi() {
+         if(keyState.contains(KeyCode.NUM0)){  //按0键返回主界面
+        	 keyState.remove(KeyCode.NUM0);
+        	 showGame.clearGameArchi();
+        	 status=STATUS_MAIN_MENU;
+         }
+	}
+	
+	/*排行榜操作*/
+	private void processRanking() {
+		if(keyState.contains(KeyCode.NUM0)){       //按0键返回主界面
+			showGame.clearRanking();
+			status=STATUS_MAIN_MENU;
+		}
+	}
+	
+	/*帮助操作*/
+	private void processHelp() {
+     if(keyState.contains(KeyCode.NUM0)){          //按0键返回主界面
+    	 keyState.remove(KeyCode.NUM0);
+    	 showGame.clearHelp();
+    	 status=STATUS_MAIN_MENU;
+     }
+	}
 	
 	/*注意和界面按钮的顺序一致*/
 	private void processSubMenu() {

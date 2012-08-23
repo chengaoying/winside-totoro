@@ -4,6 +4,7 @@ import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.ui.DrawUtil;
+import cn.ohyeah.stb.ui.TextView;
 import cn.ohyeah.stb.util.RandomValue;
 
 /**
@@ -175,8 +176,11 @@ public class ShowGame implements Common {
 		for(int i=0;i<4;i++){                                                                //游戏中的左侧框内容---道具内容
 			g.drawImage(playing_prop_memu, 497,185+i*68, TopLeft);
 			drawProp(g, i, 497+5,185+i*(68+3));                                              //第一列对应原图片中的前四个
+			drawNum(g, i+1, 540+7, 223-17+i*73);//提示技能按键：1-4{540,223}
+			
 			g.drawImage(playing_prop_memu, 564,185+i*68, TopLeft);
-			drawProp(g, i+4, 564+5,185+i*(68+2));                                             //第二列对应原图片中的后四个
+			drawProp(g, i+4, 564+5,185+i*(68+2));  //第二列对应原图片中的后四个
+			drawNum(g, i+4+1, 612, 223-17+i*73);//提示技能键5-8{}
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
 		
@@ -209,33 +213,96 @@ public class ShowGame implements Common {
 		g.drawImage(shop, 217, 18, TopLeft);
 		g.drawImage(shop_big, 29, 103, TopLeft);
 		g.drawImage(shop_balance, 46, 454, TopLeft);
-		for(int i=0;i<4;i++){                                       //以后可以减少硬编码
-			g.drawImage(shop_small, 42, 115+i*82, TopLeft);                 //上下相差 82
-			g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);        //价格和数量{109,127}
-			drawNum(g, 111, 105+55,127+5+i*81);                             //{167,127}
-			drawNum(g, 222, 105+55,130+24+i*81);
-			//TODO价格怎么单独定
-			drawProp(g, i, 47+1,120+10+i*82);                              //{47,120}
-			
-			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
-			g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
-			drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
-			drawNum(g, 444, 286+55,130+24+i*81);
-			drawProp(g, i+4, 229+1,120+10+i*82);                                     //{229,120}
-			//TODO 添加选中效果
+	
+		int x =42, y = 113, spaceX = 15, spaceY = 8;//
+//		for(int i=0;i<4;i++){                                       //以后可以减少硬编码
+////			if(shopX==i){
+////				g.drawRegion(shop_small_base, 42, 115+i*82, shop_small_base.getWidth(),
+////						shop_small_base.getHeight(), 0, x+(spaceX+179), y+(spaceY+89)*i, TopLeft);
+////			}
+//			g.drawImage(shop_small, 42, 115+i*82, TopLeft);                 //上下相差 82
+//			g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);        //价格和数量{109,127}
+//			drawNum(g, 111, 105+55,127+5+i*81);                             //{167,127}
+//			drawNum(g, 222, 105+55,130+24+i*81);
+//			//TODO价格怎么单独定
+//			drawProp(g, i, 47+1,120+10+i*82);                              //{47,120}
+//			
+//			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
+//			g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
+//			drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
+//			drawNum(g, 444, 286+55,130+24+i*81);
+//			drawProp(g, i+4, 229+1,120+10+i*82);                                     //{229,120}
+//			//TODO 添加选中效果
+//		}
+		
+		for(int i=0;i<4;i++){
+			for(int j=0;j<2;j++){
+				g.drawRegion(shop_small_base, 0, 0, shop_small_base.getWidth(), shop_small_base.getHeight(),
+						0, x+(spaceX+shop_small_base.getWidth())*j, y+(spaceY+shop_small_base.getHeight())*i, TopLeft);
+			}
+		}
+		int mapx=37,mapy=114;
+		for(int i=0;i<4;i++){
+			for(int j=0;j<2;j++){
+				if(shopX==i && shopY==j){
+					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(),
+							0, mapx+(spaceX+shop_small.getWidth())*j, mapy+(spaceY+shop_small.getHeight())*i, TopLeft);
+					g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);
+					g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
+					drawNum(g, 111, 105+55,127+5+i*81);
+					drawNum(g, 222, 105+55,130+24+i*81);
+					drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
+					drawNum(g, 444, 286+55,130+24+i*81);
+					drawProp(g, i, 47+1,120+10+i*82);
+					drawProp(g, i+4, 229+1,120+10+i*82);
+//					g.drawRegion(price_quantity, getIndex(j, i)*79, 0, price_quantity.getWidth(), price_quantity.getHeight(), 0,
+//							mapx+(spaceX+shop_small.getWidth())*j+10, mapy+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+				}else{
+					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(), 0,
+							x+(spaceX+shop_small.getWidth())*j, y+(spaceY+shop_small.getHeight())*i, TopLeft);
+					g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);
+					g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
+					drawNum(g, 111, 105+55,127+5+i*81);
+					drawNum(g, 222, 105+55,130+24+i*81);
+					drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
+					drawNum(g, 444, 286+55,130+24+i*81);
+					drawProp(g, i, 47+1,120+10+i*82); 
+					drawProp(g, i+4, 229+1,120+10+i*82);
+				}
+			}
 		}
 		g.drawImage(shop_midding, 434, 103, TopLeft);
+		if(shopX==2&& (shopY==0 || shopY==1)){
+			g.drawImage(shop_go_pay, 457, 381, TopLeft);
+		}
 		g.drawImage(shop_go_pay, 457, 381, TopLeft);
 		g.drawImage(shop_out, 457, 429, TopLeft);
-		if(shopX<2){
-			DrawUtil.drawRect(g, 42+7+shopX*180, 115+7+shopY*84, 58, 63, 2, 0XFFFF00);//58W,63 H,13间距
-			g.setColor(28, 213, 233);
-		}else{
-			DrawUtil.drawRect(g, 455, 384+(shopY+2)*50, 128, 36, 2, 0XFFFF00);
-		}
-		
+//		if(shopX<2){
+//			DrawUtil.drawRect(g, 42+7+shopX*180, 115+7+shopY*82, 58, 63, 2, 0XFFFF00);//58W,63 H,13间距
+//			g.setColor(28, 213, 233);
+//		}
+//		if(shopX==2 && (shopY==0 || shopY==1)){   //显示光标效果
+//			DrawUtil.drawRect(g, 457, 381+(shopY)*50, 128, 36, 2, 0XFFFF00);
+//		}
+//		else{
+//			DrawUtil.drawRect(g, 455, 384+(shopY+2)*50, 128, 36, 2, 0XFFFF00);
+//		}
+//		
 		drawNum(g, 10, 103,452);//TODO 添加数字
 	}
+	private int getIndex(int x, int y){//方法是为了获得产品编号
+		if(x==0 && y==0)return 0;
+		if(x==1 && y==0)return 1;
+		if(x==2 && y==0)return 2;
+		if(x==0 && y==1)return 3;
+		if(x==1 && y==1)return 4;
+		if(x==2 && y==1)return 5;
+		if(x==0 && y==2)return 6;
+		if(x==1 && y==2)return 7;
+		if(x==2 && y==2)return 8;
+		return -1;
+	}
+	
 	
 	/*画出成就系统*/
 	public void drawGameArchi(Graphics g, int archiIndex) {
@@ -296,6 +363,30 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出帮助界面*/
+	private String gameIntro[]={
+			"【操作说明】",
+			"上下方向键：控制玩家的移动。",
+			"确定键：发射飞镖或无敌拳套。",
+			"数字键1至8：使用道具。",
+			"数字键0：退出游戏。",
+			"数字键9:游戏帮助。",
+			"",
+			"【道具说明】",
+			"时光闹钟：时间静止10秒。",
+			"捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。",
+			"防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。",
+			"驱狼光波：发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。",
+			"替身玩偶：增加一条命。",
+			"驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。",
+			"速度提升液：使用后增加喜羊羊的移动速度，持续30秒。",
+			"强力磁石：击落所有空中的灰太狼。",
+			"",
+			"【游戏简介】",
+			"喜羊羊大战灰太狼是一款闯关类游戏，总共有15关。玩家控制喜羊羊击落一定数量的灰",
+			"太狼即可过关。此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。除了闯关",
+			"外，游戏中还推出了成就系统和排行榜，增加了玩家在游戏的过程中动力和目标。",
+			"",
+	};
 	public void showHelp(Graphics g,int helpIndex) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
@@ -305,6 +396,12 @@ public class ShowGame implements Common {
 		g.drawImage(shop_big, 137, 108, TopLeft);
 		g.drawImage(game_help, 214,18, TopLeft);
 		g.drawImage(achievement_out1, 17,498, TopLeft);
+		g.setColor(0xffffff);
+		String info="";
+		for(int i=0;i<gameIntro.length;i++){
+			info += gameIntro[i];
+		}
+		TextView.showMultiLineText(g, info, 10, 150, 130, 350, 350);
 	}
 	
 	/*游戏中的数字*/
