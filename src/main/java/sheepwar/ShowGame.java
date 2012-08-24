@@ -208,101 +208,76 @@ public class ShowGame implements Common {
 		Image shop_small = Resource.loadImage(Resource.id_shop_small);
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
+		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
 		//{42,115},{233,115},{42,195},{233,195},{42,279},{233,279},{42,361},{233,361}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		g.drawImage(shop, 217, 18, TopLeft);
 		g.drawImage(shop_big, 29, 103, TopLeft);
 		g.drawImage(shop_balance, 46, 454, TopLeft);
 	
-		int x =42, y = 113, spaceX = 15, spaceY = 8;//
-//		for(int i=0;i<4;i++){                                       //以后可以减少硬编码
-////			if(shopX==i){
-////				g.drawRegion(shop_small_base, 42, 115+i*82, shop_small_base.getWidth(),
-////						shop_small_base.getHeight(), 0, x+(spaceX+179), y+(spaceY+89)*i, TopLeft);
-////			}
-//			g.drawImage(shop_small, 42, 115+i*82, TopLeft);                 //上下相差 82
-//			g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);        //价格和数量{109,127}
-//			drawNum(g, 111, 105+55,127+5+i*81);                             //{167,127}
-//			drawNum(g, 222, 105+55,130+24+i*81);
-//			//TODO价格怎么单独定
-//			drawProp(g, i, 47+1,120+10+i*82);                              //{47,120}
-//			
-//			g.drawImage(shop_small, 223, 115+i*82, TopLeft);
-//			g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
-//			drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
-//			drawNum(g, 444, 286+55,130+24+i*81);
-//			drawProp(g, i+4, 229+1,120+10+i*82);                                     //{229,120}
-//			//TODO 添加选中效果
-//		}
-		
+		int x =42, y = 120, spaceX = 15, spaceY = 8;//
 		for(int i=0;i<4;i++){
 			for(int j=0;j<2;j++){
 				g.drawRegion(shop_small_base, 0, 0, shop_small_base.getWidth(), shop_small_base.getHeight(),
 						0, x+(spaceX+shop_small_base.getWidth())*j, y+(spaceY+shop_small_base.getHeight())*i, TopLeft);
 			}
 		}
-		int mapx=37,mapy=114;
-		for(int i=0;i<4;i++){
-			for(int j=0;j<2;j++){
-				if(shopX==i && shopY==j){
+		g.drawImage(shop_midding, 434, 103, TopLeft);
+		for(int i=0;i<2;i++){             //midding下的按钮阴影
+			g.drawRegion(shop_out_base, 0, 0, shop_out_base.getWidth(), shop_out_base.getHeight(), 
+					0, 457, 381+(spaceY+shop_out_base.getHeight())*i, TopLeft);
+			}
+		int mapx=37,mapy=112;       //被选中后出现阴影效果的坐标
+		 for(int i=0;i<4;i++){
+		     for(int j=0;j<2;j++){
+				if(shopX==j && shopY==i){
 					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(),
 							0, mapx+(spaceX+shop_small.getWidth())*j, mapy+(spaceY+shop_small.getHeight())*i, TopLeft);
-					g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);
-					g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
-					drawNum(g, 111, 105+55,127+5+i*81);
-					drawNum(g, 222, 105+55,130+24+i*81);
-					drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
-					drawNum(g, 444, 286+55,130+24+i*81);
-					drawProp(g, i, 47+1,120+10+i*82);
-					drawProp(g, i+4, 229+1,120+10+i*82);
-//					g.drawRegion(price_quantity, getIndex(j, i)*79, 0, price_quantity.getWidth(), price_quantity.getHeight(), 0,
-//							mapx+(spaceX+shop_small.getWidth())*j+10, mapy+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+					g.drawImage(price_quantity, mapx+(spaceX+shop_small.getWidth())*j+65, 
+							mapy+(spaceY+shop_small.getHeight())*i+12, TopLeft);
+					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
+							mapx+(spaceX+shop_small.getWidth())*j+8, mapy+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+					drawNum(g, 111, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+11);
+					drawNum(g, 333, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+36);
 				}else{
 					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(), 0,
 							x+(spaceX+shop_small.getWidth())*j, y+(spaceY+shop_small.getHeight())*i, TopLeft);
-					g.drawImage(price_quantity, 109-4, 127+4+i*81, TopLeft);
-					g.drawImage(price_quantity, 223+63, 127+4+i*81, TopLeft);
-					drawNum(g, 111, 105+55,127+5+i*81);
-					drawNum(g, 222, 105+55,130+24+i*81);
-					drawNum(g, 333, 286+55,127+5+i*81);                                       //X 286+p_q.width;
-					drawNum(g, 444, 286+55,130+24+i*81);
-					drawProp(g, i, 47+1,120+10+i*82); 
-					drawProp(g, i+4, 229+1,120+10+i*82);
+					g.drawImage(price_quantity, x+(spaceX+shop_small.getWidth())*j+65, 
+							y+(spaceY+shop_small.getHeight())*i+12, TopLeft);
+					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
+							x+(spaceX+shop_small.getWidth())*j+8, y+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+					drawNum(g, 111, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+11);
+					drawNum(g, 333, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+36);
 				}
 			}
 		}
-		g.drawImage(shop_midding, 434, 103, TopLeft);
-		if(shopX==2&& (shopY==0 || shopY==1)){
-			g.drawImage(shop_go_pay, 457, 381, TopLeft);
-		}
-		g.drawImage(shop_go_pay, 457, 381, TopLeft);
-		g.drawImage(shop_out, 457, 429, TopLeft);
-//		if(shopX<2){
-//			DrawUtil.drawRect(g, 42+7+shopX*180, 115+7+shopY*82, 58, 63, 2, 0XFFFF00);//58W,63 H,13间距
-//			g.setColor(28, 213, 233);
-//		}
-//		if(shopX==2 && (shopY==0 || shopY==1)){   //显示光标效果
-//			DrawUtil.drawRect(g, 457, 381+(shopY)*50, 128, 36, 2, 0XFFFF00);
-//		}
-//		else{
-//			DrawUtil.drawRect(g, 455, 384+(shopY+2)*50, 128, 36, 2, 0XFFFF00);
-//		}
-//		
-		drawNum(g, 10, 103,452);//TODO 添加数字
-	}
-	private int getIndex(int x, int y){//方法是为了获得产品编号
-		if(x==0 && y==0)return 0;
-		if(x==1 && y==0)return 1;
-		if(x==2 && y==0)return 2;
-		if(x==0 && y==1)return 3;
-		if(x==1 && y==1)return 4;
-		if(x==2 && y==1)return 5;
-		if(x==0 && y==2)return 6;
-		if(x==1 && y==2)return 7;
-		if(x==2 && y==2)return 8;
-		return -1;
+		 if(shopX==2){          //充值和返回被选择的阴影效果
+			 if(shopY==0){    //控制方向由左到右的入口方向
+				 g.drawImage(shop_go_pay, 457-8, 381-5, TopLeft);
+			   	 g.drawImage(shop_out, 457, 429, TopLeft);
+			  }else{
+				 g.drawImage(shop_go_pay, 457, 381, TopLeft);
+			   	 g.drawImage(shop_out, 457-8, 429-5, TopLeft);
+			 }
+		    }else{
+		    	g.drawImage(shop_go_pay, 457, 381, TopLeft);
+		   		g.drawImage(shop_out, 457, 429, TopLeft);
+		    }
+		drawNum(g, 10, 103,452);                                          //TODO 添加数字
 	}
 	
+	private int getIndex(int x, int y){    //取出对应商店商场左侧的位置
+		if(y==0 && x==0)return 0;
+		if(y==1 && x==0)return 1;
+		if(y==2 && x==0)return 2;
+		if(y==3 && x==0)return 3;
+		if(y==0 && x==1)return 4;
+		if(y==1 && x==1)return 5;
+		if(y==2 && x==1)return 6;
+		if(y==3 && x==1)return 7;
+		if(x==2)        return 8;
+		return -1;
+	}
 	
 	/*画出成就系统*/
 	public void drawGameArchi(Graphics g, int archiIndex) {
@@ -330,8 +305,8 @@ public class ShowGame implements Common {
 		g.drawImage(achievement_points, 250, 448, TopLeft);
 		g.drawImage(achievement_left_right,458,441, TopLeft);
 		for(int i=0;i<4;i++){//成就右侧条目
-			g.drawImage(achievement_long, 247, 114+i*83, TopLeft);//Y坐标相差83
-			g.drawImage(archivement_hoof, 539, 130+i*83, TopLeft);
+			g.drawImage(achievement_long1, 247, 114+i*83, TopLeft);//Y坐标相差83
+			g.drawImage(archivement_hoof1, 539, 130+i*83, TopLeft);
 		}
 	}
 	

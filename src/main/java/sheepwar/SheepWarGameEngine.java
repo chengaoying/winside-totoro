@@ -197,7 +197,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 	
-	/*商城操作*/
+	/*商城操作*/ //TODO控制从左到右的判断，为了解决在右侧上下滚动时一次点击无效
 	private void processShop() {
 		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
 			keyState.remove(KeyCode.NUM0);
@@ -213,14 +213,18 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		if (keyState.contains(KeyCode.UP)) {
 			keyState.remove(KeyCode.UP);
-			if(shopY>0){
-				shopY = shopY-1;
+			if( shopY >0){
+				shopY=shopY-1;
+			}else {
+				shopY = 0;
 			}
 		}
 		if (keyState.contains(KeyCode.DOWN)) {
 			keyState.remove(KeyCode.DOWN);
-			if(shopY<3){
+			if(shopY<4){
 				shopY = shopY+1;
+			}else{
+				shopY=0;
 			}
 		}
 		if (keyState.contains(KeyCode.LEFT)) {
@@ -231,8 +235,14 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		if (keyState.contains(KeyCode.RIGHT)) {
 			keyState.remove(KeyCode.RIGHT);
-			if(shopX<2){
+			if(shopX<3){
 				shopX = shopX+1;
+			}
+			if(shopX>2){
+				shopX=0;
+			}
+			if(shopX==2){//当控制由左到右时，shopY置零
+				shopY=0;
 			}
 		}
 		if (keyState.contains(KeyCode.OK)) {
