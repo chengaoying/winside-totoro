@@ -34,10 +34,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public ShowGame showGame;
 	public int status;
-	public int mainIndex, playingIndex,shopIndex,archiIndex,rankingIndex,helpIndex;
+	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex;
 	
 	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
-	private int shopX=0,shopY=0;
+	private int shopX=0,shopY=0,archX=0,archY=0;
 
 	protected void loop() {
 
@@ -136,7 +136,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*画出成就系统*/
 	private void showGameArchi(Graphics g) {
-		showGame.drawGameArchi(g,archiIndex);
+		showGame.drawGameArchi(g,archX,archY);
 	}
 	
 	/*画出排行榜*/
@@ -172,7 +172,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			moveRole(0);//
 		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
 			moveRole(1);
-		} else if (keyState.containsAndRemove(KeyCode.OK)) { // 普通攻击
+		} else if (keyState.contains(KeyCode.OK)) { // 普通攻击
+			keyState.remove(KeyCode.OK);
 			
 		}else if(keyState.contains(KeyCode.NUM1)){    //时光闹钟
 			keyState.remove(KeyCode.NUM1);
@@ -182,7 +183,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			keyState.remove(KeyCode.NUM3);
 		}else if(keyState.contains(KeyCode.NUM4)){//激光枪
 			keyState.remove(KeyCode.NUM4);
-		}else if(keyState.contains(KeyCode.NUM5)){//驱散竖琴（平底锅将弃之）
+		}else if(keyState.contains(KeyCode.NUM5)){//驱散竖琴
 			keyState.remove(KeyCode.NUM5);
 		}else if(keyState.contains(KeyCode.NUM6)){//
 			keyState.remove(KeyCode.NUM6);
@@ -213,18 +214,22 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		if (keyState.contains(KeyCode.UP)) {
 			keyState.remove(KeyCode.UP);
-			if( shopY >0){
-				shopY=shopY-1;
-			}else {
-				shopY = 0;
+			if(shopY>0){
+				if(shopX==2){
+					shopY=(shopY-1)%2;
+				}else{
+					shopY=(shopY-1)%4;
+				}
 			}
 		}
 		if (keyState.contains(KeyCode.DOWN)) {
 			keyState.remove(KeyCode.DOWN);
 			if(shopY<4){
-				shopY = shopY+1;
-			}else{
-				shopY=0;
+				if(shopX<2){
+					shopY = (shopY+1)%4;
+				}else{
+					shopY = (shopY+1)%2;
+				}
 			}
 		}
 		if (keyState.contains(KeyCode.LEFT)) {
@@ -235,11 +240,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		if (keyState.contains(KeyCode.RIGHT)) {
 			keyState.remove(KeyCode.RIGHT);
-			if(shopX<3){
-				shopX = shopX+1;
-			}
-			if(shopX>2){
-				shopX=0;
+			if(shopX<2){
+				shopX = (shopX+1)%3;
 			}
 			if(shopX==2){//当控制由左到右时，shopY置零
 				shopY=0;
@@ -265,12 +267,49 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 	
-	/*成就操作*/
+	/*成就 操作*/
 	private void processArchi() {
          if(keyState.contains(KeyCode.NUM0)){  //按0键返回主界面
         	 keyState.remove(KeyCode.NUM0);
         	 showGame.clearGameArchi();
         	 status=STATUS_MAIN_MENU;
+         }
+         if(keyState.contains(KeyCode.UP)){
+        	 keyState.remove(KeyCode.UP);
+        	 if(archY>0){
+        		 archY=archY-1;
+        	 }
+        	 if(archX==0 && archY>5){
+        		 archY=0;
+        	 }
+         }
+         if(keyState.contains(KeyCode.LEFT)){
+        	 keyState.remove(KeyCode.LEFT);
+        	 if(archX>0){
+        		 archX=archX-1;
+        	 }
+         }
+         if(keyState.contains(KeyCode.DOWN)){
+        	 keyState.remove(KeyCode.DOWN);
+        	 if(archX==1 && archY>3 || (archX==0 && archY>5)){
+        		 archY=0;
+        	 }
+        	 if(archY>=0 && archX==1){
+        		 archY=(archY+1)%4;
+        	 }
+        	 if(archX==0 && archY>=0){
+        		 archY=(archY+1)%6;
+        	 }
+         }
+         if(keyState.contains(KeyCode.RIGHT)){
+        	 keyState.remove(KeyCode.RIGHT);
+        	 if(archX>=0){
+        		 archX=archX+1;
+        	 }
+        	 if(archX>1){
+        		 archX=0;
+        		 archY=0;
+        	 }
          }
 	}
 	

@@ -118,7 +118,7 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_game_help);
 	}
     
-//    private int index, flag;
+    private int index, flag;
     public CreateRole createRole;
 	public void drawGamePlaying(Graphics g, int index, Role own) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
@@ -184,7 +184,7 @@ public class ShowGame implements Common {
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
 		
-//		createRole.showWolf(g,index,flag);
+//		createRole.showWolf(g,index,flag,own);
 //		if(flag>2){    //狼的效果图
 //			index = (index+1)%6;
 //			flag=0;
@@ -202,9 +202,9 @@ public class ShowGame implements Common {
 		//Image shop_figure = Resource.loadImage(Resource.id_shop_figure);//{103,452}//TODO
 		Image shop_go_pay = Resource.loadImage(Resource.id_shop_go_pay);//{457,381}
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{434,103}
-		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);//TODO
+		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);
 		Image shop_out = Resource.loadImage(Resource.id_shop_out);//{457,429}
-		Image shop_small_base = Resource.loadImage(Resource.id_shop_small_base);//TODO
+		Image shop_small_base = Resource.loadImage(Resource.id_shop_small_base);
 		Image shop_small = Resource.loadImage(Resource.id_shop_small);
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
@@ -280,7 +280,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出成就系统*/
-	public void drawGameArchi(Graphics g, int archiIndex) {
+	public void drawGameArchi(Graphics g,int archX,int archY) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{28,102}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{235,102}
@@ -298,15 +298,37 @@ public class ShowGame implements Common {
 		g.drawImage(achievement, 270, 19, TopLeft);
 		g.drawImage(shop_midding, 28, 102, TopLeft);
 		g.drawImage(achievement_out1, 55, 451, TopLeft);
-		for(int i=0;i<6;i++){  //成就左侧条目
-			g.drawImage(shop_go_pay, 51, 123+i*55, TopLeft);//Y坐标相差55
-		}
 		g.drawImage(shop_big, 235, 102, TopLeft);
 		g.drawImage(achievement_points, 250, 448, TopLeft);
 		g.drawImage(achievement_left_right,458,441, TopLeft);
-		for(int i=0;i<4;i++){//成就右侧条目
-			g.drawImage(achievement_long1, 247, 114+i*83, TopLeft);//Y坐标相差83
-			g.drawImage(archivement_hoof1, 539, 130+i*83, TopLeft);
+		
+		int x=247,y=116,spaceY=4;
+		for(int i=0;i<4;i++){//判断光标指向右侧哪个模块
+			if(archX==1 && archY==i){   
+				g.drawRegion(achievement_long, 0, 0, achievement_long.getWidth(), achievement_long.getHeight(), 0,
+						x, y+(spaceY+achievement_long.getHeight())*i, TopLeft);
+				g.drawRegion(archivement_hoof, 0, 0, archivement_hoof.getWidth(), archivement_hoof.getHeight(), 0,
+						x+289, y+12+(spaceY+achievement_long.getHeight())*i, TopLeft);//hoof相对于底层的坐标是289  
+				drawNum(g, 10, 546, y+(achievement_long.getHeight()+spaceY)*i+26);
+			}else{
+				g.drawRegion(achievement_long1, 0, 0, achievement_long1.getWidth(), achievement_long1.getHeight(), 0,
+						x, y+(spaceY+achievement_long1.getHeight())*i, TopLeft);
+				g.drawRegion(archivement_hoof1, 0, 0, archivement_hoof1.getWidth(), archivement_hoof1.getHeight(), 0,
+						x+289, y+12+(spaceY+31+archivement_hoof1.getHeight())*i, TopLeft);//hoof相对于底层的坐标是289
+				drawNum(g, 30, 546, y+(achievement_long.getHeight()+spaceY)*i+26);
+			}
+		}
+		int leftX = 52,leftY = 122,leftSpace = 15;     //成就左侧leftSpace:上下间隔
+		for(int i=0;i<6;i++){//成就左侧条目
+			if(archX==0 && archY==i){
+				g.drawRegion(shop_go_pay, 0, 0, shop_go_pay.getWidth(), shop_go_pay.getHeight(), 0,
+						leftX, leftY+(shop_go_pay.getHeight()+leftSpace)*i, TopLeft);
+				DrawUtil.drawRect(g, leftX, leftY+archY*(shop_go_pay.getHeight()+leftSpace), 
+						shop_go_pay.getWidth(), shop_go_pay.getHeight(), 2, 0XFFFF00);  // 画出矩形方框  ---2 是线条宽度
+			}else{
+				g.drawRegion(shop_go_pay, 0, 0, shop_go_pay.getWidth(), shop_go_pay.getHeight(), 0,
+						leftX, leftY+(shop_go_pay.getHeight()+leftSpace)*i, TopLeft);
+			}
 		}
 	}
 	
@@ -339,27 +361,21 @@ public class ShowGame implements Common {
 	
 	/*画出帮助界面*/
 	private String gameIntro[]={
-			"【操作说明】",
-			"上下方向键：控制玩家的移动。",
-			"确定键：发射飞镖或无敌拳套。",
-			"数字键1至8：使用道具。",
-			"数字键0：退出游戏。",
+			"【操作说明】上下方向键：控制玩家的移动。#r确定键：发射飞镖或无敌拳套。#r数字键1至8：使用道具。#r数字键0：退出游戏。#r" +
 			"数字键9:游戏帮助。",
-			"",
-			"【道具说明】",
-			"时光闹钟：时间静止10秒。",
-			"捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。",
-			"防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。",
-			"驱狼光波：发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。",
-			"替身玩偶：增加一条命。",
-			"驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。",
-			"速度提升液：使用后增加喜羊羊的移动速度，持续30秒。",
-			"强力磁石：击落所有空中的灰太狼。",
-			"",
-			"【游戏简介】",
-			"喜羊羊大战灰太狼是一款闯关类游戏，总共有15关。玩家控制喜羊羊击落一定数量的灰",
-			"太狼即可过关。此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。除了闯关",
-			"外，游戏中还推出了成就系统和排行榜，增加了玩家在游戏的过程中动力和目标。",
+			
+			"#r【道具说明】光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。",
+			"#r防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。",
+			"#r驱狼光波：发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。",
+			"#r替身玩偶：增加一条命。",
+			"#r驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。",
+			"#r速度提升液：使用后增加喜羊羊的移动速度，持续30秒。",
+			"#r强力磁石：击落所有空中的灰太狼。",
+			
+			"#r【游戏简介】",
+			"喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰",
+			"太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关",
+			"外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
 			"",
 	};
 	public void showHelp(Graphics g,int helpIndex) {
