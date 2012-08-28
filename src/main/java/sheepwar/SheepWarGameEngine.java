@@ -35,6 +35,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public ShowGame showGame;
 	public int status;
 	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex;
+	public int pageIndex;
 	
 	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
 	private int shopX=0,shopY=0,archX=0,archY=0;
@@ -115,7 +116,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	private void init() {
 		status = STATUS_MAIN_MENU;                            // 进入游戏菜单
-		showGame = new ShowGame();
+		showGame = new ShowGame(this);
 		createRole = new CreateRole();
 		own = createRole.createSheep();
 		wolf = createRole.createWolf();
@@ -146,7 +147,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*画出帮助*/
 	private void showHelp(Graphics g) {
-        showGame.showHelp(g,helpIndex);
+        showGame.showHelp(g,helpIndex,pageIndex);
 	}
 	private void processGameMenu() {
 		if (keyState.contains(KeyCode.UP)) {
@@ -191,9 +192,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			keyState.remove(KeyCode.NUM7);
 		}else if(keyState.contains(KeyCode.NUM8)){//木偶->可以增加一条生命
 			keyState.remove(KeyCode.NUM8);
+		}else if(keyState.contains(KeyCode.NUM9)){
+			keyState.remove(KeyCode.NUM9);
+			status = STATUS_GAME_HELP;
+			showGame.clearGamePlaying();
 		}
-		else if (keyState.containsAndRemove(KeyCode.NUM0)) { // 按0返回-----完善后应改为0键暂停！
-			status=STATUS_MAIN_MENU;
+		else if (keyState.containsAndRemove(KeyCode.NUM0)) { // 按0返回-----完善后应改为0键暂停！but 帮助中的操作声名却是退出游戏
+			status = STATUS_MAIN_MENU;
 			showGame.clearGamePlaying();
 		}
 	}
@@ -328,6 +333,27 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
     	 showGame.clearHelp();
     	 status=STATUS_MAIN_MENU;
      }
+     if(keyState.contains(KeyCode.OK)){
+    	 keyState.remove(KeyCode.OK);
+			if(pageIndex==0){
+				if(helpIndex>0){
+					helpIndex--;
+				}
+			}
+			if(pageIndex==1){
+				if(helpIndex<2){
+					helpIndex++;
+				}
+			}
+		}
+     if(keyState.contains(KeyCode.LEFT)){
+    	 keyState.remove(KeyCode.LEFT);
+			pageIndex=0;
+		}
+	if(keyState.contains(KeyCode.RIGHT)){
+		keyState.remove(KeyCode.RIGHT);
+			pageIndex=1;
+		}
 	}
 	
 	/*注意和界面按钮的顺序一致*/

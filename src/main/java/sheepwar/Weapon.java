@@ -7,6 +7,7 @@ package sheepwar;
  */
 public class Weapon implements Common {
 	int id;                 //武器id
+	int objectId;			//武器所属者	ID
 	int speedX;             //X 轴移动速度
 	int speedY;             //Y轴移动速度
 	int direction;          //武器移动方向 2左3右
@@ -34,6 +35,9 @@ public class Weapon implements Common {
 	 */
 	public void createShuriken(Role own, int objectId, int mapx, int mapy, int direction, int width, int height) {
 		Weapon shuriKen=new Weapon();
+		shuriKen.direction = direction;
+		shuriKen.objectId = objectId;
+		
 		
 	}
 

@@ -1,5 +1,6 @@
 package sheepwar;
 
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
@@ -14,6 +15,10 @@ import cn.ohyeah.stb.util.RandomValue;
  * 
  */
 public class ShowGame implements Common {
+	private SheepWarGameEngine engine;
+	public ShowGame(SheepWarGameEngine e){
+		this.engine=e;
+	}
 	public Image playing_cloudsmall,playing_cloudbig;
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;//ScrW屏幕宽度，tempx初始=ScrW，可以用表达式tempx-=1来使其移动
 	
@@ -23,7 +28,10 @@ public class ShowGame implements Common {
 	/* 游戏界面坐标 */
 	public int playingAxis[][] = { { 491, 0 }, { 0, 529 }, { 0, 72 },
 			{ 377, 153 }, { 377, 240 }, { 377, 324 }, { 377, 409 }, };
-
+	
+     /*成就左侧文字图片坐标*/
+	public int archLeftAxis[][] = { { 68, 132 },{ 59, 186 },{ 68, 240 },{ 68, 294 },{ 68, 348 },{ 68, 402 } };
+	
 	public void drawMainMenu(Graphics g, int index) {
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
@@ -94,6 +102,8 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_achievement_points);
     	Resource.freeImage(Resource.id_archivement_hoof);
     	Resource.freeImage(Resource.id_archivement_hoof1);
+    	Resource.freeImage(Resource.id_achievement_left);
+    	Resource.freeImage(Resource.id_achievement_word);
     }
     
     /*清除排行系统界面*/
@@ -116,8 +126,11 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_shop_big);
     	Resource.freeImage(Resource.id_game_help);
+    	Resource.freeImage(Resource.id_achievement_left_right);
+    	Resource.freeImage(Resource.id_achievement_left_right1);
 	}
     
+    /*画出游戏界面*/
     private int index, flag;
     public CreateRole createRole;
 	public void drawGamePlaying(Graphics g, int index, Role own) {
@@ -199,7 +212,7 @@ public class ShowGame implements Common {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_balance = Resource.loadImage(Resource.id_shop_balance);//{46,454}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{29,103}
-		//Image shop_figure = Resource.loadImage(Resource.id_shop_figure);//{103,452}//TODO
+		//Image shop_figure = Resource.loadImage(Resource.id_shop_figure);//{103,452}  数字
 		Image shop_go_pay = Resource.loadImage(Resource.id_shop_go_pay);//{457,381}
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{434,103}
 		Image shop_out_base = Resource.loadImage(Resource.id_shop_out_base);
@@ -284,7 +297,7 @@ public class ShowGame implements Common {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{28,102}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{235,102}
-		Image shop_go_pay = Resource.loadImage(Resource.id_shop_go_pay);//{457,381}//{51,123},{51,178},{51,232},{51,286},{51,342},{51,396}
+		Image achievement_left = Resource.loadImage(Resource.id_achievement_left);//{457,381}//{51,123},{51,178},{51,232},{51,286},{51,342},{51,396}
 		Image achievement = Resource.loadImage(Resource.id_achievement);//{270,19}
 		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{458,441}
 		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);
@@ -294,6 +307,7 @@ public class ShowGame implements Common {
 		Image achievement_points = Resource.loadImage(Resource.id_achievement_points);//{250,448}
 		Image archivement_hoof = Resource.loadImage(Resource.id_archivement_hoof);//{539,130},{539,211},{539,293},{539,378}
 		Image archivement_hoof1 = Resource.loadImage(Resource.id_archivement_hoof1);
+		Image achievement_word = Resource.loadImage(Resource.id_achievement_word);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		g.drawImage(achievement, 270, 19, TopLeft);
 		g.drawImage(shop_midding, 28, 102, TopLeft);
@@ -319,16 +333,26 @@ public class ShowGame implements Common {
 			}
 		}
 		int leftX = 52,leftY = 122,leftSpace = 15;     //成就左侧leftSpace:上下间隔
-		for(int i=0;i<6;i++){//成就左侧条目
+		for(int i=0;i<6;i++){       //成就左侧条目
 			if(archX==0 && archY==i){
-				g.drawRegion(shop_go_pay, 0, 0, shop_go_pay.getWidth(), shop_go_pay.getHeight(), 0,
-						leftX, leftY+(shop_go_pay.getHeight()+leftSpace)*i, TopLeft);
-				DrawUtil.drawRect(g, leftX, leftY+archY*(shop_go_pay.getHeight()+leftSpace), 
-						shop_go_pay.getWidth(), shop_go_pay.getHeight(), 2, 0XFFFF00);  // 画出矩形方框  ---2 是线条宽度
+				g.drawRegion(achievement_left, 0, 0, achievement_left.getWidth(), achievement_left.getHeight(), 0,
+						leftX, leftY+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
+				DrawUtil.drawRect(g, leftX, leftY+archY*(achievement_left.getHeight()+leftSpace), 
+						achievement_left.getWidth(), achievement_left.getHeight(), 2, 0XFFFF00);  // 画出矩形方框  ---2 是线条宽度
 			}else{
-				g.drawRegion(shop_go_pay, 0, 0, shop_go_pay.getWidth(), shop_go_pay.getHeight(), 0,
-						leftX, leftY+(shop_go_pay.getHeight()+leftSpace)*i, TopLeft);
+				g.drawRegion(achievement_left, 0, 0, achievement_left.getWidth(), achievement_left.getHeight(), 0,
+						leftX, leftY+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
 			}
+		}
+		for(int i = 0;i<archLeftAxis.length;++ i){     //成就左侧条目文字图片
+//			if(i!=1){
+				g.drawRegion(achievement_word,0,
+						i*achievement_word.getHeight() / 6, achievement_word.getWidth(),
+						achievement_word.getHeight() / 6, 0, archLeftAxis[i][0],
+						archLeftAxis[i][1], TopLeft);
+//			}else{
+//				g.drawImage(achievement_word, archLeftAxis[i][0], archLeftAxis[i][1], TopLeft);
+//			}
 		}
 	}
 	
@@ -360,39 +384,45 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出帮助界面*/
-	private String gameIntro[]={
-			"【操作说明】上下方向键：控制玩家的移动。#r确定键：发射飞镖或无敌拳套。#r数字键1至8：使用道具。#r数字键0：退出游戏。#r" +
-			"数字键9:游戏帮助。",
-			
-			"#r【道具说明】光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。",
-			"#r防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。",
-			"#r驱狼光波：发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。",
-			"#r替身玩偶：增加一条命。",
-			"#r驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。",
-			"#r速度提升液：使用后增加喜羊羊的移动速度，持续30秒。",
-			"#r强力磁石：击落所有空中的灰太狼。",
-			
-			"#r【游戏简介】",
-			"喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰",
-			"太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关",
-			"外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
-			"",
-	};
-	public void showHelp(Graphics g,int helpIndex) {
+	public void showHelp(Graphics g,int helpIndex,int pageIndex) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
 		Image game_help = Resource.loadImage(Resource.id_game_help);     //{214,18}
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);   //{17,498}
+		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);   //{}
+		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);   //{380,452}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		g.drawImage(shop_big, 137, 108, TopLeft);
+//		g.drawImage(achievement_left_right1, 380, 490-achievement_left_right.getHeight(), TopLeft);
+//		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth(), achievement_left_right1.getHeight(), 0
+//				, 380, 452, TopLeft);
+//		g.drawRegion(achievement_left_right, pageIndex==0?0:achievement_left_right1.getWidth()/2,
+//				0, achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(), 0, 380, 452, TopLeft);
+//		g.drawRegion(achievement_left_right1, pageIndex==1?0:achievement_left_right1.getWidth()/2,
+//				0, achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(), 0, 
+//				380+achievement_left_right.getWidth()/2, 452, TopLeft);
+		if(pageIndex==0){
+			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(), 0,
+					380, 452, TopLeft);
+			g.drawRegion(achievement_left_right1, achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
+					0, 380+achievement_left_right.getWidth()/2, 452, TopLeft);
+		}else{
+			g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(), 0,
+					380, 452, TopLeft);
+			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
+					0, 380+achievement_left_right.getWidth()/2, 452, TopLeft);
+		}
 		g.drawImage(game_help, 214,18, TopLeft);
 		g.drawImage(achievement_out1, 17,498, TopLeft);
 		g.setColor(0xffffff);
-		String info="";
-		for(int i=0;i<gameIntro.length;i++){
-			info += gameIntro[i];
-		}
-		TextView.showMultiLineText(g, info, 10, 150, 130, 350, 350);
+//        engine.setFont(5);
+		g.setFont(Font.getDefaultFont());
+//		String info="";
+//		for(int i=0;i<gameIntro.length;i++){
+//			info += gameIntro[i];
+//		}
+//		TextView.showMultiLineText(g, info, 10, 150, 130, 350, 350);
+		TextView.showMultiLineText(g, Resource.gameInfo[helpIndex], 10,150, 130, 360, 334);
 	}
 	
 	/*游戏中的数字*/
