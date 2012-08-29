@@ -32,18 +32,6 @@ public class ShowGame implements Common {
      /*成就左侧文字图片坐标*/
 	public int archLeftAxis[][] = { { 68, 132 },{ 59, 186 },{ 68, 240 },{ 68, 294 },{ 68, 348 },{ 68, 402 } };
 	
-	public void drawMainMenu(Graphics g, int index) {
-		Image main_bg = Resource.loadImage(Resource.id_main_bg);
-		Image main_menu = Resource.loadImage(Resource.id_main_menu);
-		g.drawImage(main_bg, 0, 0, 0);
-		for (int i = 0; i < menuAxis.length; ++i) {
-			g.drawRegion(main_menu,
-					(index != i) ? main_menu.getWidth() / 2 : 0,
-					i * main_menu.getHeight() / 6, main_menu.getWidth() / 2,
-					main_menu.getHeight() / 6, 0, menuAxis[i][0],
-					menuAxis[i][1], 0);
-		}
-	}
 	
 	/*释放MainMenu图片*/
 	public void clearMainMenu() {
@@ -71,6 +59,7 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_playing_sheep);   
 		Resource.freeImage(Resource.id_sheep_eye);   
 		Resource.freeImage(Resource.id_sheep_hand);   
+		Resource.freeImage(Resource.id_bomb);   
 	}
 	
 	/*清商城界面*/
@@ -130,10 +119,23 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_achievement_left_right1);
 	}
     
+    /*画出主菜单mainMenu*/
+	public void drawMainMenu(Graphics g, int index) {
+		Image main_bg = Resource.loadImage(Resource.id_main_bg);
+		Image main_menu = Resource.loadImage(Resource.id_main_menu);
+		g.drawImage(main_bg, 0, 0, 0);
+		for (int i = 0; i < menuAxis.length; ++i) {
+			g.drawRegion(main_menu,
+					(index != i) ? main_menu.getWidth() / 2 : 0,
+					i * main_menu.getHeight() / 6, main_menu.getWidth() / 2,
+					main_menu.getHeight() / 6, 0, menuAxis[i][0],
+					menuAxis[i][1], 0);
+		}
+	}
+    
     /*画出游戏界面*/
-    private int index, flag;
-    public CreateRole createRole;
-	public void drawGamePlaying(Graphics g, int index, Role own) {
+	public void drawGamePlaying(Graphics g, int index,Role own) {
+		
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
 		Image playing_cloudbig = Resource.loadImage(Resource.id_playing_cloudbig);
@@ -145,12 +147,9 @@ public class ShowGame implements Common {
 		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
 		Image playing_lift = Resource.loadImage(Resource.id_playing_lift); //{342,303}
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}//横放的绳子
-		Image wolf = Resource.loadImage(Resource.id_wolf_run); //{399, 135}
-		Image playing_sheep = Resource.loadImage(Resource.id_playing_sheep); //{399, 135}
-		Image sheep_eye = Resource.loadImage(Resource.id_sheep_eye);
-		Image sheep_hand = Resource.loadImage(Resource.id_sheep_hand);
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
+		Image bomb = Resource.loadImage(Resource.id_bomb); //{501,466}
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -178,11 +177,10 @@ public class ShowGame implements Common {
 		}
 		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), (own.mapy-154),        //上下移动的绳子
 				0, 379, 154, TopLeft);                                                        //竖直绳子 的纵坐标 154
-		createRole=new CreateRole();                                                           //容易忘记实例化
-		createRole.showSheep(g,sheep_hand,playing_sheep,sheep_eye,own);                        //动态的羊
 
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
 				0, 342, 154+(own.mapy-154), TopLeft);
+		g.drawRegion(bomb, 0, 0, bomb.getWidth()/3, bomb.getHeight(), 0, 345-18, 40+own.mapy, TopLeft); //吊篮上的飞镖
 		
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
@@ -197,14 +195,6 @@ public class ShowGame implements Common {
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
 		
-//		createRole.showWolf(g,index,flag,own);
-//		if(flag>2){    //狼的效果图
-//			index = (index+1)%6;
-//			flag=0;
-//		}else{
-//			flag++;
-//		}
-//		g.drawRegion(wolf, index*wolf.getWidth()/6, 0, wolf.getWidth()/6, wolf.getHeight(), 0, 50, 50, TopLeft);
 	}
 	
 	/*画商店界面*/

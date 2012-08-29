@@ -34,6 +34,9 @@ public class Resource implements Common {
 	public static short id_playing_sheep = NUMS++;
 	public static short id_sheep_eye = NUMS++;
 	public static short id_sheep_hand = NUMS++;
+	public static short id_bomb = NUMS++;
+	public static short id_wolf_down = NUMS++;
+	
 	
 	public static short id_shop_balance = NUMS++;//商城界面
 	public static short id_shop_big = NUMS++;
@@ -90,6 +93,8 @@ public class Resource implements Common {
 		"/playing_sheep.png",
 		"/sheep_eye.png",
 		"/sheep_hand.png",
+		"/bomb.png",
+		"/wolf_down.png",
 		
 		"/shop_balance.png",            //商城界面图片资源
 		"/shop_big.png",

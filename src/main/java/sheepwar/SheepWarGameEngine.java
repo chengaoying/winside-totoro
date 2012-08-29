@@ -12,13 +12,13 @@ import cn.ohyeah.stb.key.KeyCode;
  * @author Administrator
  */
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
-	public Role own;
-	public Role wolf;
+	public Role own;      //玩家操控的羊
+	public Role wolf;     //npc
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
 	public static int ScrH = 0;
-	private CreateRole createRole;
+	public CreateRole createRole;
 	public static SheepWarGameEngine instance = buildGameEngine();
 
 	private static SheepWarGameEngine buildGameEngine() {
@@ -33,8 +33,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	public ShowGame showGame;
+	public Weapon weapon;
 	public int status;
 	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex;
+//	public int flag;              //画出狼
 	public int pageIndex;
 	
 	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
@@ -117,6 +119,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void init() {
 		status = STATUS_MAIN_MENU;                            // 进入游戏菜单
 		showGame = new ShowGame(this);
+		weapon = new Weapon();
 		createRole = new CreateRole();
 		own = createRole.createSheep();
 		wolf = createRole.createWolf();
@@ -127,7 +130,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void showGamePlaying(Graphics g) {
-		showGame.drawGamePlaying(g, playingIndex, own);
+		showGame.drawGamePlaying(g, playingIndex,own);
+		createRole.showSheep(g,own);                        //动态的羊
+		createRole.showWolf(g, wolf);    
+		weapon.showBomb(g);
 	}
 	
 	/*画出商店*/
@@ -169,12 +175,14 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void processGamePlaying() {
+		
 		if (keyState.containsMoveEventAndRemove(KeyCode.UP)) {
 			moveRole(0);//
 		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
 			moveRole(1);
 		} else if (keyState.contains(KeyCode.OK)) { // 普通攻击
 			keyState.remove(KeyCode.OK);
+			weapon.createBomb(own);
 			
 		}else if(keyState.contains(KeyCode.NUM1)){    //时光闹钟
 			keyState.remove(KeyCode.NUM1);
