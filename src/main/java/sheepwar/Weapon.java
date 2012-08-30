@@ -51,6 +51,10 @@ public class Weapon implements Common {
 	}
 	
 	private int bombIndex, bombFlag;
+	/**
+	 * »­³öÆÕÍ¨ÎäÆ÷
+	 * @param g
+	 */
 	public void showBomb(Graphics g){
 		Image bomb = Resource.loadImage(Resource.id_bomb);
 		Weapon w = null;
@@ -72,5 +76,6 @@ public class Weapon implements Common {
 			g.drawRegion(bomb, bombIndex *bomb.getWidth()/3, 0, bomb.getWidth()/3, bomb.getHeight(), 0, tempx, tempy, 0);
 		}
 	}
+	
 
 }

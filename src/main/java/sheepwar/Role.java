@@ -1,6 +1,6 @@
 package sheepwar;
 public class Role {
-	int id; 			//ID  判断羊||狼
+	int id; 			//ID  判断羊||狼  气球id（1-5）
 	int mapx; 			//在地图上的横坐标
 	int mapy; 			//在地图上的纵坐标
 	int direction; 		//移动方向 0 向上，1向下

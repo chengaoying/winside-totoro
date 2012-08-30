@@ -134,6 +134,7 @@ public class ShowGame implements Common {
 	}
     
     /*画出游戏界面*/
+	private int flag,Findex;
 	public void drawGamePlaying(Graphics g, int index,Role own) {
 		
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
@@ -150,6 +151,7 @@ public class ShowGame implements Common {
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
 		Image bomb = Resource.loadImage(Resource.id_bomb); //{501,466}
+//		Image blue = Resource.loadImage(Resource.id_balloon_blue);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -181,6 +183,15 @@ public class ShowGame implements Common {
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
 				0, 342, 154+(own.mapy-154), TopLeft);
 		g.drawRegion(bomb, 0, 0, bomb.getWidth()/3, bomb.getHeight(), 0, 345-18, 40+own.mapy, TopLeft); //吊篮上的飞镖
+		
+//		if(flag>=0){                  
+//			Findex = (Findex+1)%3;       //帧数
+//			flag=0;
+//		}else{
+//			flag++;
+//		}
+//		g.drawRegion(blue, index*blue.getWidth()/5, 0, blue.getWidth()/5, blue.getHeight(), 0,
+//				80, tempy, 0);
 		
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);

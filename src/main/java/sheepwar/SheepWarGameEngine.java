@@ -14,6 +14,7 @@ import cn.ohyeah.stb.key.KeyCode;
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;      //玩家操控的羊
 	public Role wolf;     //npc
+	public Role buble;
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
@@ -123,6 +124,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		createRole = new CreateRole();
 		own = createRole.createSheep();
 		wolf = createRole.createWolf();
+//		createRole.createBuble();
 	}
 
 	private void showGameMenu(Graphics g) {
@@ -132,7 +134,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void showGamePlaying(Graphics g) {
 		showGame.drawGamePlaying(g, playingIndex,own);
 		createRole.showSheep(g,own);                        //动态的羊
-		createRole.showWolf(g, wolf);    
+		createRole.showWolf(g, wolf);
+//		createRole.showBuble(g);
 		weapon.showBomb(g);
 	}
 	

@@ -35,7 +35,9 @@ public class Resource implements Common {
 	public static short id_sheep_eye = NUMS++;
 	public static short id_sheep_hand = NUMS++;
 	public static short id_bomb = NUMS++;
+	public static short id_wolf_run = NUMS++;
 	public static short id_wolf_down = NUMS++;
+	public static short id_balloon_blue = NUMS++;
 	
 	
 	public static short id_shop_balance = NUMS++;//商城界面
@@ -68,7 +70,7 @@ public class Resource implements Common {
 	public static short id_ranking_stripe = NUMS++;
 	public static short id_ranking = NUMS++;
 	public static short id_ranking_show = NUMS++;
-	public static short id_wolf_run = NUMS++;
+	
 	
 	public static short id_game_help = NUMS++;     //游戏帮助
 	
@@ -94,7 +96,9 @@ public class Resource implements Common {
 		"/sheep_eye.png",
 		"/sheep_hand.png",
 		"/bomb.png",
+		"/wolf_run.png",
 		"/wolf_down.png",
+		"/balloon_blue.png",
 		
 		"/shop_balance.png",            //商城界面图片资源
 		"/shop_big.png",
@@ -126,7 +130,7 @@ public class Resource implements Common {
 		"/ranking_stripe.jpg",        //条纹图片
 		"/ranking.png",
 		"/ranking_show.jpg",
-		"/wolf_run.png",
+		
 		
 		"/game_help.png",              //游戏帮助
 	};
