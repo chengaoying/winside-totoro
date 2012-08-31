@@ -38,6 +38,7 @@ public class Resource implements Common {
 	public static short id_wolf_run = NUMS++;
 	public static short id_wolf_down = NUMS++;
 	public static short id_balloon_blue = NUMS++;
+	public static short id_ladder = NUMS++;
 	
 	
 	public static short id_shop_balance = NUMS++;//商城界面
@@ -99,6 +100,7 @@ public class Resource implements Common {
 		"/wolf_run.png",
 		"/wolf_down.png",
 		"/balloon_blue.png",
+		"/ladder.png",
 		
 		"/shop_balance.png",            //商城界面图片资源
 		"/shop_big.png",

@@ -60,6 +60,9 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_sheep_eye);   
 		Resource.freeImage(Resource.id_sheep_hand);   
 		Resource.freeImage(Resource.id_bomb);   
+		Resource.freeImage(Resource.id_wolf_down);   
+		Resource.freeImage(Resource.id_wolf_run);   
+		Resource.freeImage(Resource.id_balloon_blue);   
 	}
 	
 	/*清商城界面*/

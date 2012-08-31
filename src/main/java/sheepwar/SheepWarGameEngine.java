@@ -14,7 +14,7 @@ import cn.ohyeah.stb.key.KeyCode;
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;      //玩家操控的羊
 	public Role wolf;     //npc
-	public Role buble;
+//	public Role buble;
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
@@ -123,7 +123,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		weapon = new Weapon();
 		createRole = new CreateRole();
 		own = createRole.createSheep();
-		wolf = createRole.createWolf();
+		createRole.createWolf();
 //		createRole.createBuble();
 	}
 
@@ -134,8 +134,11 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	private void showGamePlaying(Graphics g) {
 		showGame.drawGamePlaying(g, playingIndex,own);
 		createRole.showSheep(g,own);                        //动态的羊
-		createRole.showWolf(g, wolf);
-//		createRole.showBuble(g);
+		int len = CreateRole.npcs.size();
+		for(int i=0;i<len;i++){
+			wolf = (Role) CreateRole.npcs.elementAt(i);
+			createRole.showWolf(g, wolf);
+		}
 		weapon.showBomb(g);
 	}
 	
@@ -212,6 +215,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			status = STATUS_MAIN_MENU;
 			showGame.clearGamePlaying();
 		}
+		
 	}
 	
 	/*商城操作*/ //TODO控制从左到右的判断，为了解决在右侧上下滚动时一次点击无效
