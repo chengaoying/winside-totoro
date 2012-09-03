@@ -26,5 +26,4 @@ public interface Common {
 	
 	public static int sheepMapY = 290;                     //364-74:羊上下移动的限制范围
 	
-	
 }

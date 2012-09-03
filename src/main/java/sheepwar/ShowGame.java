@@ -1,9 +1,9 @@
 package sheepwar;
 
 import javax.microedition.lcdui.Font;
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
+import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.ui.DrawUtil;
 import cn.ohyeah.stb.ui.TextView;
 import cn.ohyeah.stb.util.RandomValue;
@@ -63,6 +63,11 @@ public class ShowGame implements Common {
 		Resource.freeImage(Resource.id_wolf_down);   
 		Resource.freeImage(Resource.id_wolf_run);   
 		Resource.freeImage(Resource.id_balloon_blue);   
+		Resource.freeImage(Resource.id_balloon_green);   
+		Resource.freeImage(Resource.id_balloon_multicolour);   
+		Resource.freeImage(Resource.id_balloon_yellow);   
+		Resource.freeImage(Resource.id_balloon_yellowred);   
+		Resource.freeImage(Resource.id_balloon_red);   
 	}
 	
 	/*清商城界面*/
@@ -123,7 +128,7 @@ public class ShowGame implements Common {
 	}
     
     /*画出主菜单mainMenu*/
-	public void drawMainMenu(Graphics g, int index) {
+	public void drawMainMenu(SGraphics g, int index) {
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
 		g.drawImage(main_bg, 0, 0, 0);
@@ -138,7 +143,7 @@ public class ShowGame implements Common {
     
     /*画出游戏界面*/
 	private int flag,Findex;
-	public void drawGamePlaying(Graphics g, int index,Role own) {
+	public void drawGamePlaying(SGraphics g, int index,Role own) {
 		
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
@@ -212,7 +217,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画商店界面*/
-	public void drawGameShop(Graphics g,int shopX,int shopY) {
+	public void drawGameShop(SGraphics g,int shopX,int shopY) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_balance = Resource.loadImage(Resource.id_shop_balance);//{46,454}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{29,103}
@@ -297,7 +302,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出成就系统*/
-	public void drawGameArchi(Graphics g,int archX,int archY) {
+	public void drawGameArchi(SGraphics g,int archX,int archY) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{28,102}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{235,102}
@@ -361,7 +366,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出排行榜*/
-	public void showRanking(Graphics g, int rankingIndex) {
+	public void showRanking(SGraphics g, int rankingIndex) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{61,462}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{233,101}
@@ -388,7 +393,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出帮助界面*/
-	public void showHelp(Graphics g,int helpIndex,int pageIndex) {
+	public void showHelp(SGraphics g,int helpIndex,int pageIndex) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
 		Image game_help = Resource.loadImage(Resource.id_game_help);     //{214,18}
@@ -430,7 +435,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*游戏中的数字*/
-	private void drawNum(Graphics g, int num, int x, int y) {
+	private void drawNum(SGraphics g, int num, int x, int y) {
 		Image imgNumeber = Resource.loadImage(Resource.id_shop_figure);
 		String number = String.valueOf(num);
 		for (byte i = 0; i < number.length(); i++) {
@@ -440,7 +445,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*道具的图片加载----数字转化为图片*/
-	private void drawProp(Graphics g,int num,int x,int y){
+	private void drawProp(SGraphics g,int num,int x,int y){
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
 		String number=String.valueOf(num);
 		for(byte i=0;i<number.length();i++){

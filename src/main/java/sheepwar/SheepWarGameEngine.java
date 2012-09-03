@@ -1,9 +1,9 @@
 package sheepwar;
 
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.midlet.MIDlet;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
+import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 
 /**
@@ -14,12 +14,16 @@ import cn.ohyeah.stb.key.KeyCode;
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;      //玩家操控的羊
 	public Role wolf;     //npc
+	public Role buble;     //气球
 //	public Role buble;
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
 	public static int ScrH = 0;
+	public static int  direction;
 	public CreateRole createRole;
+	public Weapon weapon;
+	public Attacks attacks;
 	public static SheepWarGameEngine instance = buildGameEngine();
 
 	private static SheepWarGameEngine buildGameEngine() {
@@ -34,7 +38,6 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	public ShowGame showGame;
-	public Weapon weapon;
 	public int status;
 	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex;
 //	public int flag;              //画出狼
@@ -110,7 +113,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 	}
 
-	private void showInit(Graphics g) {
+	private void showInit(SGraphics g) {
 		/*
 		 * g.setColor(0X000000); g.setClip(0, 0, 100, 100);
 		 * g.setColor(0Xffffff); g.drawString("加载中,请稍后...", 300, 260, 10);
@@ -121,44 +124,46 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		status = STATUS_MAIN_MENU;                            // 进入游戏菜单
 		showGame = new ShowGame(this);
 		weapon = new Weapon();
+		attacks = new Attacks(this);
 		createRole = new CreateRole();
 		own = createRole.createSheep();
 		createRole.createWolf();
-//		createRole.createBuble();
 	}
 
-	private void showGameMenu(Graphics g) {
+	private void showGameMenu(SGraphics g) {
 		showGame.drawMainMenu(g, mainIndex);
 	}
 
-	private void showGamePlaying(Graphics g) {
+	private void showGamePlaying(SGraphics g) {
 		showGame.drawGamePlaying(g, playingIndex,own);
 		createRole.showSheep(g,own);                        //动态的羊
+		weapon.showBomb(g);
 		int len = CreateRole.npcs.size();
 		for(int i=0;i<len;i++){
 			wolf = (Role) CreateRole.npcs.elementAt(i);
-			createRole.showWolf(g, wolf);
+			buble=(Role)CreateRole.bubles.elementAt(i);
+			createRole.showWolf(g, wolf,buble);
 		}
-		weapon.showBomb(g);
+//		weapon.showBomb(g);
 	}
 	
 	/*画出商店*/
-	private void showGameShop(Graphics g) {
+	private void showGameShop(SGraphics g) {
 		showGame.drawGameShop(g,shopX,shopY);
 	}
 	
 	/*画出成就系统*/
-	private void showGameArchi(Graphics g) {
+	private void showGameArchi(SGraphics g) {
 		showGame.drawGameArchi(g,archX,archY);
 	}
 	
 	/*画出排行榜*/
-	private void showRanking(Graphics g) {
+	private void showRanking(SGraphics g) {
 		showGame.showRanking(g, rankingIndex);
 	}
 	
 	/*画出帮助*/
-	private void showHelp(Graphics g) {
+	private void showHelp(SGraphics g) {
         showGame.showHelp(g,helpIndex,pageIndex);
 	}
 	private void processGameMenu() {
@@ -188,7 +193,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			moveRole(1);
 		} else if (keyState.contains(KeyCode.OK)) { // 普通攻击
 			keyState.remove(KeyCode.OK);
-			weapon.createBomb(own);
+			weapon.createBomb(own, 2);
 			
 		}else if(keyState.contains(KeyCode.NUM1)){    //时光闹钟
 			keyState.remove(KeyCode.NUM1);
@@ -208,14 +213,33 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			keyState.remove(KeyCode.NUM8);
 		}else if(keyState.contains(KeyCode.NUM9)){
 			keyState.remove(KeyCode.NUM9);
-			status = STATUS_GAME_HELP;
 			showGame.clearGamePlaying();
+			status = STATUS_GAME_HELP;
 		}
 		else if (keyState.containsAndRemove(KeyCode.NUM0)) { // 按0返回-----完善后应改为0键暂停！but 帮助中的操作声名却是退出游戏
-			status = STATUS_MAIN_MENU;
 			showGame.clearGamePlaying();
+			status = STATUS_MAIN_MENU;
 		}
+		if(timePass(10000)){
+			createRole.createWolf();
+		}
+		attacks.bompAttack(wolf, own);
 		
+	}
+	
+	private long recordTime;
+	private boolean timePass(int millisSeconds) {
+		long curTime = System.currentTimeMillis();
+		if (recordTime <= 0) {
+			recordTime = curTime;
+		}
+		else {
+			if (curTime-recordTime >= millisSeconds) {
+				recordTime = 0;
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/*商城操作*/ //TODO控制从左到右的判断，为了解决在右侧上下滚动时一次点击无效
@@ -223,11 +247,11 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
 			keyState.remove(KeyCode.NUM0);
 			keyState.remove(KeyCode.BACK);
-//			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
-//				status=STATUS_MAIN_MENU;
-//			}else if(mainOrgame==1){     //返回游戏中的界面
-//				status=STATUS_GAME_PLAYING;
-//			}
+			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
+				status=STATUS_MAIN_MENU;
+			}else if(mainOrgame==1){     //返回游戏中的界面
+				status=STATUS_GAME_PLAYING;
+			}
 			status=STATUS_MAIN_MENU;          //TODO 判断返回游戏中还是主界面
 			shopX = 0;shopY = 0;
 			showGame.clearShop();

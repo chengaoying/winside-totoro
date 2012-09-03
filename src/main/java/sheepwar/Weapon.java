@@ -2,8 +2,9 @@ package sheepwar;
 
 import java.util.Vector;
 
-import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
+
+import cn.ohyeah.stb.game.SGraphics;
 
 
 /**
@@ -28,7 +29,9 @@ public class Weapon implements Common {
 	int random;				//随机跟踪
 	boolean isSingle;		//单个属性
 	
-	private Vector bombs = new Vector();
+	
+	
+	public Vector bombs = new Vector();
 	
 	/**
 	 * 创建普通武器 ---Shuriken
@@ -40,11 +43,12 @@ public class Weapon implements Common {
 	 * @param width       发射飞镖者的宽(用于定位子弹的坐标)
 	 * @param height      发射飞镖者的高 (用于定位子弹的坐标
 	 */
-	public void createBomb(Role own) {
+	public void createBomb(Role own, int direction) {
 		Weapon w = new Weapon();
 		w.direction = direction;
 		w.objectId = objectId;
-		w.mapx = own.mapx-40;  //飞镖发射的初始X坐标
+		System.out.println("武器横坐标："+w.mapx);
+		w.mapx = own.mapx-20;  //飞镖发射的初始X坐标
 		w.mapy = own.mapy+45;  //飞镖发射的初始Y坐标
 		w.speedX = 5;
 		bombs.addElement(w);
@@ -55,7 +59,7 @@ public class Weapon implements Common {
 	 * 画出普通武器
 	 * @param g
 	 */
-	public void showBomb(Graphics g){
+	public void showBomb(SGraphics g){
 		Image bomb = Resource.loadImage(Resource.id_bomb);
 		Weapon w = null;
 		int tempx, tempy;
