@@ -24,6 +24,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public CreateRole createRole;
 	public Weapon weapon;
 	public Attacks attacks;
+	
+	public static int bombAmount;		//发射子弹数量
 	public static SheepWarGameEngine instance = buildGameEngine();
 
 	private static SheepWarGameEngine buildGameEngine() {
@@ -39,12 +41,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public ShowGame showGame;
 	public int status;
-	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex;
+	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex,archIndex;
 //	public int flag;              //画出狼
 	public int pageIndex;
 	
 	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
-	private int shopX=0,shopY=0,archX=0,archY=0;
+	private int shopX=0,shopY=0,archX=0,archY=0,rankX = 0;
+	public int bX;					//成就右侧下面的按钮方向
 
 	protected void loop() {
 
@@ -136,15 +139,14 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	private void showGamePlaying(SGraphics g) {
 		showGame.drawGamePlaying(g, playingIndex,own);
-		createRole.showSheep(g,own);                        //动态的羊
-		weapon.showBomb(g);
+		createRole.showSheep(g,own);//动态的羊
 		int len = CreateRole.npcs.size();
 		for(int i=0;i<len;i++){
 			wolf = (Role) CreateRole.npcs.elementAt(i);
 			buble=(Role)CreateRole.bubles.elementAt(i);
 			createRole.showWolf(g, wolf,buble);
 		}
-//		weapon.showBomb(g);
+		weapon.showBomb(g);
 	}
 	
 	/*画出商店*/
@@ -154,12 +156,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*画出成就系统*/
 	private void showGameArchi(SGraphics g) {
-		showGame.drawGameArchi(g,archX,archY);
+		showGame.drawGameArchi(g,archX,archY,archIndex,bX);
 	}
 	
 	/*画出排行榜*/
 	private void showRanking(SGraphics g) {
-		showGame.showRanking(g, rankingIndex);
+		showGame.showRanking(g, rankingIndex,rankX);
 	}
 	
 	/*画出帮助*/
@@ -194,6 +196,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		} else if (keyState.contains(KeyCode.OK)) { // 普通攻击
 			keyState.remove(KeyCode.OK);
 			weapon.createBomb(own, 2);
+//			weapon.bombAmount++;  //射出的武器数目增加
 			
 		}else if(keyState.contains(KeyCode.NUM1)){    //时光闹钟
 			keyState.remove(KeyCode.NUM1);
@@ -326,33 +329,59 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
         	 if(archX==0 && archY>5){
         		 archY=0;
         	 }
+        	 if(archX == 1 && archY >= 0){
+        		 archY = archY - 1;
+        	 }
          }
          if(keyState.contains(KeyCode.LEFT)){
         	 keyState.remove(KeyCode.LEFT);
         	 if(archX>0){
         		 archX=archX-1;
         	 }
+//        	 if(archY == 4){    			//右侧按钮判断
+//        		 archX =(archX-1);
+//        	 }
+        	 if(archX == 1 && archY == 4){
+        		if(bX > 0){
+        			bX = bX - 1;
+        		}else{
+        			bX = 0;
+        		}
+        	 }
          }
          if(keyState.contains(KeyCode.DOWN)){
         	 keyState.remove(KeyCode.DOWN);
-        	 if(archX==1 && archY>3 || (archX==0 && archY>5)){
+//        	 if(archX==1 && archY>3 || (archX==0 && archY>5)){
+//        		 archY=0;
+//        	 }
+        	 if(archX==0 && archY>5){
         		 archY=0;
         	 }
         	 if(archY>=0 && archX==1){
-        		 archY=(archY+1)%4;
+        		 archY=archY+1;
         	 }
         	 if(archX==0 && archY>=0){
         		 archY=(archY+1)%6;
         	 }
+//        	 if(archX==1 && archY>3 ){  
+//        		 archY = 4;
+//        	 }
          }
          if(keyState.contains(KeyCode.RIGHT)){
         	 keyState.remove(KeyCode.RIGHT);
         	 if(archX>=0){
         		 archX=archX+1;
         	 }
-        	 if(archX>1){
+        	 if(archX>1 && archY != 4){
         		 archX=0;
         		 archY=0;
+        	 }
+        	 if(archX == 1 && archY == 4){
+        		 if(bX > 1){
+        			 bX = bX + 1;
+        		 }else{
+        			 bX = 1;
+        		 }
         	 }
          }
 	}

@@ -69,6 +69,7 @@ public class Resource implements Common {
 	public static short id_archivement_hoof1 = NUMS++;
 	public static short id_achievement_word = NUMS++;
 	public static short id_achievement_left = NUMS++;
+	public static short id_slash = NUMS++;				//分号，斜杠
 	
 	public static short id_current_ranking = NUMS++;//排行界面
 	public static short id_ranking_option = NUMS++;
@@ -76,6 +77,7 @@ public class Resource implements Common {
 	public static short id_ranking_stripe = NUMS++;
 	public static short id_ranking = NUMS++;
 	public static short id_ranking_show = NUMS++;
+	public static short id_ranking_word = NUMS++;			//排行文字
 	
 	
 	public static short id_game_help = NUMS++;     //游戏帮助
@@ -135,6 +137,7 @@ public class Resource implements Common {
 		"/archivement_hoof1.png",
 		"/achievement_word.png",
 		"/achievement_left.png",
+		"/slash.png",
 		
 		"/current_ranking.jpg",       //排行图片资源
 		"/ranking_option.png",
@@ -142,6 +145,7 @@ public class Resource implements Common {
 		"/ranking_stripe.jpg",        //条纹图片
 		"/ranking.png",
 		"/ranking_show.jpg",
+		"/ranking_word.png",
 		
 		
 		"/game_help.png",              //游戏帮助
@@ -172,9 +176,9 @@ public class Resource implements Common {
 		"【操作说明】#r上下方向键：控制玩家的移动。#r确定键：发射飞镖或无敌拳套。#r数字键1至8：使用道具。#r数字键0：退出游戏。#r" +
 		"数字键9:游戏帮助。",
 		
-		"#r【道具说明】#r光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。#r速度提升液：使用后增加喜羊羊的移动速度，持续30秒。#r强力磁石：击落所有空中的灰太狼。",
+		"【道具说明】#r光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。#r速度提升液：使用后增加喜羊羊的移动速度，持续30秒。#r强力磁石：击落所有空中的灰太狼。",
 		
-		"#r【游戏简介】#r喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
+		"【游戏简介】#r喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
 		"",
 	};
 

@@ -25,6 +25,7 @@ public class ShowGame implements Common {
 	/* 登陆界面坐标 */
 	public int menuAxis[][] = { { 523, 243 }, { 466, 288 }, { 523, 333 },
 			{ 466, 378 }, { 523, 423 }, { 466, 468 }, };
+	
 	/* 游戏界面坐标 */
 	public int playingAxis[][] = { { 491, 0 }, { 0, 529 }, { 0, 72 },
 			{ 377, 153 }, { 377, 240 }, { 377, 324 }, { 377, 409 }, };
@@ -101,6 +102,8 @@ public class ShowGame implements Common {
     	Resource.freeImage(Resource.id_archivement_hoof1);
     	Resource.freeImage(Resource.id_achievement_left);
     	Resource.freeImage(Resource.id_achievement_word);
+    	Resource.freeImage(Resource.id_slash);
+    	Resource.freeImage(Resource.id_shop_out_base);
     }
     
     /*清除排行系统界面*/
@@ -302,7 +305,7 @@ public class ShowGame implements Common {
 	}
 	
 	/*画出成就系统*/
-	public void drawGameArchi(SGraphics g,int archX,int archY) {
+	public void drawGameArchi(SGraphics g,int archX,int archY,int archIndex,int bX) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_midding = Resource.loadImage(Resource.id_shop_midding);//{28,102}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{235,102}
@@ -317,13 +320,16 @@ public class ShowGame implements Common {
 		Image archivement_hoof = Resource.loadImage(Resource.id_archivement_hoof);//{539,130},{539,211},{539,293},{539,378}
 		Image archivement_hoof1 = Resource.loadImage(Resource.id_archivement_hoof1);
 		Image achievement_word = Resource.loadImage(Resource.id_achievement_word);
+		Image slash = Resource.loadImage(Resource.id_slash);
+		Image achievement_left1 = Resource.loadImage(Resource.id_shop_out_base);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		g.drawImage(achievement, 270, 19, TopLeft);
 		g.drawImage(shop_midding, 28, 102, TopLeft);
 		g.drawImage(achievement_out1, 55, 451, TopLeft);
 		g.drawImage(shop_big, 235, 102, TopLeft);
 		g.drawImage(achievement_points, 250, 448, TopLeft);
-		g.drawImage(achievement_left_right,458,441, TopLeft);
+		g.drawImage(slash, 517, 450, TopLeft);					//画出斜杠
+//		g.drawImage(achievement_left_right,458,441, TopLeft);
 		
 		int x=247,y=116,spaceY=4;
 		for(int i=0;i<4;i++){//判断光标指向右侧哪个模块
@@ -341,32 +347,66 @@ public class ShowGame implements Common {
 				drawNum(g, 30, 546, y+(achievement_long.getHeight()+spaceY)*i+26);
 			}
 		}
+		
+		//shadowX = 4,shadowY = 4：阴影效果的间隔值
+		int leftRightX = 459,leftRightY = 441,distanceLAR = 60,shadowX = 4,shadowY = 4;				//distanceLAR: leftRightX和leftRightY的间距
+		
+		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2,			//翻页左按钮
+				achievement_left_right1.getHeight(), 0, leftRightX, leftRightY, TopLeft);
+		
+		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//翻页右按钮
+				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
+				0, leftRightX+distanceLAR+achievement_left_right1.getWidth()/2, leftRightY, TopLeft);
+		if(archX == 1 && archY == 4){
+			if(archIndex == 0){
+				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//翻页左按钮
+						achievement_left_right.getHeight(), 0,
+						leftRightX-shadowX, leftRightY-shadowY, TopLeft);
+				
+				drawNum(g,archIndex+1,leftRightX+distanceLAR+18,leftRightY+8);
+				
+				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//翻页右按钮
+						achievement_left_right.getHeight(), 0,
+						leftRightX+distanceLAR-shadowX, leftRightY-shadowY, TopLeft);
+			}else{
+				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//翻页左按钮
+						achievement_left_right.getHeight(), 0,
+						leftRightX-shadowX, leftRightY-shadowY, TopLeft);
+				drawNum(g,archIndex+1,leftRightX+distanceLAR+18,leftRightY+8); 		//页面码
+				
+				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//翻页右按钮
+						achievement_left_right.getHeight(), 0,
+						leftRightX+distanceLAR, leftRightY, TopLeft);
+			}
+		}
+		
 		int leftX = 52,leftY = 122,leftSpace = 15;     //成就左侧leftSpace:上下间隔
+		for(int i = 0;i<6;i++){
+			g.drawRegion(achievement_left1, 0, 0, achievement_left1.getWidth(), achievement_left1.getHeight(), 
+					0, leftX, leftY+(leftSpace+achievement_left1.getHeight())*i, TopLeft);
+			
+		}
 		for(int i=0;i<6;i++){       //成就左侧条目
 			if(archX==0 && archY==i){
 				g.drawRegion(achievement_left, 0, 0, achievement_left.getWidth(), achievement_left.getHeight(), 0,
-						leftX, leftY+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
-				DrawUtil.drawRect(g, leftX, leftY+archY*(achievement_left.getHeight()+leftSpace), 
-						achievement_left.getWidth(), achievement_left.getHeight(), 2, 0XFFFF00);  // 画出矩形方框  ---2 是线条宽度
+						leftX-shadowX, leftY-shadowY+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
+				g.drawRegion(achievement_word,0,
+						i*achievement_word.getHeight() / 6, achievement_word.getWidth(),
+						achievement_word.getHeight() / 6, 0, leftX-shadowX+8,
+						leftY-shadowY+8+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
 			}else{
 				g.drawRegion(achievement_left, 0, 0, achievement_left.getWidth(), achievement_left.getHeight(), 0,
 						leftX, leftY+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
-			}
-		}
-		for(int i = 0;i<archLeftAxis.length;++ i){     //成就左侧条目文字图片
-//			if(i!=1){
 				g.drawRegion(achievement_word,0,
 						i*achievement_word.getHeight() / 6, achievement_word.getWidth(),
-						achievement_word.getHeight() / 6, 0, archLeftAxis[i][0],
-						archLeftAxis[i][1], TopLeft);
-//			}else{
-//				g.drawImage(achievement_word, archLeftAxis[i][0], archLeftAxis[i][1], TopLeft);
-//			}
+						achievement_word.getHeight() / 6, 0, leftX+8,
+						leftY+8+(achievement_left.getHeight()+leftSpace)*i, TopLeft);
+			}
 		}
 	}
 	
 	/*画出排行榜*/
-	public void showRanking(SGraphics g, int rankingIndex) {
+	public void showRanking(SGraphics g, int rankingIndex,int rankX) {
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{61,462}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{233,101}
@@ -377,10 +417,32 @@ public class ShowGame implements Common {
 		Image ranking_stripe=Resource.loadImage(Resource.id_ranking_stripe);//{241,151}  条高度57
 		Image ranking=Resource.loadImage(Resource.id_ranking);//{232,18}
 		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
+		Image ranking_word=Resource.loadImage(Resource.id_ranking_word);    //TODO 文字对齐
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		g.drawImage(achievement_out1, 61,462, TopLeft);
+		
+		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX 左侧x坐标，rankLeftYSpace 上下间距
+		int rankShadowX = 4,rankShadowY = 4;								//排行阴影效果坐标差
+		
 		for(int i=0;i<3;i++){//排行左侧条目
-			g.drawImage(ranking_option, 39, 112+i*54, TopLeft);
+//			g.drawImage(ranking_option1, rankLeftX, rankLeftY+i*54, TopLeft);
+			g.drawRegion(ranking_option1, 0, 0, ranking_option1.getWidth(), ranking_option1.getHeight(), 0,
+					rankLeftX, rankLeftY+(ranking_option1.getHeight()+rankLeftYSpace)*i, TopLeft);
+			if(rankX ==i){     		//TODO 排行的控制 9-5
+				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
+						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+				g.drawRegion(ranking_word,0,
+						i*ranking_word.getHeight() / 6, ranking_word.getWidth(),
+						ranking_word.getHeight() / 6, 0, rankLeftX-rankShadowX+8,
+						rankLeftY-rankShadowY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+			}else{
+				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
+						rankLeftX, rankLeftY+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+				g.drawRegion(ranking_word,0,
+						i*ranking_word.getHeight() / 6, ranking_word.getWidth(),
+						ranking_word.getHeight() / 6, 0, rankLeftX+8,
+						rankLeftY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+			}
 		}
 		g.drawImage(shop_big, 233,101, TopLeft);
 		g.drawImage(ranking_show,241,108, TopLeft);
@@ -413,25 +475,24 @@ public class ShowGame implements Common {
 		if(pageIndex==0){
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(), 0,
 					380, 452, TopLeft);
-			g.drawRegion(achievement_left_right1, achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
-					0, 380+achievement_left_right.getWidth()/2, 452, TopLeft);
+			drawNum(g,helpIndex+1,395+20,452+8);
+			g.drawRegion(achievement_left_right1, achievement_left_right.getWidth()/2, 0,
+					achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
+					0, 380+15+achievement_left_right.getWidth()/2, 452, TopLeft);
 		}else{
 			g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(), 0,
 					380, 452, TopLeft);
-			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
-					0, 380+achievement_left_right.getWidth()/2, 452, TopLeft);
+			drawNum(g,helpIndex+1,395+20,452+8); 		//页面码
+			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0,
+					achievement_left_right.getWidth()/2, achievement_left_right.getHeight(),
+					0, 380+15+achievement_left_right.getWidth()/2, 452, TopLeft);
 		}
 		g.drawImage(game_help, 214,18, TopLeft);
 		g.drawImage(achievement_out1, 17,498, TopLeft);
 		g.setColor(0xffffff);
-//        engine.setFont(5);
-		g.setFont(Font.getDefaultFont());
-//		String info="";
-//		for(int i=0;i<gameIntro.length;i++){
-//			info += gameIntro[i];
-//		}
-//		TextView.showMultiLineText(g, info, 10, 150, 130, 350, 350);
-		TextView.showMultiLineText(g, Resource.gameInfo[helpIndex], 10,150, 130, 360, 334);
+		engine.setFont(19);
+		TextView.showMultiLineText(g, Resource.gameInfo[helpIndex], 8,150, 130, 360, 334);
+		engine.setDefaultFont();
 	}
 	
 	/*游戏中的数字*/
