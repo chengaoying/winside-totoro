@@ -46,7 +46,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public int pageIndex;
 	
 	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
-	private int shopX=0,shopY=0,archX=0,archY=0,rankX = 0;
+	private int shopX=0,shopY=0,archX=0,archY=0,rankX = 0,rankY	= 0,helpX = 0;;
 	public int bX;					//成就右侧下面的按钮方向
 
 	protected void loop() {
@@ -161,12 +161,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	
 	/*画出排行榜*/
 	private void showRanking(SGraphics g) {
-		showGame.showRanking(g, rankingIndex,rankX);
+		showGame.showRanking(g, rankingIndex,rankX,rankY);
 	}
 	
 	/*画出帮助*/
 	private void showHelp(SGraphics g) {
-        showGame.showHelp(g,helpIndex,pageIndex);
+        showGame.showHelp(g,helpIndex,pageIndex,helpX);
 	}
 	private void processGameMenu() {
 		if (keyState.contains(KeyCode.UP)) {
@@ -329,25 +329,27 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
         	 if(archX==0 && archY>5){
         		 archY=0;
         	 }
-        	 if(archX == 1 && archY >= 0){
-        		 archY = archY - 1;
-        	 }
+//        	 if(archX == 1 && archY >= 0){
+//        		 archY = archY - 1;
+//        	 }
          }
          if(keyState.contains(KeyCode.LEFT)){
         	 keyState.remove(KeyCode.LEFT);
         	 if(archX>0){
         		 archX=archX-1;
+        		 
+        		 if(archX == 1 && archY == 4){		//右侧按钮的判断
+             		if(bX > 0){
+             			bX = bX - 1;
+             		}else{
+             			bX = 0;
+             		}
+             	 }
         	 }
 //        	 if(archY == 4){    			//右侧按钮判断
 //        		 archX =(archX-1);
 //        	 }
-        	 if(archX == 1 && archY == 4){
-        		if(bX > 0){
-        			bX = bX - 1;
-        		}else{
-        			bX = 0;
-        		}
-        	 }
+        	 
          }
          if(keyState.contains(KeyCode.DOWN)){
         	 keyState.remove(KeyCode.DOWN);
@@ -357,8 +359,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
         	 if(archX==0 && archY>5){
         		 archY=0;
         	 }
-        	 if(archY>=0 && archX==1){
-        		 archY=archY+1;
+        	 if(archY>=0 && archX==1){			//成就右侧部分
+        		 archY=(archY+1)%5;
         	 }
         	 if(archX==0 && archY>=0){
         		 archY=(archY+1)%6;
@@ -372,17 +374,23 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
         	 if(archX>=0){
         		 archX=archX+1;
         	 }
-        	 if(archX>1 && archY != 4){
-        		 archX=0;
-        		 archY=0;
+        	 if(archX <1){
+        		archX = archX + 1; 
+        	 }else{
+        		 archX = 1;
+        		 if(archX == 1 && archY == 4){  	//控制成就的左右按钮
+            		 if(bX < 1){
+            			 bX = bX + 1;
+            		 }else{
+            			 bX = 1;
+            		 }
+            	 }
         	 }
-        	 if(archX == 1 && archY == 4){
-        		 if(bX > 1){
-        			 bX = bX + 1;
-        		 }else{
-        			 bX = 1;
-        		 }
-        	 }
+//        	 if(archX>1 && archY != 4){
+//        		 archX=0;
+//        		 archY=0;
+//        	 }
+        	 
          }
 	}
 	
@@ -391,6 +399,47 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		if(keyState.contains(KeyCode.NUM0)){       //按0键返回主界面
 			showGame.clearRanking();
 			status=STATUS_MAIN_MENU;
+		}
+		if(keyState.contains(KeyCode.OK)){
+			keyState.remove(KeyCode.OK);
+			if(rankingIndex==0){
+				if(rankingIndex>0){
+					rankingIndex--;
+				}
+			}
+			if(rankingIndex==1){
+				if(rankingIndex<2){
+					rankingIndex++;
+				}
+			}
+		}
+		if(keyState.contains(KeyCode.UP)){
+			keyState.remove(KeyCode.UP);
+			if(rankX == 0 && rankY > 0){
+				rankY = rankY - 1;
+			}
+		}
+		if(keyState.contains(KeyCode.DOWN)){
+			keyState.remove(KeyCode.DOWN);
+			if(rankX == 0 && rankY <3){
+				rankY = (rankY + 1)%3;
+			}
+		}
+		if(keyState.contains(KeyCode.LEFT)){
+			keyState.remove(KeyCode.LEFT);
+			if(rankX > 0){
+				rankX = rankX - 1;
+			}else {
+				rankX = 0;
+			}
+		}
+		if(keyState.contains(KeyCode.RIGHT)){
+			keyState.remove(KeyCode.RIGHT);
+			if(rankX < 2){
+				rankX = rankX + 1;
+			}else{
+				rankX = 2;
+			}
 		}
 	}
 	
@@ -401,7 +450,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
     	 showGame.clearHelp();
     	 status=STATUS_MAIN_MENU;
      }
-     if(keyState.contains(KeyCode.OK)){
+     if(keyState.contains(KeyCode.OK) ||keyState.contains(KeyCode.LEFT) ||keyState.contains(KeyCode.RIGHT) ){ //翻页的判断
     	 keyState.remove(KeyCode.OK);
 			if(pageIndex==0){
 				if(helpIndex>0){
@@ -417,10 +466,20 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
      if(keyState.contains(KeyCode.LEFT)){
     	 keyState.remove(KeyCode.LEFT);
 			pageIndex=0;
+			if(helpX > 0){
+				helpX = helpX - 1;
+			}else{
+				helpX = 0;
+			}
 		}
 	if(keyState.contains(KeyCode.RIGHT)){
 		keyState.remove(KeyCode.RIGHT);
 			pageIndex=1;
+			if(helpX < 1){
+				helpX = helpX +1;
+			}else{
+				helpX = 1;
+			}
 		}
 	}
 	
