@@ -34,16 +34,6 @@ public class Weapon implements Common {
 	
 	
 	public Vector bombs = new Vector();
-	/*武器参数*/
-	private int bombsPara[][] =	{
-	/*0-武器ID,1-武器宽度,2-武器高度,3-武器速度,4-武器伤害,5-移动方向(2左3右)*/
-			{},
-			{},
-			{},
-			{},
-			{},
-			{},
-	};
 	
 	/**
 	 * 创建普通武器 ---Shuriken

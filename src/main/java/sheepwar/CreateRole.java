@@ -14,7 +14,6 @@ public class CreateRole implements Common {
 	private int tempx, tempy;
 	
 	private int[] coors = {80, 160,240,320};  //狼从开始横行到下落的点的横坐标
-	private int startIiime,endTime;
 	
 	
 	/* 气球属性 */
@@ -253,27 +252,5 @@ public class CreateRole implements Common {
 		// tempx-100, tempy, TopLeft); //狼的竖直下落(业务实际是当被击中时气球破裂，狼下坠)
 	}
 
-	/* 创建气球 */
-	// public Role createBuble(){
-	// Role buble=new Role();
-	// return buble;
-	// }
-	//
-	// /*画出气球*/
-	// public void showBuble(SGraphics g){
-	// Image blue = Resource.loadImage(Resource.id_balloon_blue);
-	// if(flag>=0){
-	// index = (index+1)%3; //帧数
-	// flag=0;
-	// }else{
-	// flag++;
-	// }
-	// // if(npc.id == 1){ //蓝色气球
-	// //
-	// // }
-	// g.drawRegion(blue, index*blue.getWidth()/5, 0, blue.getWidth()/5,
-	// blue.getHeight(), 0,
-	// 80, tempy, 0);
-	// }
 
 }

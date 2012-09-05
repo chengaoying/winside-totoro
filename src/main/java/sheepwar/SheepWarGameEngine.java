@@ -15,12 +15,10 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public Role own;      //玩家操控的羊
 	public Role wolf;     //npc
 	public Role buble;     //气球
-//	public Role buble;
 
 	public static boolean isSupportFavor = false;
 	public static int ScrW = 0;
 	public static int ScrH = 0;
-	public static int  direction;
 	public CreateRole createRole;
 	public Weapon weapon;
 	public Attacks attacks;
@@ -41,14 +39,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public ShowGame showGame;
 	public int status;
-	public int mainIndex, playingIndex,shopIndex,rankingIndex,helpIndex,archIndex;
-//	public int flag;              //画出狼
-	public int pageIndex;
+	public int mainIndex, playingIndex;
 	
-	private int mainOrgame=-1;                                 //返回商城界面：0返回主界面，1返回游戏中的界面
-	private int shopX=0,shopY=0,archX=0,archY=0,rankX = 0,rankY	= 0,helpX = 0;;
-	public int bX;					//成就右侧下面的按钮方向
-
 	protected void loop() {
 
 		switch (status) {
@@ -62,16 +54,16 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			processGamePlaying();// 游戏中的操作
 			break;
 		case STATUS_GAME_SHOP: // 道具商城
-			 processShop();
+			 //processShop();
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
-			processArchi();
+			//processArchi();
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
-			 processRanking();
+			 //processRanking();
 			break;
 		case STATUS_GAME_HELP:// 游戏帮助
-			 processHelp();
+			 //processHelp();
 			break;
 		}
 
@@ -86,16 +78,16 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			showGamePlaying(g);
 			break;
 		case STATUS_GAME_SHOP: // 道具商城
-			 showGameShop(g);
+			 //showGameShop(g);
 			break;
 		case STATUS_GAME_ARCHI:// 游戏成就
-			 showGameArchi(g);
+			 //showGameArchi(g);
 			break;
 		case STATUS_GAME_RANKING:// 游戏排行
-			showRanking(g);
+			//showRanking(g);
 			break;
 		case STATUS_GAME_HELP:// 游戏帮助
-			showHelp(g);
+			//showHelp(g);
 			break;
 		}
 	}
@@ -149,25 +141,6 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		weapon.showBomb(g);
 	}
 	
-	/*画出商店*/
-	private void showGameShop(SGraphics g) {
-		showGame.drawGameShop(g,shopX,shopY);
-	}
-	
-	/*画出成就系统*/
-	private void showGameArchi(SGraphics g) {
-		showGame.drawGameArchi(g,archX,archY,archIndex,bX);
-	}
-	
-	/*画出排行榜*/
-	private void showRanking(SGraphics g) {
-		showGame.showRanking(g, rankingIndex,rankX,rankY);
-	}
-	
-	/*画出帮助*/
-	private void showHelp(SGraphics g) {
-        showGame.showHelp(g,helpIndex,pageIndex,helpX);
-	}
 	private void processGameMenu() {
 		if (keyState.contains(KeyCode.UP)) {
 			keyState.remove(KeyCode.UP);
@@ -245,243 +218,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		return false;
 	}
 	
-	/*商城操作*/ //TODO控制从左到右的判断，为了解决在右侧上下滚动时一次点击无效
-	private void processShop() {
-		if (keyState.contains(KeyCode.NUM0) || keyState.contains(KeyCode.BACK)) {
-			keyState.remove(KeyCode.NUM0);
-			keyState.remove(KeyCode.BACK);
-			if(mainOrgame==0){          //返回主界面------（-1返回商城界面）
-				status=STATUS_MAIN_MENU;
-			}else if(mainOrgame==1){     //返回游戏中的界面
-				status=STATUS_GAME_PLAYING;
-			}
-			status=STATUS_MAIN_MENU;          //TODO 判断返回游戏中还是主界面
-			shopX = 0;shopY = 0;
-			showGame.clearShop();
-		}
-		if (keyState.contains(KeyCode.UP)) {
-			keyState.remove(KeyCode.UP);
-			if(shopY>0){
-				if(shopX==2){
-					shopY=(shopY-1)%2;
-				}else{
-					shopY=(shopY-1)%4;
-				}
-			}
-		}
-		if (keyState.contains(KeyCode.DOWN)) {
-			keyState.remove(KeyCode.DOWN);
-			if(shopY<4){
-				if(shopX<2){
-					shopY = (shopY+1)%4;
-				}else{
-					shopY = (shopY+1)%2;
-				}
-			}
-		}
-		if (keyState.contains(KeyCode.LEFT)) {
-			keyState.remove(KeyCode.LEFT);
-			if(shopX>0){
-				shopX = shopX-1;
-			}
-		}
-		if (keyState.contains(KeyCode.RIGHT)) {
-			keyState.remove(KeyCode.RIGHT);
-			if(shopX<2){
-				shopX = (shopX+1)%3;
-			}
-			if(shopX==2){//当控制由左到右时，shopY置零
-				shopY=0;
-			}
-		}
-		if (keyState.contains(KeyCode.OK)) {
-			keyState.remove(KeyCode.OK);
-			showGame.clearMainMenu();
-			if(shopX==2 && shopY==0){//进入充值
-				showGame.clearShop();
-			}
-			if(shopX==2 && shopY==1){
-//				if(mainOrgame==0){//返回主界面
-//					showGame.clearShop();
-//					status=STATUS_MAIN_MENU;
-//				}else if(mainOrgame==1){//返回游戏中的界面
-//					showGame.clearShop();
-//					status=STATUS_GAME_PLAYING;
-//				}
-				showGame.clearShop();
-				status=STATUS_MAIN_MENU;
-			}
-		}
-	}
 	
-	/*成就 操作*/
-	private void processArchi() {
-         if(keyState.contains(KeyCode.NUM0)){  //按0键返回主界面
-        	 keyState.remove(KeyCode.NUM0);
-        	 showGame.clearGameArchi();
-        	 status=STATUS_MAIN_MENU;
-         }
-         if(keyState.contains(KeyCode.UP)){
-        	 keyState.remove(KeyCode.UP);
-        	 if(archY>0){
-        		 archY=archY-1;
-        	 }
-        	 if(archX==0 && archY>5){
-        		 archY=0;
-        	 }
-//        	 if(archX == 1 && archY >= 0){
-//        		 archY = archY - 1;
-//        	 }
-         }
-         if(keyState.contains(KeyCode.LEFT)){
-        	 keyState.remove(KeyCode.LEFT);
-        	 if(archX>0){
-        		 archX=archX-1;
-        		 
-        		 if(archX == 1 && archY == 4){		//右侧按钮的判断
-             		if(bX > 0){
-             			bX = bX - 1;
-             		}else{
-             			bX = 0;
-             		}
-             	 }
-        	 }
-//        	 if(archY == 4){    			//右侧按钮判断
-//        		 archX =(archX-1);
-//        	 }
-        	 
-         }
-         if(keyState.contains(KeyCode.DOWN)){
-        	 keyState.remove(KeyCode.DOWN);
-//        	 if(archX==1 && archY>3 || (archX==0 && archY>5)){
-//        		 archY=0;
-//        	 }
-        	 if(archX==0 && archY>5){
-        		 archY=0;
-        	 }
-        	 if(archY>=0 && archX==1){			//成就右侧部分
-        		 archY=(archY+1)%5;
-        	 }
-        	 if(archX==0 && archY>=0){
-        		 archY=(archY+1)%6;
-        	 }
-//        	 if(archX==1 && archY>3 ){  
-//        		 archY = 4;
-//        	 }
-         }
-         if(keyState.contains(KeyCode.RIGHT)){
-        	 keyState.remove(KeyCode.RIGHT);
-        	 if(archX>=0){
-        		 archX=archX+1;
-        	 }
-        	 if(archX <1){
-        		archX = archX + 1; 
-        	 }else{
-        		 archX = 1;
-        		 if(archX == 1 && archY == 4){  	//控制成就的左右按钮
-            		 if(bX < 1){
-            			 bX = bX + 1;
-            		 }else{
-            			 bX = 1;
-            		 }
-            	 }
-        	 }
-//        	 if(archX>1 && archY != 4){
-//        		 archX=0;
-//        		 archY=0;
-//        	 }
-        	 
-         }
-	}
 	
-	/*排行榜操作*/
-	private void processRanking() {
-		if(keyState.contains(KeyCode.NUM0)){       //按0键返回主界面
-			showGame.clearRanking();
-			status=STATUS_MAIN_MENU;
-		}
-		if(keyState.contains(KeyCode.OK)){
-			keyState.remove(KeyCode.OK);
-			if(rankingIndex==0){
-				if(rankingIndex>0){
-					rankingIndex--;
-				}
-			}
-			if(rankingIndex==1){
-				if(rankingIndex<2){
-					rankingIndex++;
-				}
-			}
-		}
-		if(keyState.contains(KeyCode.UP)){
-			keyState.remove(KeyCode.UP);
-			if(rankX == 0 && rankY > 0){
-				rankY = rankY - 1;
-			}
-		}
-		if(keyState.contains(KeyCode.DOWN)){
-			keyState.remove(KeyCode.DOWN);
-			if(rankX == 0 && rankY <3){
-				rankY = (rankY + 1)%3;
-			}
-		}
-		if(keyState.contains(KeyCode.LEFT)){
-			keyState.remove(KeyCode.LEFT);
-			if(rankX > 0){
-				rankX = rankX - 1;
-			}else {
-				rankX = 0;
-			}
-		}
-		if(keyState.contains(KeyCode.RIGHT)){
-			keyState.remove(KeyCode.RIGHT);
-			if(rankX < 2){
-				rankX = rankX + 1;
-			}else{
-				rankX = 2;
-			}
-		}
-	}
-	
-	/*帮助操作*/
-	private void processHelp() {
-     if(keyState.contains(KeyCode.NUM0)){          //按0键返回主界面
-    	 keyState.remove(KeyCode.NUM0);
-    	 showGame.clearHelp();
-    	 status=STATUS_MAIN_MENU;
-     }
-     if(keyState.contains(KeyCode.OK) ||keyState.contains(KeyCode.LEFT) ||keyState.contains(KeyCode.RIGHT) ){ //翻页的判断
-    	 keyState.remove(KeyCode.OK);
-			if(pageIndex==0){
-				if(helpIndex>0){
-					helpIndex--;
-				}
-			}
-			if(pageIndex==1){
-				if(helpIndex<2){
-					helpIndex++;
-				}
-			}
-		}
-     if(keyState.contains(KeyCode.LEFT)){
-    	 keyState.remove(KeyCode.LEFT);
-			pageIndex=0;
-			if(helpX > 0){
-				helpX = helpX - 1;
-			}else{
-				helpX = 0;
-			}
-		}
-	if(keyState.contains(KeyCode.RIGHT)){
-		keyState.remove(KeyCode.RIGHT);
-			pageIndex=1;
-			if(helpX < 1){
-				helpX = helpX +1;
-			}else{
-				helpX = 1;
-			}
-		}
-	}
 	
 	/*注意和界面按钮的顺序一致*/
 	private void processSubMenu() {
@@ -489,17 +227,20 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			status = STATUS_GAME_PLAYING;
 			
 		} else if (mainIndex == 1) {// 道具商城
-			showGame.clearGamePlaying();
-			status=STATUS_GAME_SHOP;
+			StateShop ss =  new StateShop();
+			ss.processShop();
 			
 		} else if (mainIndex == 2){ //成就系统
-			status=STATUS_GAME_ARCHI;
+			StateAttainment sa = new StateAttainment();
+			sa.processAttainment();
 			
 		} else if (mainIndex == 3) {// 排行榜
-			status=STATUS_GAME_RANKING;
+			StateRanking sr = new StateRanking();
+			sr.processRanking();
 			
 		} else if (mainIndex == 4) {// 游戏帮助
-			status=STATUS_GAME_HELP;
+			StateHelp sh = new StateHelp();
+			sh.processHelp();
 			
 		}else if(mainIndex==5){//退出游戏
 			exit = true;
