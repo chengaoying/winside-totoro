@@ -44,30 +44,27 @@ public class Weapon implements Common {
 		bombs.addElement(w);
 	}
 	
-	private int bombIndex, bombFlag;
 	/**
 	 * »­³öÆÕÍ¨ÎäÆ÷
 	 * @param g
 	 */
 	public void showBomb(SGraphics g){
+		int len = bombs.size()-1;
+		System.out.println("len:"+len);
+		if(len<1){
+			return;
+		}
 		Image bomb = Resource.loadImage(Resource.id_bomb);
 		Weapon w = null;
 		int tempx, tempy;
-		int len = bombs.size()-1;
-		for(int i=len; i>=0; i--){
+		for(int i=0; i<len; i++){
 			w = (Weapon)bombs.elementAt(i);
 			tempx = w.mapx;
 			tempy = w.mapy;
 			tempx -= w.speedX;
 			w.mapx = tempx;
-			
-			if(bombFlag>=0){                  
-				bombIndex = (bombIndex+1)%3;
-				bombFlag=0;
-			}else{
-				bombFlag++;
-			}
-			g.drawRegion(bomb, bombIndex *bomb.getWidth()/3, 0, bomb.getWidth()/3, bomb.getHeight(), 0, tempx, tempy, 0);
+			w.frame = (w.frame+1)%3;
+			g.drawRegion(bomb, w.frame *bomb.getWidth()/3, 0, bomb.getWidth()/3, bomb.getHeight(), 0, tempx, tempy, 0);
 		}
 	}
 	

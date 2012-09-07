@@ -23,13 +23,13 @@ public class CreateRole implements Common {
 	   45, 75, 
 	};
 	
-	/*npc属性*/
+	/*npc（狼）属性*/
 	public static int npcPara[] = {
 		/*0-图片宽度，1-图片高度，2-移动速度，3-初始X坐标，4-初始Y坐标*/
 		57, 71, 5, -57, 16
 	};
 
-	/* 创建玩家角色 */
+	/*羊*/
 	public Role createSheep() {
 		Role role = new Role();
 		role.mapx = 366; 
@@ -58,9 +58,9 @@ public class CreateRole implements Common {
 				154 + 23 + (role.mapy - 154), TopLeft);
 	}
 
+	/*狼*/
 	public void createWolf() {
 		Role wolf = new Role();
-		Role buble=new Role();
 		wolf.mapx = npcPara[3];
 		wolf.mapy = npcPara[4];
 		wolf.speed = npcPara[2];
@@ -69,60 +69,74 @@ public class CreateRole implements Common {
 		wolf.coorX = coors[RandomValue.getRandInt(0,4)];		
 		wolf.direction = ROLE_MOVE_RIGHT;         
 		
-		buble.width = bublePara[0];
-		buble.height = bublePara[1];
-		buble.mapx = wolf.mapx+36;
-		buble.mapy = buble.height - (wolf.mapy+42);      
-		buble.speed	= wolf.speed;
-		
-		wolf.role = buble;
 		npcs.addElement(wolf);
+	}
+	
+	/*气球*/
+	public void createBallon(Role wolf){
+		if(wolf.role != null){
+			return;
+		}
+		Role ballon = new Role();
+		ballon.id = RandomValue.getRandInt(Resource.id_balloon_blue, Resource.id_balloon_yellowred+1);
+		ballon.width = bublePara[0];
+		ballon.height = bublePara[1];
+		ballon.mapx = wolf.mapx+20;
+		ballon.mapy = ballon.height - (wolf.mapy+65);      
+		ballon.speed = wolf.speed;
+		
+		wolf.role = ballon;
 	}
 
 	public void showWolf(SGraphics g) {
-		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); // {399, 135}
-		Image wolf_down = Resource.loadImage(Resource.id_wolf_down); // 气球被击落时狼的图片
-		Image blue = Resource.loadImage(Resource.id_balloon_blue);
-		Image green = Resource.loadImage(Resource.id_balloon_green);
-		Image multicolour = Resource.loadImage(Resource.id_balloon_multicolour);
-		Image red = Resource.loadImage(Resource.id_balloon_red);
-		Image yellow = Resource.loadImage(Resource.id_balloon_yellow);
-		Image yellowRed = Resource.loadImage(Resource.id_balloon_yellowred);
+		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); 
+		Image wolf_down = Resource.loadImage(Resource.id_wolf_down);
 		//Image ladder = Resource.loadImage(Resource.id_ladder);
 		
 		int len = npcs.size();
-		Role wolf = null, buble = null;
+		Role wolf = null;
 		for(int i=0;i<len;i++){
 			wolf = (Role)npcs.elementAt(i);
+			
 			int tempx = wolf.mapx;
 			int tempy = wolf.mapy;
-			buble = wolf.role;
-			System.out.println("wolf.mapx:"+wolf.mapx);
-			System.out.println("wolf.mapy:"+wolf.mapy);
+			
 			if(wolf.direction == ROLE_MOVE_RIGHT){
 				tempx += wolf.speed;
 				wolf.mapx = tempx;
 				wolf.frame = (wolf.frame + 1) % 6; 
 				g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
 			}else if(wolf.direction == ROLE_MOVE_DOWN){
-				tempy += wolf.speed;
-				wolf.mapy = tempy;
+				createBallon(wolf);
+				Image ballon = Resource.loadImage(wolf.role.id);
+				int tempx_ballon = wolf.role.mapx;
+				int tempy_ballon = wolf.role.mapy;
+				if(wolf.role.frame<2){
+					wolf.role.frame = (wolf.role.frame+1);
+				}else{
+					tempy += wolf.speed;
+					wolf.mapy = tempy;
+					tempy_ballon += wolf.role.speed;
+					wolf.role.mapy = tempy_ballon;
+				}
 				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
+				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
 			}else if(wolf.direction == ROLE_MOVE_UP){
 				tempy -= wolf.speed;
 				wolf.mapy = tempy;
 				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
 			}
 			
+			/*向下的临界点*/
 			if(wolf.mapx == wolf.coorX){    
 				wolf.direction = ROLE_MOVE_DOWN;
 			}
-			
+			/*向右的临界点*/
 			if(wolf.mapy == 446){
 				wolf.direction = ROLE_MOVE_RIGHT;
 			}
-			
-			if(wolf.mapx == 424){     
+			/*向上临界点*/
+			if(wolf.mapx == 423){     
 				wolf.direction = ROLE_MOVE_UP;
 			}
 		}	

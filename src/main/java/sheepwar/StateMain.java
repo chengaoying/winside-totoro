@@ -52,7 +52,6 @@ public class StateMain implements Common{
 	public void execute(){
 		if(mainIndex == 0){
 			stateGame.weapon = new Weapon();
-			stateGame.attacks = new Attacks(engine);
 			stateGame.createRole = new CreateRole();
 			stateGame.own = stateGame.createRole.createSheep();
 		}

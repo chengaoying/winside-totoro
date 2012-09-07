@@ -19,7 +19,6 @@ public class StateGame implements Common{
 	
 	public CreateRole createRole;
 	public Weapon weapon;
-	public Attacks attacks;
 	public Role own; 
 	
 	public void handleKey(KeyState keyState){
@@ -66,23 +65,26 @@ public class StateGame implements Common{
 	}
 	
 	public void execute(){
-		if(engine.timePass(10000)){
+		if(engine.timePass(5000)){
 			createRole.createWolf();
 		}
-		int npcs = createRole.npcs.size();
-		int bombs = weapon.bombs.size();
-		for(int i=0;i<bombs;i++){
+		if(createRole.npcs.size()<1 || weapon.bombs.size()<1){
+			return;
+		}
+		for(int i=0;i<weapon.bombs.size();i++){
 			Weapon bomb = (Weapon) weapon.bombs.elementAt(i);
-			for(int j=0;j<npcs;j++){
+			for(int j=0;j<createRole.npcs.size();j++){
 				Role npc = (Role) createRole.npcs.elementAt(j);
-				Role role = npc.role;
-				if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, role.mapx, role.mapy, role.width, role.height)){
-					System.out.println("发生碰撞！");
+				Role ballon = npc.role;
+				if(ballon != null){
+					if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, ballon.mapx, ballon.mapy, ballon.width, ballon.height)){
+						createRole.npcs.removeElement(npc);
+						weapon.bombs.removeElement(bomb);
+					}
 				}
 			}
-			
 			/*子弹出界时移除*/
-			if((bomb.mapx+bomb.width)<=0){
+			if(bomb.mapx+bomb.width <=0){
 				weapon.bombs.removeElement(bomb);
 			}
 		}
@@ -102,7 +104,7 @@ public class StateGame implements Common{
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}//横放的绳子
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
-		Image bomb = Resource.loadImage(Resource.id_bomb); //{501,466}
+		//Image bomb = Resource.loadImage(Resource.id_bomb); //{501,466}
 //		Image blue = Resource.loadImage(Resource.id_balloon_blue);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
@@ -134,7 +136,7 @@ public class StateGame implements Common{
 
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
 				0, 342, 154+(own.mapy-154), TopLeft);
-		g.drawRegion(bomb, 0, 0, bomb.getWidth()/3, bomb.getHeight(), 0, 345-18, 40+own.mapy, TopLeft); //吊篮上的飞镖
+		//g.drawRegion(bomb, 0, 0, bomb.getWidth()/3, bomb.getHeight(), 0, 345-18, 40+own.mapy, TopLeft); //吊篮上的飞镖
 		
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
@@ -148,8 +150,6 @@ public class StateGame implements Common{
 			drawNum(g, i+4+1, 612, 223-17+i*73);//提示技能键5-8{}
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
-		
-	
 	
 	}
 	
