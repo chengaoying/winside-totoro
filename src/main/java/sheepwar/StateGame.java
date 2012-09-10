@@ -15,7 +15,6 @@ public class StateGame implements Common{
 	public static boolean HASWOLF_THREE;
 	public static boolean HASWOLF_FOUR;
 	
-	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;//ScrW屏幕宽度，tempx初始=ScrW，可以用表达式tempx-=1来使其移动
 	private SheepWarGameEngine engine;
 	
 	public StateGame(SheepWarGameEngine engine){
@@ -26,9 +25,21 @@ public class StateGame implements Common{
 	public Weapon weapon;
 	public Role own; 
 	
+	/*关卡信息*/
+	public static int[][] LEVEL_INFO = {
+		
+		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-*/
+		{1, 32, 3},  //第一关
+		{},  //第二关
+		{},  //第三关
+	};
+	
+	/*控制子弹发射的变量*/
 	private long startTime, endTime;
 	private boolean isAttack = true;
 	private int bulletInterval = 2;   //子弹发射间隔
+	
+	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;//ScrW屏幕宽度，tempx初始=ScrW，可以用表达式tempx-=1来使其移动
 	
 	public void handleKey(KeyState keyState){
 		
@@ -67,12 +78,6 @@ public class StateGame implements Common{
 			engine.status = STATUS_MAIN_MENU;
 			clear();
 		}
-		
-		
-		endTime = System.currentTimeMillis()/1000; 
-		if(endTime-startTime>=bulletInterval){
-			isAttack = true;
-		}
 	}
 	
 	public void show(SGraphics g){
@@ -86,7 +91,34 @@ public class StateGame implements Common{
 		if(engine.timePass(5000)){
 			createRole.createWolf();
 		}
-		System.out.println("npc.size:"+createRole.npcs.size());
+		
+		/*控制子弹发射间隔*/
+		endTime = System.currentTimeMillis()/1000; 
+		if(endTime-startTime>=bulletInterval){
+			isAttack = true;
+		}
+		
+		/*检测普通攻击是否击中目标*/
+		bombAttackNpcs();
+		
+		/*移除死亡对象*/
+		removeDeath();
+		
+	}
+	
+	
+	/*移除死亡对象*/
+	private void removeDeath(){
+		for(int j=createRole.npcs.size()-1;j>=0;j--){
+			Role npc = (Role) createRole.npcs.elementAt(j);
+			if(npc.status == ROLE_DEATH && npc.mapy >= 446){
+				createRole.npcs.removeElement(npc);
+			}
+		}
+	}
+	
+	/*判断普通攻击是否击中目标*/
+	private void bombAttackNpcs(){
 		for(int i=weapon.bombs.size()-1;i>=0;i--){
 			Weapon bomb = (Weapon) weapon.bombs.elementAt(i);
 			for(int j=createRole.npcs.size()-1;j>=0;j--){
@@ -94,15 +126,10 @@ public class StateGame implements Common{
 				Role ballon = npc.role;
 				if(ballon != null && npc.status == ROLE_ALIVE){
 					if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, ballon.mapx, ballon.mapy, ballon.width, ballon.height)){
-						System.out.println("击中对象");
 						npc.status = ROLE_DEATH;
+						npc.speed += 10;
 						weapon.bombs.removeElement(bomb);
 					}
-				}
-				/*移除死亡对象*/
-				if(npc.status == ROLE_DEATH && npc.mapy >= 446){
-					System.out.println("移除死亡对象");
-					createRole.npcs.removeElement(npc);
 				}
 			}
 			/*子弹出界时移除*/
@@ -114,18 +141,18 @@ public class StateGame implements Common{
 	
 	private void drawGamePlaying(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
-		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);// {491,0}
+		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);
 		Image playing_cloudbig = Resource.loadImage(Resource.id_playing_cloudbig);
-		Image playing_cloudsmall = Resource.loadImage(Resource.id_playing_cloudsmall);// {404,164}
-		Image playing_lawn = Resource.loadImage(Resource.id_playing_lawn);// {0,499}
-		Image playing_step = Resource.loadImage(Resource.id_playing_step);// {377,153},{377,240}{377,324}{377,409} Y 相差89
-		Image playing_tree = Resource.loadImage(Resource.id_playing_tree);// {0,72}
-		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);//{374,132}
-		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi); //{379,154}
-		Image playing_lift = Resource.loadImage(Resource.id_playing_lift); //{342,303}
-		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}//横放的绳子
-		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
-		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
+		Image playing_cloudsmall = Resource.loadImage(Resource.id_playing_cloudsmall);
+		Image playing_lawn = Resource.loadImage(Resource.id_playing_lawn);
+		Image playing_step = Resource.loadImage(Resource.id_playing_step);
+		Image playing_tree = Resource.loadImage(Resource.id_playing_tree);
+		Image playing_lunzi = Resource.loadImage(Resource.id_playing_lunzi);
+		Image playing_shenzi = Resource.loadImage(Resource.id_playing_shenzi);
+		Image playing_lift = Resource.loadImage(Resource.id_playing_lift);
+		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1);
+		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu);
+		Image playing_stop = Resource.loadImage(Resource.id_playing_stop);
 		Image ladder = Resource.loadImage(Resource.id_ladder);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
@@ -158,13 +185,13 @@ public class StateGame implements Common{
 
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
 				0, 342, 154+(own.mapy-154), TopLeft);
-		//g.drawRegion(bomb, 0, 0, bomb.getWidth()/3, bomb.getHeight(), 0, 345-18, 40+own.mapy, TopLeft); //吊篮上的飞镖
 		
 		g.drawImage(playing_lunzi, 374,132, TopLeft);
 		g.drawImage(playing_menu, 491, 0, TopLeft);
-		for(int i=0;i<4;i++){                                                                //游戏中的左侧框内容---道具内容
+		
+		for(int i=0;i<4;i++){                                                                
 			g.drawImage(playing_prop_memu, 497,185+i*68, TopLeft);
-			drawProp(g, i, 497+5,185+i*(68+3));                                              //第一列对应原图片中的前四个
+			drawProp(g, i, 497+5,185+i*(68+3));                                              
 			drawNum(g, i+1, 540+7, 223-17+i*73);//提示技能按键：1-4{540,223}
 			
 			g.drawImage(playing_prop_memu, 564,185+i*68, TopLeft);
@@ -172,7 +199,6 @@ public class StateGame implements Common{
 			drawNum(g, i+4+1, 612, 223-17+i*73);//提示技能键5-8{}
 		}
 		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
-	
 	}
 	
 	private void moveRole(int towards) {

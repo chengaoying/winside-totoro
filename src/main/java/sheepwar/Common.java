@@ -25,4 +25,9 @@ public interface Common {
 	public final static short ON_THREE_LADDER = 3;  		//角色在第三个梯子上
 	public final static short ON_FOUR_LADDER = 4;  			//角色在第四个梯子上
 	
+	/*狼在空中分布方式*/
+	public final static short SPREED_BELOW = 1;			//斜下直线
+	public final static short SPREED_ABOVE = 2;			//斜上直线
+	public final static short SPREED_VERTICAL = 3;		//竖直
+	
 }

@@ -12,10 +12,11 @@ public class Role {
 	int lifeNum; 		//生命数
 	int speed;			//移动速度
 	int scores; 		//积分
-	int skill; 			//技能，
 	int coorX;			//下落点
 	int height;         //角色自身高度
 	int width;          //角色自身宽度
+	int eatNum;			//单关击中的狼数
+	
 	
 	Role role;		   //子对象
 }
