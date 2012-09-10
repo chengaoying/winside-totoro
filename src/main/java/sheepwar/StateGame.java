@@ -88,15 +88,15 @@ public class StateGame implements Common{
 	}
 	
 	public void execute(){
-		if(engine.timePass(5000)){
-			createRole.createWolf();
-		}
 		
 		/*控制子弹发射间隔*/
 		endTime = System.currentTimeMillis()/1000; 
 		if(endTime-startTime>=bulletInterval){
 			isAttack = true;
 		}
+		
+		/*创建狼*/
+		createNpc();
 		
 		/*检测普通攻击是否击中目标*/
 		bombAttackNpcs();
@@ -106,8 +106,13 @@ public class StateGame implements Common{
 		
 	}
 	
+	private void createNpc(){
+		if(engine.timePass(2000)){
+			createRole.createWolf();
+		}
+
+	}
 	
-	/*移除死亡对象*/
 	private void removeDeath(){
 		for(int j=createRole.npcs.size()-1;j>=0;j--){
 			Role npc = (Role) createRole.npcs.elementAt(j);
@@ -117,7 +122,6 @@ public class StateGame implements Common{
 		}
 	}
 	
-	/*判断普通攻击是否击中目标*/
 	private void bombAttackNpcs(){
 		for(int i=weapon.bombs.size()-1;i>=0;i--){
 			Weapon bomb = (Weapon) weapon.bombs.elementAt(i);

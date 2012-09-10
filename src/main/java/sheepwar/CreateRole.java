@@ -179,25 +179,21 @@ public class CreateRole implements Common {
 		if(!StateGame.HASWOLF_ONE){
 			wolf.position = ON_ONE_LADDER;
 			StateGame.HASWOLF_ONE = true;
-			System.out.println(1);
 			return;
 		}
 		if(!StateGame.HASWOLF_TWO){
 			wolf.position = ON_TWO_LADDER;
 			StateGame.HASWOLF_TWO = true;
-			System.out.println(2);
 			return;
 		}
 		if(!StateGame.HASWOLF_THREE){
 			wolf.position = ON_THREE_LADDER;
 			StateGame.HASWOLF_THREE = true;
-			System.out.println(3);
 			return;
 		}
 		if(!StateGame.HASWOLF_FOUR){
 			wolf.position = ON_FOUR_LADDER;
 			StateGame.HASWOLF_FOUR = true;
-			System.out.println(4);
 			return;
 		}
 	}
