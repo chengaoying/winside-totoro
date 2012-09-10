@@ -49,15 +49,11 @@ public class Weapon implements Common {
 	 * @param g
 	 */
 	public void showBomb(SGraphics g){
-		int len = bombs.size()-1;
-		System.out.println("len:"+len);
-		if(len<1){
-			return;
-		}
+		int len = bombs.size();
 		Image bomb = Resource.loadImage(Resource.id_bomb);
 		Weapon w = null;
 		int tempx, tempy;
-		for(int i=0; i<len; i++){
+		for(int i=len-1; i>=0; i--){
 			w = (Weapon)bombs.elementAt(i);
 			tempx = w.mapx;
 			tempy = w.mapy;

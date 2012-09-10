@@ -22,6 +22,9 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public StateMain stateMain;
 	public StateGame stateGame;
+	
+	/*ÓÎÏ·¹Ø¿¨*/
+	public short level;  
 
 	private SheepWarGameEngine(MIDlet midlet) {
 		super(midlet);

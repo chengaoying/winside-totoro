@@ -17,9 +17,12 @@ public interface Common {
 	public final static int ScrW = SheepWarGameEngine.ScrW;
 	public final static int ScrH = SheepWarGameEngine.ScrH;
 	
-	public final static int gameMapX = 640;                 //游戏区域的宽度
-	public final static int gameMapY = 530;                  //游戏区域的高度
+	public final static short ROLE_ALIVE = 0; 			//角色活着状态 
+	public final static short ROLE_DEATH = -1;  		//角色活着状态 
 	
-	//public static int sheepMapY = 290;                     //364-74:羊上下移动的限制范围
+	public final static short ON_ONE_LADDER = 1; 			//角色在第一个梯子上
+	public final static short ON_TWO_LADDER = 2;  			//角色在第二个梯子上 
+	public final static short ON_THREE_LADDER = 3;  		//角色在第三个梯子上
+	public final static short ON_FOUR_LADDER = 4;  			//角色在第四个梯子上
 	
 }

@@ -61,6 +61,7 @@ public class CreateRole implements Common {
 	/*狼*/
 	public void createWolf() {
 		Role wolf = new Role();
+		wolf.status = ROLE_ALIVE;
 		wolf.mapx = npcPara[3];
 		wolf.mapy = npcPara[4];
 		wolf.speed = npcPara[2];
@@ -91,39 +92,67 @@ public class CreateRole implements Common {
 	public void showWolf(SGraphics g) {
 		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); 
 		Image wolf_down = Resource.loadImage(Resource.id_wolf_down);
-		//Image ladder = Resource.loadImage(Resource.id_ladder);
-		
 		int len = npcs.size();
 		Role wolf = null;
 		for(int i=0;i<len;i++){
 			wolf = (Role)npcs.elementAt(i);
-			
 			int tempx = wolf.mapx;
 			int tempy = wolf.mapy;
-			
-			if(wolf.direction == ROLE_MOVE_RIGHT){
+			if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
 				tempx += wolf.speed;
 				wolf.mapx = tempx;
 				wolf.frame = (wolf.frame + 1) % 6; 
 				g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
-			}else if(wolf.direction == ROLE_MOVE_DOWN){
-				createBallon(wolf);
-				Image ballon = Resource.loadImage(wolf.role.id);
+			}else if(wolf.direction == ROLE_MOVE_DOWN){   //向下走
+				createBallon(wolf); //创建气球
 				int tempx_ballon = wolf.role.mapx;
 				int tempy_ballon = wolf.role.mapy;
-				if(wolf.role.frame<2){
-					wolf.role.frame = (wolf.role.frame+1);
-				}else{
-					tempy += wolf.speed;
-					wolf.mapy = tempy;
-					tempy_ballon += wolf.role.speed;
-					wolf.role.mapy = tempy_ballon;
+				Image ballon = Resource.loadImage(wolf.role.id);
+				if(wolf.status == ROLE_ALIVE){
+					if(wolf.role.frame<2){
+						wolf.role.frame = (wolf.role.frame+1);
+					}else{
+						tempy += wolf.speed;
+						wolf.mapy = tempy;
+						tempy_ballon += wolf.role.speed;
+						wolf.role.mapy = tempy_ballon;
+					}
+					g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
+					g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+				}else if(wolf.status == ROLE_DEATH){
+					if(wolf.role.frame<4){
+						wolf.role.frame = (wolf.role.frame+1);
+						g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+					}else{
+						tempy += wolf.speed;
+						wolf.mapy = tempy;
+					}
+					g.drawImage(wolf_down, tempx, tempy, TopLeft);
 				}
-				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
-				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
-			}else if(wolf.direction == ROLE_MOVE_UP){
-				tempy -= wolf.speed;
-				wolf.mapy = tempy;
+				
+			}else if(wolf.direction == ROLE_MOVE_UP){    //向上走
+				System.out.println("wolf.posiion:"+wolf.position);
+				if(wolf.position == ON_ONE_LADDER){
+					if(tempy >= 183){
+						tempy -= wolf.speed;
+						wolf.mapy = tempy;
+					}
+				}else if(wolf.position == ON_TWO_LADDER){
+					if(tempy >= 183+89){
+						tempy -= wolf.speed;
+						wolf.mapy = tempy;
+					}
+				}else if(wolf.position == ON_THREE_LADDER){
+					if(tempy >= 183+89*2){
+						tempy -= wolf.speed;
+						wolf.mapy = tempy;
+					}
+				}else if(wolf.position == ON_FOUR_LADDER){
+					if(tempy >= 183+89*3){
+						tempy -= wolf.speed;
+						wolf.mapy = tempy;
+					}
+				}
 				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, TopLeft);
 			}
 			
@@ -138,8 +167,38 @@ public class CreateRole implements Common {
 			/*向上临界点*/
 			if(wolf.mapx == 423){     
 				wolf.direction = ROLE_MOVE_UP;
+				if(wolf.position == 0){
+					setWolfLadders(wolf);
+				}
 			}
 		}	
-		
+	}
+	
+	/*没有被攻击到的狼，设置它在梯子上的位置*/
+	private void setWolfLadders(Role wolf){
+		if(!StateGame.HASWOLF_ONE){
+			wolf.position = ON_ONE_LADDER;
+			StateGame.HASWOLF_ONE = true;
+			System.out.println(1);
+			return;
+		}
+		if(!StateGame.HASWOLF_TWO){
+			wolf.position = ON_TWO_LADDER;
+			StateGame.HASWOLF_TWO = true;
+			System.out.println(2);
+			return;
+		}
+		if(!StateGame.HASWOLF_THREE){
+			wolf.position = ON_THREE_LADDER;
+			StateGame.HASWOLF_THREE = true;
+			System.out.println(3);
+			return;
+		}
+		if(!StateGame.HASWOLF_FOUR){
+			wolf.position = ON_FOUR_LADDER;
+			StateGame.HASWOLF_FOUR = true;
+			System.out.println(4);
+			return;
+		}
 	}
 }

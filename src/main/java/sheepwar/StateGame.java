@@ -1,7 +1,6 @@
 package sheepwar;
 
 import javax.microedition.lcdui.Image;
-
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
@@ -9,6 +8,12 @@ import cn.ohyeah.stb.util.Collision;
 import cn.ohyeah.stb.util.RandomValue;
 
 public class StateGame implements Common{
+	
+	/*从上往下判断四个梯子上是否有狼*/
+	public static boolean HASWOLF_ONE;
+	public static boolean HASWOLF_TWO;
+	public static boolean HASWOLF_THREE;
+	public static boolean HASWOLF_FOUR;
 	
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;//ScrW屏幕宽度，tempx初始=ScrW，可以用表达式tempx-=1来使其移动
 	private SheepWarGameEngine engine;
@@ -21,6 +26,10 @@ public class StateGame implements Common{
 	public Weapon weapon;
 	public Role own; 
 	
+	private long startTime, endTime;
+	private boolean isAttack = true;
+	private int bulletInterval = 2;   //子弹发射间隔
+	
 	public void handleKey(KeyState keyState){
 		
 		if (keyState.containsMoveEventAndRemove(KeyCode.UP)) {
@@ -29,9 +38,12 @@ public class StateGame implements Common{
 		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
 			moveRole(1);
 			
-		} else if (keyState.contains(KeyCode.OK)) {				 // 普通攻击
-			keyState.remove(KeyCode.OK);
-			weapon.createBomb(own, 2);
+		} else if (keyState.containsAndRemove(KeyCode.OK)) {	
+			if(isAttack){ //普通攻击
+				weapon.createBomb(own, 2);
+				startTime = System.currentTimeMillis()/1000;
+				isAttack = false;
+			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM1)){    	//时光闹钟
 			
@@ -55,6 +67,12 @@ public class StateGame implements Common{
 			engine.status = STATUS_MAIN_MENU;
 			clear();
 		}
+		
+		
+		endTime = System.currentTimeMillis()/1000; 
+		if(endTime-startTime>=bulletInterval){
+			isAttack = true;
+		}
 	}
 	
 	public void show(SGraphics g){
@@ -68,19 +86,23 @@ public class StateGame implements Common{
 		if(engine.timePass(5000)){
 			createRole.createWolf();
 		}
-		if(createRole.npcs.size()<1 || weapon.bombs.size()<1){
-			return;
-		}
-		for(int i=0;i<weapon.bombs.size();i++){
+		System.out.println("npc.size:"+createRole.npcs.size());
+		for(int i=weapon.bombs.size()-1;i>=0;i--){
 			Weapon bomb = (Weapon) weapon.bombs.elementAt(i);
-			for(int j=0;j<createRole.npcs.size();j++){
+			for(int j=createRole.npcs.size()-1;j>=0;j--){
 				Role npc = (Role) createRole.npcs.elementAt(j);
 				Role ballon = npc.role;
-				if(ballon != null){
+				if(ballon != null && npc.status == ROLE_ALIVE){
 					if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, ballon.mapx, ballon.mapy, ballon.width, ballon.height)){
-						createRole.npcs.removeElement(npc);
+						System.out.println("击中对象");
+						npc.status = ROLE_DEATH;
 						weapon.bombs.removeElement(bomb);
 					}
+				}
+				/*移除死亡对象*/
+				if(npc.status == ROLE_DEATH && npc.mapy >= 446){
+					System.out.println("移除死亡对象");
+					createRole.npcs.removeElement(npc);
 				}
 			}
 			/*子弹出界时移除*/
@@ -104,8 +126,7 @@ public class StateGame implements Common{
 		Image playing_shenzi1 = Resource.loadImage(Resource.id_playing_shenzi1); //{399, 135}//横放的绳子
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu); //{497,192}{564,192}//上下相差70
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop); //{501,466}
-		//Image bomb = Resource.loadImage(Resource.id_bomb); //{501,466}
-//		Image blue = Resource.loadImage(Resource.id_balloon_blue);
+		Image ladder = Resource.loadImage(Resource.id_ladder);
 		g.drawImage(game_bg, 0, 0, TopLeft);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -130,6 +151,7 @@ public class StateGame implements Common{
 		g.drawImage(playing_shenzi1, 399, 135, TopLeft);
 		for(int i=0;i<4;i++){   //阶梯
 			g.drawImage(playing_step, 377, 153+i*89, TopLeft);
+			g.drawImage(ladder, 426, 183+i*89, TopLeft);
 		}
 		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), (own.mapy-154),        //上下移动的绳子
 				0, 379, 154, TopLeft);                                                        //竖直绳子 的纵坐标 154
