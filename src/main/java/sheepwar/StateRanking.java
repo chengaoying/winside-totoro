@@ -57,65 +57,65 @@ public class StateRanking implements Common{
 		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
 		Image ranking_word=Resource.loadImage(Resource.id_ranking_word);    
 		Image slash = Resource.loadImage(Resource.id_slash);
-		g.drawImage(game_bg, 0, 0, TopLeft);
-		g.drawImage(achievement_out1, 61,462, TopLeft);
+		g.drawImage(game_bg, 0, 0, 20);
+		g.drawImage(achievement_out1, 61,462, 20);
 		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX 左侧x坐标，rankLeftYSpace 上下间距
 		int rankShadowX = 4,rankShadowY = 4;								//排行阴影效果坐标差
 		
 		for(int i=0;i<3;i++){//排行左侧条目
-//			g.drawImage(ranking_option1, rankLeftX, rankLeftY+i*54, TopLeft);
+//			g.drawImage(ranking_option1, rankLeftX, rankLeftY+i*54, 20);
 			g.drawRegion(ranking_option1, 0, 0, ranking_option1.getWidth(), ranking_option1.getHeight(), 0,
-					rankLeftX, rankLeftY+(ranking_option1.getHeight()+rankLeftYSpace)*i, TopLeft);
+					rankLeftX, rankLeftY+(ranking_option1.getHeight()+rankLeftYSpace)*i, 20);
 			if(rankY ==i){     		
 				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
-						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 				g.drawRegion(ranking_word,0,
 						i*ranking_word.getHeight() / 3, ranking_word.getWidth(),
 						ranking_word.getHeight() / 3, 0, rankLeftX-rankShadowX+8,
-						rankLeftY-rankShadowY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+						rankLeftY-rankShadowY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 			}else{
 				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
-						rankLeftX, rankLeftY+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+						rankLeftX, rankLeftY+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 				g.drawRegion(ranking_word,0,
 						i*ranking_word.getHeight() / 3, ranking_word.getWidth(),
 						ranking_word.getHeight() / 3, 0, rankLeftX+8,
-						rankLeftY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, TopLeft);
+						rankLeftY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 			}
 		}
-		g.drawImage(shop_big, 233,101, TopLeft);
+		g.drawImage(shop_big, 233,101, 20);
 //		drawNum(g, rankingIndex+1, rankLeftX+achievement_left_right1.getWidth()/2, rankLeftY+8);
-		g.drawImage(slash, 523-slash.getWidth()/2, 447, TopLeft);								//画出斜杠
-		g.drawImage(ranking_show,241,108, TopLeft);
+		g.drawImage(slash, 523-slash.getWidth()/2, 447, 20);								//画出斜杠
+		g.drawImage(ranking_show,241,108, 20);
 		for(int i=0;i<5;i++){
-			g.drawImage(ranking_stripe,241,151+i*57, TopLeft);
+			g.drawImage(ranking_stripe,241,151+i*57, 20);
 		}
-		g.drawImage(current_ranking, 253,448, TopLeft);
-		g.drawImage(ranking, 232,18, TopLeft);
+		g.drawImage(current_ranking, 253,448, 20);
+		g.drawImage(ranking, 232,18, 20);
 		
 		int rankLeftRightX = 457,rankLeftRightY = 440,rankLeftRightSpace = 60;  	//按钮的横纵坐标和按钮之间的间隙
 		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2, 		//翻页左按钮
-				achievement_left_right1.getHeight(), 0, rankLeftRightX, rankLeftRightY, TopLeft);
+				achievement_left_right1.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
 		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//翻页右按钮
 				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-				0, rankLeftRightX+rankLeftRightSpace+achievement_left_right1.getWidth()/2, rankLeftRightY, TopLeft);
+				0, rankLeftRightX+rankLeftRightSpace+achievement_left_right1.getWidth()/2, rankLeftRightY, 20);
 		if(rankX == 1){
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, rankLeftRightX-rankShadowX, rankLeftRightY-rankShadowY, TopLeft);
+					achievement_left_right.getHeight(), 0, rankLeftRightX-rankShadowX, rankLeftRightY-rankShadowY, 20);
 			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
 					achievement_left_right.getHeight(), 0, rankLeftRightX+rankLeftRightSpace+achievement_left_right.getWidth()/2,
-					rankLeftRightY, TopLeft);
+					rankLeftRightY, 20);
 		}else if(rankX == 2){
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, TopLeft);
+					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
 			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
 					achievement_left_right.getHeight(), 0, rankLeftRightX-rankShadowX+rankLeftRightSpace+achievement_left_right.getWidth()/2,
-					rankLeftRightY-rankShadowY, TopLeft);
+					rankLeftRightY-rankShadowY, 20);
 		}else{
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, TopLeft);
+					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
 			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0,			//翻页右按钮
 					achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-					0, rankLeftRightX+rankLeftRightSpace+achievement_left_right.getWidth()/2, rankLeftRightY, TopLeft);
+					0, rankLeftRightX+rankLeftRightSpace+achievement_left_right.getWidth()/2, rankLeftRightY, 20);
 		}
 	
 	}

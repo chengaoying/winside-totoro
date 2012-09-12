@@ -25,6 +25,7 @@ public class Weapon implements Common {
 	
 	public final static int WEAPON_MOVE_LEFT = 0;
 	public final static int WEAPON_MOVE_RIGHT = 1;
+	public final static int WEAPON_MOVE_DOWN = 2;
 	
 	public Vector bombs = new Vector();
 	
@@ -40,7 +41,7 @@ public class Weapon implements Common {
 		w.mapy = own.mapy+45;  
 		w.width = 18;
 		w.height = 19;
-		w.speedX = 6;
+		w.speedX = 10;
 		bombs.addElement(w);
 	}
 	
@@ -52,14 +53,21 @@ public class Weapon implements Common {
 		int len = bombs.size();
 		Image bomb = Resource.loadImage(Resource.id_bomb);
 		Weapon w = null;
-		int tempx, tempy;
+		int tempx=0, tempy=0;
 		for(int i=len-1; i>=0; i--){
 			w = (Weapon)bombs.elementAt(i);
-			tempx = w.mapx;
-			tempy = w.mapy;
-			tempx -= w.speedX;
-			w.mapx = tempx;
-			w.frame = (w.frame+1)%3;
+			if(w.direction == WEAPON_MOVE_LEFT){
+				tempx = w.mapx;
+				tempy = w.mapy;
+				tempx -= w.speedX;
+				w.mapx = tempx;
+				w.frame = (w.frame+1)%3;
+			}else if(w.direction == WEAPON_MOVE_DOWN){
+				tempx = w.mapx;
+				tempy = w.mapy;
+				tempy += w.speedY;
+				w.mapy = tempy;
+			}
 			g.drawRegion(bomb, w.frame *bomb.getWidth()/3, 0, bomb.getWidth()/3, bomb.getHeight(), 0, tempx, tempy, 0);
 		}
 	}

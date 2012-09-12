@@ -53,42 +53,42 @@ public class StateHelp implements Common{
 		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);   //{}
 		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);   //{380,452}
 		Image slash = Resource.loadImage(Resource.id_slash);
-		g.drawImage(game_bg, 0, 0, TopLeft);
-		g.drawImage(shop_big, 137, 108, TopLeft);
+		g.drawImage(game_bg, 0, 0, 20);
+		g.drawImage(shop_big, 137, 108, 20);
 		
 		int helpLeftRightX = 380,helpLeftRightY = 452,sapceLeftRight = 52;				//帮助界面中的按钮横纵坐标,sapceLeftRight左右间距
 		int helpShadowX = 4,helpShadowY = 4;
-		g.drawImage(slash, helpLeftRightX+achievement_left_right.getWidth()/2+15, helpLeftRightY+7, TopLeft);
+		g.drawImage(slash, helpLeftRightX+achievement_left_right.getWidth()/2+15, helpLeftRightY+7, 20);
 		drawNum(g, 3, helpLeftRightX+achievement_left_right.getWidth()/2+slash.getWidth()+14, helpLeftRightY+8);
 		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2, 		//翻页左按钮
-				achievement_left_right1.getHeight(), 0, helpLeftRightX, helpLeftRightY, TopLeft);
+				achievement_left_right1.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
 		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//翻页右按钮
 				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-				0, helpLeftRightX+sapceLeftRight+achievement_left_right1.getWidth()/2, helpLeftRightY, TopLeft);
+				0, helpLeftRightX+sapceLeftRight+achievement_left_right1.getWidth()/2, helpLeftRightY, 20);
 		if(helpX == 0){
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX, helpLeftRightY-helpShadowY, TopLeft);
+					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX, helpLeftRightY-helpShadowY, 20);
 			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8); 		//页面码
 			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
 					achievement_left_right.getHeight(), 0, helpLeftRightX+sapceLeftRight+achievement_left_right.getWidth()/2,
-					helpLeftRightY, TopLeft);
+					helpLeftRightY, 20);
 		}else if(helpX == 1){
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, TopLeft);
+					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
 			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8);; 		//页面码
 			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
 					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX+sapceLeftRight+achievement_left_right.getWidth()/2,
-					helpLeftRightY-helpShadowY, TopLeft);
+					helpLeftRightY-helpShadowY, 20);
 		}else{
 			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//翻页左按钮
-					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, TopLeft);
+					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
 			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8); 		//页面码
 			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0,			//翻页右按钮
 					achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-					0, helpLeftRightX+sapceLeftRight+achievement_left_right.getWidth()/2, helpLeftRightY, TopLeft);
+					0, helpLeftRightX+sapceLeftRight+achievement_left_right.getWidth()/2, helpLeftRightY, 20);
 		}
-		g.drawImage(game_help, 214,18, TopLeft);
-		g.drawImage(achievement_out1, 17,498, TopLeft);
+		g.drawImage(game_help, 214,18, 20);
+		g.drawImage(achievement_out1, 17,498, 20);
 		g.setColor(0xffffff);				//设置字体颜色
 		engine.setFont(19);					//设置字体大小
 		TextView.showMultiLineText(g, Resource.gameInfo[helpIndex], 8,150, 130, 360, 334);			//写出描述信息

@@ -58,22 +58,22 @@ public class StateShop implements Common{
 		Image price_quantity = Resource.loadImage(Resource.id_price_quantity);
 		Image shop = Resource.loadImage(Resource.id_shop);//{217,18}
 		Image playing_prop=Resource.loadImage(Resource.id_playing_prop);
-		g.drawImage(game_bg, 0, 0, TopLeft);
-		g.drawImage(shop, 217, 18, TopLeft);
-		g.drawImage(shop_big, 29, 103, TopLeft);
-		g.drawImage(shop_balance, 46, 454, TopLeft);
+		g.drawImage(game_bg, 0, 0, 20);
+		g.drawImage(shop, 217, 18, 20);
+		g.drawImage(shop_big, 29, 103, 20);
+		g.drawImage(shop_balance, 46, 454, 20);
 	
 		int x =42, y = 120, spaceX = 15, spaceY = 8;//
 		for(int i=0;i<4;i++){
 			for(int j=0;j<2;j++){
 				g.drawRegion(shop_small_base, 0, 0, shop_small_base.getWidth(), shop_small_base.getHeight(),
-						0, x+(spaceX+shop_small_base.getWidth())*j, y+(spaceY+shop_small_base.getHeight())*i, TopLeft);
+						0, x+(spaceX+shop_small_base.getWidth())*j, y+(spaceY+shop_small_base.getHeight())*i, 20);
 			}
 		}
-		g.drawImage(shop_midding, 434, 103, TopLeft);
+		g.drawImage(shop_midding, 434, 103, 20);
 		for(int i=0;i<2;i++){             //midding下的按钮阴影
 			g.drawRegion(shop_out_base, 0, 0, shop_out_base.getWidth(), shop_out_base.getHeight(), 
-					0, 457, 381+(spaceY+shop_out_base.getHeight())*i, TopLeft);
+					0, 457, 381+(spaceY+shop_out_base.getHeight())*i, 20);
 			}
 		int mapx=37,mapy=112;       //被选中后出现阴影效果的坐标
 		int propMessageX = 444,propMessageY = 140,propMessageW = 162,propMessageH = 220 ;		//propMessageX 信息出现的横纵坐标和显示的宽高
@@ -82,11 +82,11 @@ public class StateShop implements Common{
 		     for(int j=0;j<2;j++){
 				if(shopX==j && shopY==i){
 					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(),
-							0, mapx+(spaceX+shop_small.getWidth())*j, mapy+(spaceY+shop_small.getHeight())*i, TopLeft);
+							0, mapx+(spaceX+shop_small.getWidth())*j, mapy+(spaceY+shop_small.getHeight())*i, 20);
 					g.drawImage(price_quantity, mapx+(spaceX+shop_small.getWidth())*j+65, 
-							mapy+(spaceY+shop_small.getHeight())*i+12, TopLeft);
+							mapy+(spaceY+shop_small.getHeight())*i+12, 20);
 					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
-							mapx+(spaceX+shop_small.getWidth())*j+8, mapy+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+							mapx+(spaceX+shop_small.getWidth())*j+8, mapy+(spaceY+shop_small.getHeight())*i+9, 20);
 					drawNum(g, 111, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+11);
 					drawNum(g, 333, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+36);
 					g.setColor(0xffffff);				//设置字体颜色
@@ -96,11 +96,11 @@ public class StateShop implements Common{
 					engine.setDefaultFont();
 				}else{
 					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(), 0,
-							x+(spaceX+shop_small.getWidth())*j, y+(spaceY+shop_small.getHeight())*i, TopLeft);
+							x+(spaceX+shop_small.getWidth())*j, y+(spaceY+shop_small.getHeight())*i, 20);
 					g.drawImage(price_quantity, x+(spaceX+shop_small.getWidth())*j+65, 
-							y+(spaceY+shop_small.getHeight())*i+12, TopLeft);
+							y+(spaceY+shop_small.getHeight())*i+12, 20);
 					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
-							x+(spaceX+shop_small.getWidth())*j+8, y+(spaceY+shop_small.getHeight())*i+9, TopLeft);
+							x+(spaceX+shop_small.getWidth())*j+8, y+(spaceY+shop_small.getHeight())*i+9, 20);
 					drawNum(g, 111, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+11);
 					drawNum(g, 333, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+36);
 				}
@@ -108,15 +108,15 @@ public class StateShop implements Common{
 		}
 		 if(shopX==2){          //充值和返回被选择的阴影效果
 			 if(shopY==0){    //控制方向由左到右的入口方向
-				 g.drawImage(shop_go_pay, 457-8, 381-5, TopLeft);
-			   	 g.drawImage(shop_out, 457, 429, TopLeft);
+				 g.drawImage(shop_go_pay, 457-8, 381-5, 20);
+			   	 g.drawImage(shop_out, 457, 429, 20);
 			  }else{
-				 g.drawImage(shop_go_pay, 457, 381, TopLeft);
-			   	 g.drawImage(shop_out, 457-8, 429-5, TopLeft);
+				 g.drawImage(shop_go_pay, 457, 381, 20);
+			   	 g.drawImage(shop_out, 457-8, 429-5, 20);
 			 }
 		    }else{
-		    	g.drawImage(shop_go_pay, 457, 381, TopLeft);
-		   		g.drawImage(shop_out, 457, 429, TopLeft);
+		    	g.drawImage(shop_go_pay, 457, 381, 20);
+		   		g.drawImage(shop_out, 457, 429, 20);
 		    }
 		drawNum(g, 10, 103,452);                                          //TODO 添加数字
 	

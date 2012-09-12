@@ -17,7 +17,7 @@ public class Resource implements Common {
 	public static short id_main_bg = NUMS++;
 	public static short id_main_menu = NUMS++;
 	
-	public static short id_playing_menu = NUMS++;//游戏中 的界面
+	public static short id_playing_menu = NUMS++;
 	public static short id_playing_cloudbig = NUMS++;
 	public static short id_playing_cloudsmall = NUMS++;
 	public static short id_playing_lawn = NUMS++;
@@ -26,10 +26,10 @@ public class Resource implements Common {
 	public static short id_playing_stop = NUMS++;
 	public static short id_game_bg = NUMS++;
 	public static short id_playing_prop_memu = NUMS++;
-	public static short id_playing_prop = NUMS++;      //左侧菜单商品栏
-	public static short id_playing_lunzi = NUMS++;     //滑轮
-	public static short id_playing_shenzi = NUMS++;    //绳子
-	public static short id_playing_lift = NUMS++;      //羊的吊篮
+	public static short id_playing_prop = NUMS++;      
+	public static short id_playing_lunzi = NUMS++;    
+	public static short id_playing_shenzi = NUMS++;   
+	public static short id_playing_lift = NUMS++;     
 	public static short id_playing_shenzi1 = NUMS++;
 	public static short id_playing_sheep = NUMS++;
 	public static short id_sheep_eye = NUMS++;
@@ -37,6 +37,7 @@ public class Resource implements Common {
 	public static short id_bomb = NUMS++;
 	public static short id_wolf_run = NUMS++;
 	public static short id_wolf_down = NUMS++;
+	public static short id_wolf_climb = NUMS++;
 	public static short id_balloon_blue = NUMS++;      
 	public static short id_balloon_green = NUMS++;
 	public static short id_balloon_multicolour = NUMS++;
@@ -69,7 +70,7 @@ public class Resource implements Common {
 	public static short id_archivement_hoof1 = NUMS++;
 	public static short id_achievement_word = NUMS++;
 	public static short id_achievement_left = NUMS++;
-	public static short id_slash = NUMS++;				//分号，斜杠
+	public static short id_slash = NUMS++;				
 	
 	public static short id_current_ranking = NUMS++;//排行界面
 	public static short id_ranking_option = NUMS++;
@@ -78,6 +79,9 @@ public class Resource implements Common {
 	public static short id_ranking = NUMS++;
 	public static short id_ranking_show = NUMS++;
 	public static short id_ranking_word = NUMS++;			//排行文字
+	
+	public static short id_playing_level= NUMS++;			
+	public static short id_playing_point = NUMS++;			
 	
 	
 	public static short id_game_help = NUMS++;     //游戏帮助
@@ -96,9 +100,9 @@ public class Resource implements Common {
 		"/game_bg.jpg",
 		"/playing_prop_memu.png",
 		"/playing_prop.png",
-		"/playing_lunzi.png",//绳子“微分化”可以活动
+		"/playing_lunzi.png",
 		"/playing_shenzi.png",
-		"/playing_lift.png",     //羊的吊篮
+		"/playing_lift.png",    
 		"/playing_shenzi1.png",
 		"/playing_sheep.png",
 		"/sheep_eye.png",
@@ -106,6 +110,7 @@ public class Resource implements Common {
 		"/bomb.png",
 		"/wolf_run.png",
 		"/wolf_down.png",
+		"/wolf_cilmb.png",
 		"/balloon_blue.png",
 		"/balloon_green.png",
 		"/balloon_multicolour.png",
@@ -142,11 +147,13 @@ public class Resource implements Common {
 		"/current_ranking.jpg",       //排行图片资源
 		"/ranking_option.png",
 		"/ranking_option1.png",
-		"/ranking_stripe.jpg",        //条纹图片
+		"/ranking_stripe.jpg",       
 		"/ranking.png",
 		"/ranking_show.jpg",
 		"/ranking_word.png",
 		
+		"/playing_level.png",
+		"/playing_point.png",
 		
 		"/game_help.png",              //游戏帮助
 	};

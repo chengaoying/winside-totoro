@@ -44,7 +44,7 @@ public class StateMain implements Common{
 			g.drawRegion(main_menu,
 					(mainIndex != i) ? main_menu.getWidth() / 2 : 0,
 					i * main_menu.getHeight() / 6, main_menu.getWidth() / 2,
-					main_menu.getHeight() / 6, 0, menuAxis[i][0],
+					main_menu.getHeight() / 6, 0, menuAxis[i][0], 
 					menuAxis[i][1], 0);
 		}
 	}
@@ -53,6 +53,7 @@ public class StateMain implements Common{
 		if(mainIndex == 0){
 			stateGame.weapon = new Weapon();
 			stateGame.createRole = new CreateRole();
+			stateGame.batches = new Batches();
 			stateGame.own = stateGame.createRole.createSheep();
 		}
 	}

@@ -1,7 +1,5 @@
 package sheepwar;
 
-import javax.microedition.lcdui.Graphics;
-
 /*
  * 公共变量类 
  */
@@ -11,14 +9,14 @@ public interface Common {
 	public final static int STATUS_MAIN_MENU = 1;		//游戏主菜单 
 	public final static int STATUS_GAME_PLAYING = 2;	//游戏中
 
-	
-	public final static short TopLeft = Graphics.LEFT|Graphics.TOP;
-	
 	public final static int ScrW = SheepWarGameEngine.ScrW;
 	public final static int ScrH = SheepWarGameEngine.ScrH;
 	
 	public final static short ROLE_ALIVE = 0; 			//角色活着状态 
 	public final static short ROLE_DEATH = -1;  		//角色活着状态 
+	
+	public final static short ROLE_ON_GROUND = 0;  		//狼在地面
+	public final static short ROLE_IN_AIR = 1;  		//狼离开地面
 	
 	public final static short ON_ONE_LADDER = 1; 			//角色在第一个梯子上
 	public final static short ON_TWO_LADDER = 2;  			//角色在第二个梯子上 
@@ -26,8 +24,60 @@ public interface Common {
 	public final static short ON_FOUR_LADDER = 4;  			//角色在第四个梯子上
 	
 	/*狼在空中分布方式*/
+	public final static short NONE = 0;					//无
 	public final static short SPREED_BELOW = 1;			//斜下直线
 	public final static short SPREED_ABOVE = 2;			//斜上直线
 	public final static short SPREED_VERTICAL = 3;		//竖直
+	public final static short SPREED_IRREGULAR = 4;		//折线
+	
+	/*气球ID(对应颜色)*/
+	public final static short blue = Resource.id_balloon_blue;					//蓝气球
+	public final static short green = Resource.id_balloon_green;				//绿气球
+	public final static short multicolour = Resource.id_balloon_multicolour;	//彩色气球
+	public final static short red = Resource.id_balloon_red;					//红气球
+	public final static short yellow = Resource.id_balloon_yellow;				//黄气球
+	public final static short orange = Resource.id_balloon_yellowred;			//橙色气球
+	
+	/*折线方式*/
+	public final static short[][] regular = {
+		{4,2,3,1},
+		{1,2,4,3},
+		{1,3,4,3},
+		{4,3,2,3},
+		{3,1,2,4},
+	};
+	
+	/*每批狼出现的方式*/
+	public static int[][][] BatchesInfo = {
+		
+		/*第一关*/
+		{   
+			/*0-数量， 1-气球ID(对应颜色) 2-空中分布方式 */
+			{4, orange, SPREED_ABOVE },
+			{2, blue, SPREED_VERTICAL },
+			{2, orange, SPREED_BELOW },
+			{2, blue, SPREED_ABOVE },
+			{3, orange, SPREED_BELOW },
+			{1, blue, NONE },
+			{4, blue, SPREED_ABOVE },
+			{2, red, SPREED_VERTICAL },
+			{2, orange, SPREED_ABOVE },
+		},
+		
+		/*第二关*/
+		{   
+			/*0-数量， 1-气球ID(对应颜色), 2-空中分布方式*/
+			{4, orange, SPREED_IRREGULAR },
+			{4, orange, SPREED_IRREGULAR },
+			{4, orange, SPREED_IRREGULAR },
+		},
+		
+		/*第三关*/
+		{   
+			/*0-数量， 1-气球ID(对应颜色), 2-空中分布方式*/
+			{},
+			{},
+		}
+	};
 	
 }

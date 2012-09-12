@@ -22,15 +22,23 @@ public class StateGame implements Common{
 	}
 	
 	public CreateRole createRole;
+	public Batches batches;
 	public Weapon weapon;
 	public Role own; 
+
+	/*游戏关卡*/
+	public short level = 2; 
+	public boolean isNext;
+	
+	/*当前关卡狼出现的批次*/
+	public short batch;
 	
 	/*关卡信息*/
 	public static int[][] LEVEL_INFO = {
 		
 		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-*/
 		{1, 32, 3},  //第一关
-		{},  //第二关
+		{1, 32, 3},  //第二关
 		{},  //第三关
 	};
 	
@@ -39,7 +47,17 @@ public class StateGame implements Common{
 	private boolean isAttack = true;
 	private int bulletInterval = 2;   //子弹发射间隔
 	
-	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;//ScrW屏幕宽度，tempx初始=ScrW，可以用表达式tempx-=1来使其移动
+	/*时光闹钟*/
+	public static boolean pasueState;
+	private long pasueTimeS,  pasueTimeE;
+	private int pasueInterval = 10;
+	
+	/*加速*/
+	public static boolean speedFlag;
+	private long addSpeedTime,addSpeedTime2;
+	private int speedLiquidInterval = 30;
+	
+	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;
 	
 	public void handleKey(KeyState keyState){
 		
@@ -51,12 +69,17 @@ public class StateGame implements Common{
 			
 		} else if (keyState.containsAndRemove(KeyCode.OK)) {	
 			if(isAttack){ //普通攻击
-				weapon.createBomb(own, 2);
-				startTime = System.currentTimeMillis()/1000;
-				isAttack = false;
+				weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
+				own.bombNum ++;
+				if(own.bombNum%2==0){
+					isAttack = false;
+					startTime = System.currentTimeMillis()/1000;
+				}
 			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM1)){    	//时光闹钟
+			pasueState = true;
+			pasueTimeS = System.currentTimeMillis()/1000;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){ 	//捕狼网
 			
@@ -67,6 +90,11 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)){		//驱散竖琴
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)){
+			if(!speedFlag){
+				addSpeedTime = System.currentTimeMillis()/1000;
+				own.speed = own.speed + 5;
+				speedFlag = true;
+			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
 			
@@ -83,7 +111,7 @@ public class StateGame implements Common{
 	public void show(SGraphics g){
 		drawGamePlaying(g);
 		createRole.showSheep(g,own);
-		createRole.showWolf(g);
+		batches.showWolf(g);
 		weapon.showBomb(g);
 	}
 	
@@ -91,10 +119,21 @@ public class StateGame implements Common{
 		
 		/*控制子弹发射间隔*/
 		endTime = System.currentTimeMillis()/1000; 
-		if(endTime-startTime>=bulletInterval){
+		if(isAttack==false && endTime-startTime>=bulletInterval){
 			isAttack = true;
 		}
-		
+		/*时光闹钟效果时间*/
+		pasueTimeE = System.currentTimeMillis()/1000;
+		if(pasueState && (pasueTimeE-pasueTimeS)>=pasueInterval){
+			pasueState = false;
+		}
+		/*加速效果时间*/
+		addSpeedTime2 = System.currentTimeMillis()/1000;
+		if(addSpeedTime2 - addSpeedTime >= speedLiquidInterval){			
+			speedFlag = false;
+		}
+
+
 		/*创建狼*/
 		createNpc();
 		
@@ -104,20 +143,43 @@ public class StateGame implements Common{
 		/*移除死亡对象*/
 		removeDeath();
 		
+		/*过关判断*/
+		nextLevel();
+		
+	}
+	
+	private void nextLevel(){
+		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
+			isNext = true;
+		}
 	}
 	
 	private void createNpc(){
-		if(engine.timePass(2000)){
-			createRole.createWolf();
+		if(isAllDown()){
+			if(engine.timePass(LEVEL_INFO[level-1][2]*1000)){
+				batches.createBatches(level, batch);
+				batch = (short) ((batch+1) % BatchesInfo[level-1].length);
+			}
 		}
-
+	}
+	
+	/*判断狼是否都已经下降或者上升*/
+	private boolean isAllDown(){
+		int len = batches.npcs.size();
+		for(int i=len-1;i>=0;i--){
+			Role role = (Role) batches.npcs.elementAt(i);
+			if(role.status2 == ROLE_ON_GROUND){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private void removeDeath(){
-		for(int j=createRole.npcs.size()-1;j>=0;j--){
-			Role npc = (Role) createRole.npcs.elementAt(j);
+		for(int j=batches.npcs.size()-1;j>=0;j--){
+			Role npc = (Role) batches.npcs.elementAt(j);
 			if(npc.status == ROLE_DEATH && npc.mapy >= 446){
-				createRole.npcs.removeElement(npc);
+				batches.npcs.removeElement(npc);
 			}
 		}
 	}
@@ -125,19 +187,26 @@ public class StateGame implements Common{
 	private void bombAttackNpcs(){
 		for(int i=weapon.bombs.size()-1;i>=0;i--){
 			Weapon bomb = (Weapon) weapon.bombs.elementAt(i);
-			for(int j=createRole.npcs.size()-1;j>=0;j--){
-				Role npc = (Role) createRole.npcs.elementAt(j);
+			for(int j=batches.npcs.size()-1;j>=0;j--){
+				Role npc = (Role) batches.npcs.elementAt(j);
 				Role ballon = npc.role;
 				if(ballon != null && npc.status == ROLE_ALIVE){
-					if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, ballon.mapx, ballon.mapy, ballon.width, ballon.height)){
+					if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, ballon.mapx, ballon.mapy, ballon.width, 30/*ballon.height*/)){
 						npc.status = ROLE_DEATH;
 						npc.speed += 10;
 						weapon.bombs.removeElement(bomb);
+						
+						own.eatNum ++;
+						own.scores += ballon.scores;
+					}
+					else if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, npc.mapx, npc.mapy, npc.width, npc.height)){
+						bomb.direction = Weapon.WEAPON_MOVE_DOWN;
+						bomb.speedY = bomb.speedX + 10;
 					}
 				}
 			}
 			/*子弹出界时移除*/
-			if(bomb.mapx+bomb.width <=0){
+			if((bomb.mapx+bomb.width <=0) || bomb.mapy >= 466){
 				weapon.bombs.removeElement(bomb);
 			}
 		}
@@ -158,7 +227,9 @@ public class StateGame implements Common{
 		Image playing_prop_memu = Resource.loadImage(Resource.id_playing_prop_memu);
 		Image playing_stop = Resource.loadImage(Resource.id_playing_stop);
 		Image ladder = Resource.loadImage(Resource.id_ladder);
-		g.drawImage(game_bg, 0, 0, TopLeft);
+		Image playing_level = Resource.loadImage(Resource.id_playing_level);
+		Image playing_point = Resource.loadImage(Resource.id_playing_point);
+		g.drawImage(game_bg, 0, 0, 20);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
 			tempx -= 1;
@@ -167,7 +238,7 @@ public class StateGame implements Common{
 			tempx = ScrW;
 		}
 		g.drawRegion(playing_cloudbig, 0, 0, playing_cloudbig.getWidth(), playing_cloudbig.getHeight(), 
-				0, tempx, tempy, TopLeft);
+				0, tempx, tempy, 20);
 		
 		if(tempx2+playing_cloudsmall.getWidth()>0){
 			tempx2 -= 2;
@@ -176,33 +247,39 @@ public class StateGame implements Common{
 			tempx2 = ScrW;
 		}
 		g.drawRegion(playing_cloudsmall, 0, 0, playing_cloudsmall.getWidth(), playing_cloudsmall.getHeight(), 
-				0, tempx2, tempy2, TopLeft);
-		g.drawImage(playing_lawn, 0, 499, TopLeft);
-		g.drawImage(playing_tree, 0, 72, TopLeft);
-		g.drawImage(playing_shenzi1, 399, 135, TopLeft);
+				0, tempx2, tempy2, 20);
+		g.drawImage(playing_lawn, 0, 499, 20);
+		g.drawImage(playing_tree, 0, 72, 20);
+		g.drawImage(playing_shenzi1, 399, 135, 20);
 		for(int i=0;i<4;i++){   //阶梯
-			g.drawImage(playing_step, 377, 153+i*89, TopLeft);
-			g.drawImage(ladder, 426, 183+i*89, TopLeft);
+			g.drawImage(playing_step, 377, 153+i*89, 20);
+			g.drawImage(ladder, 426, 183+i*89, 20);
 		}
 		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), (own.mapy-154),        //上下移动的绳子
-				0, 379, 154, TopLeft);                                                        //竖直绳子 的纵坐标 154
+				0, 379, 154, 20);                                                        //竖直绳子 的纵坐标 154
 
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
-				0, 342, 154+(own.mapy-154), TopLeft);
+				0, 342, 154+(own.mapy-154), 20);
 		
-		g.drawImage(playing_lunzi, 374,132, TopLeft);
-		g.drawImage(playing_menu, 491, 0, TopLeft);
+		g.drawImage(playing_lunzi, 374,132, 20);
+		g.drawImage(playing_menu, 491, 0, 20);
 		
+		g.drawImage(playing_level, 491+32, 25, 20);				//游戏中 左侧的关卡图片		
+		g.drawImage(playing_point, 491+11, 66, 20);				//游戏中 左侧 的得分图片		
+		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
+		int numLeftX = 547,numRight = 612;
 		for(int i=0;i<4;i++){                                                                
-			g.drawImage(playing_prop_memu, 497,185+i*68, TopLeft);
-			drawProp(g, i, 497+5,185+i*(68+3));                                              
-			drawNum(g, i+1, 540+7, 223-17+i*73);//提示技能按键：1-4{540,223}
+			g.drawImage(playing_prop_memu, propLeftMenuX,propMenuY+i*(distanceMenuY+playing_prop_memu.getHeight()), 20);
+			drawProp(g, i, propLeftMenuX+5,propMenuY+4+i*(distanceMenuY+playing_prop_memu.getHeight()));                                              
+			drawNum(g, i+1, numLeftX, propMenuY+playing_prop_memu.getHeight()-29			//29是显示
+					+i*(distanceMenuY+playing_prop_memu.getHeight()));//提示技能按键：1-4{540,223}
 			
-			g.drawImage(playing_prop_memu, 564,185+i*68, TopLeft);
-			drawProp(g, i+4, 564+5,185+i*(68+2));  //第二列对应原图片中的后四个
-			drawNum(g, i+4+1, 612, 223-17+i*73);//提示技能键5-8{}
+			g.drawImage(playing_prop_memu, propRightMenuX,propMenuY+i*(distanceMenuY+playing_prop_memu.getHeight()), 20);
+			drawProp(g, i+4, propRightMenuX+5,propMenuY+4+i*(distanceMenuY+playing_prop_memu.getHeight()));  //第二列对应原图片中的后四个
+			drawNum(g, i+4+1, numRight, propMenuY+playing_prop_memu.getHeight()-29
+					+i*(distanceMenuY+playing_prop_memu.getHeight()));//提示技能键5-8{}
 		}
-		g.drawImage(playing_stop, 500,459, TopLeft);//暂停游戏按钮
+		g.drawImage(playing_stop, 500,459, 20);//暂停游戏按钮
 	}
 	
 	private void moveRole(int towards) {
