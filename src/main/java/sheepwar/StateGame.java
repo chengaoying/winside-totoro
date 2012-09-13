@@ -232,6 +232,9 @@ public class StateGame implements Common{
 		Image ladder = Resource.loadImage(Resource.id_ladder);
 		Image playing_level = Resource.loadImage(Resource.id_playing_level);
 		Image playing_point = Resource.loadImage(Resource.id_playing_point);
+		Image sheep_head = Resource.loadImage(Resource.id_sheep_head);
+		Image wolf_head = Resource.loadImage(Resource.id_wolf_head);
+		Image multiply = Resource.loadImage(Resource.id_multiply);
 		g.drawImage(game_bg, 0, 0, 20);
 		
 		if(tempx+playing_cloudbig.getWidth()>0){
@@ -268,7 +271,11 @@ public class StateGame implements Common{
 		g.drawImage(playing_menu, 491, 0, 20);
 		
 		g.drawImage(playing_level, 491+32, 25, 20);				//游戏中 左侧的关卡图片		
-		g.drawImage(playing_point, 491+11, 66, 20);				//游戏中 左侧 的得分图片		
+		g.drawImage(playing_point, 491+11, 66, 20);				//游戏中 左侧 的得分图片	
+		g.drawImage(sheep_head, 491+26, 142, 20);				//游戏中 右侧 的羊的头像		
+		g.drawImage(wolf_head, 12, 10, 20);				//游戏中 左侧 的狼的头像		
+		g.drawImage(multiply, 491+66, 147, 20);						
+		g.drawImage(multiply, 45, 12, 20);	
 		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
 		int numLeftX = 547,numRight = 612;
 		for(int i=0;i<4;i++){                                                                
@@ -347,6 +354,12 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_balloon_yellow);   
 		Resource.freeImage(Resource.id_balloon_yellowred);   
 		Resource.freeImage(Resource.id_balloon_red);   
+		Resource.freeImage(Resource.id_ladder);   
+		Resource.freeImage(Resource.id_playing_level);   
+		Resource.freeImage(Resource.id_playing_point);   
+		Resource.freeImage(Resource.id_sheep_head);   
+		Resource.freeImage(Resource.id_wolf_head);   
+		Resource.freeImage(Resource.id_multiply);   
 	}
 
 }

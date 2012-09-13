@@ -82,6 +82,9 @@ public class Resource implements Common {
 	
 	public static short id_playing_level= NUMS++;			
 	public static short id_playing_point = NUMS++;			
+	public static short id_sheep_head = NUMS++;			
+	public static short id_wolf_head = NUMS++;			
+	public static short id_multiply = NUMS++;			
 	
 	
 	public static short id_game_help = NUMS++;     //”Œœ∑∞Ô÷˙
@@ -154,6 +157,9 @@ public class Resource implements Common {
 		
 		"/playing_level.png",
 		"/playing_point.png",
+		"/sheep_head.png",
+		"/wolf_head.png",
+		"/multiply.png",
 		
 		"/game_help.png",              //”Œœ∑∞Ô÷˙
 	};
