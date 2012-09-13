@@ -89,7 +89,7 @@ public class StateGame implements Common{
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)){		//ÇýÉ¢ÊúÇÙ
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM6)){
+		}else if(keyState.containsAndRemove(KeyCode.NUM6)){		//¼ÓËÙ
 			if(!speedFlag){
 				addSpeedTime = System.currentTimeMillis()/1000;
 				own.speed = own.speed + 5;
@@ -150,7 +150,10 @@ public class StateGame implements Common{
 	
 	private void nextLevel(){
 		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
+			StateNextLevel stateLevel = new StateNextLevel();
+			stateLevel.processNextLevel();
 			isNext = true;
+			level ++;
 		}
 	}
 	

@@ -9,6 +9,7 @@ import cn.ohyeah.stb.key.KeyState;
 
 public class StateMain implements Common{
 	
+	public boolean exit;
 	private StateGame stateGame;
 	private SheepWarGameEngine engine;
 	public StateMain(SheepWarGameEngine engine, StateGame stateGame){
@@ -24,7 +25,7 @@ public class StateMain implements Common{
 	public void handleKey(KeyState keyState){
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			//exit = true;
-			clear();
+			//clear();
 		}
 		if (keyState.containsAndRemove(KeyCode.UP)) {
 			mainIndex = (mainIndex + 6 - 1) % 6;
@@ -80,7 +81,7 @@ public class StateMain implements Common{
 			sh.processHelp();
 			
 		}else if(mainIndex==5){//ÍË³öÓÎÏ·
-			//exit = true;
+			exit = true;
 		} 
 	}
 

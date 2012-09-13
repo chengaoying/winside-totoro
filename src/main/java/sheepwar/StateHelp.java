@@ -100,38 +100,36 @@ public class StateHelp implements Common{
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
 		}
-	     if(keyState.contains(KeyCode.OK) ||keyState.contains(KeyCode.LEFT) ||keyState.contains(KeyCode.RIGHT) ){ //·­Ò³µÄÅÐ¶Ï
-	    	 keyState.remove(KeyCode.OK);
-				if(pageIndex==0){
-					if(helpIndex>0){
-						helpIndex--;
-					}
-				}
-				if(pageIndex==1){
-					if(helpIndex<2){
-						helpIndex++;
-					}
+		if (keyState.containsAndRemove(KeyCode.OK)
+				|| keyState.containsAndRemove(KeyCode.LEFT)
+				|| keyState.containsAndRemove(KeyCode.RIGHT)) { // ·­Ò³µÄÅÐ¶Ï
+			if (pageIndex == 0) {
+				if (helpIndex > 0) {
+					helpIndex--;
 				}
 			}
-	     if(keyState.contains(KeyCode.LEFT)){
-	    	 keyState.remove(KeyCode.LEFT);
-				pageIndex=0;
-				if(helpX > 0){
-					helpX = helpX - 1;
-				}else{
-					helpX = 0;
+			if (pageIndex == 1) {
+				if (helpIndex < 2) {
+					helpIndex++;
 				}
 			}
-		if(keyState.contains(KeyCode.RIGHT)){
-			keyState.remove(KeyCode.RIGHT);
-				pageIndex=1;
-				if(helpX < 1){
-					helpX = helpX +1;
-				}else{
-					helpX = 1;
-				}
+		}
+		if (keyState.containsAndRemove(KeyCode.LEFT)) {
+			pageIndex = 0;
+			if (helpX > 0) {
+				helpX = helpX - 1;
+			} else {
+				helpX = 0;
 			}
-		
+		}
+		if (keyState.containsAndRemove(KeyCode.RIGHT)) {
+			pageIndex = 1;
+			if (helpX < 1) {
+				helpX = helpX + 1;
+			} else {
+				helpX = 1;
+			}
+		}
 	}
 
 	private void drawNum(SGraphics g, int num, int x, int y) {

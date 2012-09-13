@@ -75,10 +75,18 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			stateGame.execute();
 			break;
 		}
+		
+		/*ÍË³öÓÎÏ·*/
+		exit();
 	}
 
 	private void init() {
 		status = STATUS_MAIN_MENU;                           
+	}
+	private void exit(){
+		if(stateMain.exit){
+			exit = true;
+		}
 	}
 	
 	private long recordTime;
