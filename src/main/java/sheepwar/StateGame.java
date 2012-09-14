@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public Role own; 
 
 	/*游戏关卡*/
-	public short level = 2; 
+	public short level = 1; 
 	public boolean isNext;
 	
 	/*当前关卡狼出现的批次*/
@@ -37,7 +37,7 @@ public class StateGame implements Common{
 	public static int[][] LEVEL_INFO = {
 		
 		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-*/
-		{1, 32, 3},  //第一关
+		{1, 2, 3},  //第一关
 		{1, 32, 3},  //第二关
 		{},  //第三关
 	};
@@ -45,7 +45,7 @@ public class StateGame implements Common{
 	/*控制子弹发射的变量*/
 	private long startTime, endTime;
 	private boolean isAttack = true;
-	private int bulletInterval = 2;   //子弹发射间隔
+	private int bulletInterval = 2;   
 	
 	/*时光闹钟*/
 	public static boolean pasueState;
@@ -56,6 +56,12 @@ public class StateGame implements Common{
 	public static boolean speedFlag;
 	private long addSpeedTime,addSpeedTime2;
 	private int speedLiquidInterval = 30;
+	
+	/*无敌*/
+	private long proEndTime;
+	private long proStartTime;
+	private long protectInterval = 5;
+	public static boolean protectState;
 	
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;
 	
@@ -82,8 +88,14 @@ public class StateGame implements Common{
 			pasueTimeS = System.currentTimeMillis()/1000;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){ 	//捕狼网
+			weapon.createNet(own, Weapon.WEAPON_MOVE_LEFT);
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)){		//盾牌
+			protectState = true;
+			if(own.status == ROLE_ALIVE){
+				weapon.createProtect(own);
+			}
+			proStartTime = System.currentTimeMillis()/1000;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)){		//激光枪
 			
@@ -111,8 +123,11 @@ public class StateGame implements Common{
 	public void show(SGraphics g){
 		drawGamePlaying(g);
 		createRole.showSheep(g,own);
-		batches.showWolf(g);
+		batches.showWolf(g, weapon);
 		weapon.showBomb(g);
+		weapon.showBoom(g,own);			//显示狼发射的子弹
+		weapon.showNet(g);
+		weapon.showProtect(g, own);
 	}
 	
 	public void execute(){
@@ -132,13 +147,24 @@ public class StateGame implements Common{
 		if(addSpeedTime2 - addSpeedTime >= speedLiquidInterval){			
 			speedFlag = false;
 		}
-
+		
+		/*防狼套装的时间控制*/
+		proEndTime = System.currentTimeMillis()/1000;
+		if(proEndTime - proStartTime > protectInterval){
+			protectState = false;
+		}
 
 		/*创建狼*/
 		createNpc();
 		
 		/*检测普通攻击是否击中目标*/
 		bombAttackNpcs();
+		
+		/*捕狼道具*/
+		netAttackNpcs();
+		
+		/*狼的普通攻击*/
+		boomAttackPlayer();
 		
 		/*移除死亡对象*/
 		removeDeath();
@@ -148,12 +174,59 @@ public class StateGame implements Common{
 		
 	}
 	
+	/*判断狼是否击中玩家*/
+	private void boomAttackPlayer(){
+		for(int i = weapon.booms.size() - 1;i >=0;i--){
+			Weapon boom = (Weapon)weapon.booms.elementAt(i);
+			if(own.status == ROLE_ALIVE){
+				if(Collision.checkCollision(boom.mapx, boom.mapy, boom.width, boom.height, own.mapx, own.mapy, own.width, own.height)){
+					if(protectState){			//玩家是否有防狼套装
+						own.status = ROLE_ALIVE;
+					}else{
+						own.status = ROLE_DEATH;
+					}
+					weapon.booms.removeElement(boom);
+				}
+			}
+			/*子弹出界时移除*/
+			if(boom.mapx >= gameW){
+				weapon.booms.removeElement(boom);
+			}
+		}
+	}
+
+	/*羊的捕狼网技能攻击*/
+	private void netAttackNpcs() {
+		for(int i=weapon.nets.size()-1;i>=0;i--){
+			Weapon net = (Weapon) weapon.nets.elementAt(i);
+			if(net.isUse){
+				for(int j=batches.npcs.size()-1;j>=0;j--){
+					Role npc = (Role) batches.npcs.elementAt(j);
+					if(npc.status == ROLE_ALIVE){
+						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, net.mapx, net.mapy, net.width, net.height)){
+							npc.status = ROLE_DEATH;
+							npc.speed += 10;
+						}
+					}
+				}
+			}
+			/*网出界时移除*/
+			if(net.mapy >= ScrH){
+				net.isUse = false;
+				weapon.nets.removeElement(net);
+			}
+		}
+	
+	}
+
 	private void nextLevel(){
 		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
 			StateNextLevel stateLevel = new StateNextLevel();
 			stateLevel.processNextLevel();
 			isNext = true;
 			level ++;
+			weapon.clearObjects();  //清空对象
+			batches.clearObject();	//清空对象
 		}
 	}
 	

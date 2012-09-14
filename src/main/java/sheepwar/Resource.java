@@ -84,10 +84,25 @@ public class Resource implements Common {
 	public static short id_playing_point = NUMS++;			
 	public static short id_sheep_head = NUMS++;			
 	public static short id_wolf_head = NUMS++;			
-	public static short id_multiply = NUMS++;			
-	
+	public static short id_multiply = NUMS++;	
 	
 	public static short id_game_help = NUMS++;     //”Œœ∑∞Ô÷˙
+	
+	public static short id_logo = NUMS++;    
+	public static short id_pass_bg = NUMS++;    
+	public static short id_pass_cloud = NUMS++;    
+	public static short id_pass_cloud1 = NUMS++;    
+	public static short id_pass_cloud2 = NUMS++;    
+	public static short id_pass_num = NUMS++;    
+	public static short id_pass_rainbow = NUMS++;    
+	public static short id_pass_score = NUMS++;    
+	public static short id_pass_star = NUMS++;    
+	public static short id_pass_star2 = NUMS++;    
+	public static short id_net = NUMS++;    
+	public static short id_net2 = NUMS++;    
+	public static short id_boom = NUMS++;    
+	public static short id_prop_3 = NUMS++;    
+	
 	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
@@ -162,6 +177,22 @@ public class Resource implements Common {
 		"/multiply.png",
 		
 		"/game_help.png",              //”Œœ∑∞Ô÷˙
+		
+		"/logo.png",             
+		"/pass_bg.jpg",             
+		"/pass_cloud.png",             
+		"/pass_cloud1.png",             
+		"/pass_cloud2.png",             
+		"/pass_num.png",             
+		"/pass_rainbow.png",             
+		"/pass_score.png",             
+		"/pass_star.png",             
+		"/pass_star1.png",             
+		"/net.png",             
+		"/net_effect.png",             
+		"/boom.png",             
+		"/prop_3.png",             
+		
 	};
 	
 	private static final Image[] images = new Image[NUMS];

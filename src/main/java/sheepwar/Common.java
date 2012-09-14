@@ -11,6 +11,7 @@ public interface Common {
 
 	public final static int ScrW = SheepWarGameEngine.ScrW;
 	public final static int ScrH = SheepWarGameEngine.ScrH;
+	public final static int gameW = 490;				//游戏区域宽度
 	
 	public final static short ROLE_ALIVE = 0; 			//角色活着状态 
 	public final static short ROLE_DEATH = -1;  		//角色活着状态 

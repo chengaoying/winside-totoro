@@ -25,19 +25,22 @@ public class CreateRole implements Common {
 		Image playing_sheep = Resource.loadImage(Resource.id_playing_sheep); 
 		Image sheep_eye = Resource.loadImage(Resource.id_sheep_eye);
 		Image sheep_hand = Resource.loadImage(Resource.id_sheep_hand);
+		if(role.status == ROLE_ALIVE){
+			g.drawRegion(sheep_hand, 0, 0, sheep_hand.getWidth(),
+					sheep_hand.getHeight(), 0, 359 - 14,
+					154 + 50 + (role.mapy - 154), 20); 
 
-		g.drawRegion(sheep_hand, 0, 0, sheep_hand.getWidth(),
-				sheep_hand.getHeight(), 0, 359 - 14,
-				154 + 50 + (role.mapy - 154), 20); 
+			g.drawRegion(playing_sheep, 0, 0, playing_sheep.getWidth(),
+					playing_sheep.getHeight(), 0, 361, 154 + 2 + (role.mapy - 154),
+					20);
 
-		g.drawRegion(playing_sheep, 0, 0, playing_sheep.getWidth(),
-				playing_sheep.getHeight(), 0, 361, 154 + 2 + (role.mapy - 154),
-				20);
+			g.drawRegion(sheep_eye, 0, 0, sheep_eye.getWidth(),
+					sheep_eye.getHeight(), 0, 371 - 13,
+					154 + 23 + (role.mapy - 154), 20);
+			
+		}else if(role.status == ROLE_DEATH){
+			g.drawRegion(playing_sheep, 0, 0, playing_sheep.getWidth(), playing_sheep.getHeight(), 0, 361, 470, 20);
+		}
 
-		g.drawRegion(sheep_eye, 0, 0, sheep_eye.getWidth(),
-				sheep_eye.getHeight(), 0, 371 - 13,
-				154 + 23 + (role.mapy - 154), 20);
 	}
-
-
 }

@@ -183,7 +183,7 @@ public class Batches implements Common{
 		wolf.role = ballon;
 	}
 
-	public void showWolf(SGraphics g) {
+	public void showWolf(SGraphics g, Weapon weapon) {
 		Image wolf_Image = Resource.loadImage(Resource.id_wolf_run); 
 		Image wolf_down = Resource.loadImage(Resource.id_wolf_down);
 		Image wolf_climb = Resource.loadImage(Resource.id_wolf_climb);
@@ -215,6 +215,11 @@ public class Batches implements Common{
 							wolf.mapy = tempy;
 							tempy_ballon += wolf.role.speed;
 							wolf.role.mapy = tempy_ballon;
+						}
+						if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
+							if(wolf.mapy == 146){				
+								weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+							}
 						}
 					}
 					g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
@@ -306,5 +311,9 @@ public class Batches implements Common{
 			StateGame.HASWOLF_FOUR = true;
 			return;
 		}
+	}
+	
+	public void clearObject(){
+		npcs.removeAllElements();
 	}
 }
