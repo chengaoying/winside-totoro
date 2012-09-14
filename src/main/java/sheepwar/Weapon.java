@@ -172,7 +172,6 @@ public class Weapon implements Common {
 			}
 		}
 	}
-
 	
 	/*清除内存中的对象*/
 	public void clearObjects() {
