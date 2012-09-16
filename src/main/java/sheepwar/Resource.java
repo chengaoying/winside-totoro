@@ -102,6 +102,9 @@ public class Resource implements Common {
 	public static short id_net2 = NUMS++;    
 	public static short id_boom = NUMS++;    
 	public static short id_prop_3 = NUMS++;    
+	public static short id_prop_4 = NUMS++;    
+	public static short id_prop_4_effect = NUMS++;    
+	public static short id_prop_5_effect = NUMS++;    
 	
 	
 	public static String[] imagesrcs = {
@@ -192,6 +195,9 @@ public class Resource implements Common {
 		"/net_effect.png",             
 		"/boom.png",             
 		"/prop_3.png",             
+		"/prop_4.png",             
+		"/prop_4_effect.png",             
+		"/prop_5_effect.png",             
 		
 	};
 	

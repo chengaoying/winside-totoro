@@ -32,6 +32,8 @@ public class Weapon implements Common {
 	public Vector nets = new Vector();
 	public Vector booms = new Vector();
 	public Vector protects = new Vector();
+	public Vector glares = new Vector();
+	public Vector harps = new Vector();
 	
 	/*捕狼标识*/
 	public boolean isUseNet;
@@ -171,11 +173,89 @@ public class Weapon implements Common {
 		}
 	}
 	
+	/*创建激光枪*/
+	public void createGlare(Role player,int direction) {
+		Weapon w = new Weapon();
+		w.direction = direction;
+		w.mapy  = player.mapy +24-22;
+		w.mapx = player.mapx - 20;
+		w.height = 87;				//光波效果的高度
+		w.speedX = 40;
+		w.isUse = false;
+		glares.addElement(w);
+	}
+	
+	/*显示激光枪*/
+	public void showGlare(SGraphics g,Role player) {
+		Image glare = Resource.loadImage(Resource.id_prop_4);
+		Image glareEffect = Resource.loadImage(Resource.id_prop_4_effect);
+		Weapon w = null;
+		int tempx = 0,tempy = 0;
+		for(int i = glares.size() - 1;i >= 0;i --){
+			w = (Weapon)glares.elementAt(i);
+			if( w.isUse == false){
+				tempy = player.mapy + 50 - 20;
+				tempx = player.mapx - 34 + 5;
+				w.isUse = true;
+				g.drawImage(glare, tempx, tempy, 20);
+			}
+			if (w.isUse == true) {
+				w.mapx -= w.speedX;
+				tempx = w.mapx;
+				tempy = w.mapy;
+				w.frame = (w.frame + 1) % 8;
+				w.height = glareEffect.getHeight();
+				if (w.width+w.speedX >= glareEffect.getWidth() / 8) {
+					w.width = glareEffect.getWidth() / 8;
+				} else {
+					w.width += w.speedX;
+				}
+				w.isUse = false;
+				g.drawRegion(glareEffect, w.frame * glareEffect.getWidth() / 8,
+						0, w.width, glareEffect.getHeight(), 0, tempx, tempy, 20);
+			}
+		}
+	}
+	/*创建驱散竖琴*/
+	public void createHarp(Role player){
+		Weapon w = new Weapon();
+		w.mapx = 444;
+		w.mapy = 156;
+		harps.addElement(w);
+	}
+	
+	/*显示驱散竖琴的效果*/
+	public void showHarp(SGraphics  g, Batches batches) {
+		Image harpEffect = Resource.loadImage(Resource.id_prop_5_effect);
+		Weapon w = null;
+		for(int i = harps.size() - 1;i>=0;i --){
+			w = (Weapon)harps.elementAt(i);
+			w.frame = (w.frame+1)%5;
+			for(int j = batches.npcs.size() - 1;j>=0;j--){
+				Role npc = (Role)batches.npcs.elementAt(j);
+				if(npc.position == ON_ONE_LADDER || npc.position ==ON_TWO_LADDER 
+						|| npc.position == ON_THREE_LADDER || npc.position == ON_FOUR_LADDER){
+					npc.status = ROLE_DEATH;
+					StateGame.HASWOLF_ONE = false;
+					StateGame.HASWOLF_TWO = false;
+					StateGame.HASWOLF_THREE = false;
+					StateGame.HASWOLF_FOUR = false;
+					batches.npcs.removeElement(npc);
+				}
+			}
+			g.drawRegion(harpEffect, w.frame*harpEffect.getWidth()/5, 0, harpEffect.getWidth()/5, harpEffect.getHeight(), 
+					0, 444, 156, 20);
+		}
+	}
+
+	
 	/*清除内存中的对象*/
 	public void clearObjects() {
       bombs.removeAllElements();
       nets.removeAllElements();
       booms.removeAllElements();
       protects.removeAllElements();
+      glares.removeAllElements();
+      harps.removeAllElements();
 	}
 }

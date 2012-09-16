@@ -106,8 +106,14 @@ public class StateGame implements Common{
 			proStartTime = System.currentTimeMillis()/1000;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)){		//激光枪
-			
+			if(own.status == ROLE_ALIVE){
+				weapon.createGlare(own,Weapon.WEAPON_MOVE_LEFT);
+			}
+
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)){		//驱散竖琴
+			if(own.status == ROLE_ALIVE){
+				weapon.createHarp(own);
+			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)){		//加速
 			if(!speedFlag){
@@ -136,6 +142,8 @@ public class StateGame implements Common{
 		weapon.showBoom(g,own);			//显示狼发射的子弹
 		weapon.showNet(g);
 		weapon.showProtect(g, own);
+		weapon.showGlare(g, own);
+		weapon.showHarp(g, batches);
 	}
 	
 	public void execute(){
@@ -174,6 +182,9 @@ public class StateGame implements Common{
 		/*狼的普通攻击*/
 		boomAttackPlayer();
 		
+		/*激光枪*/
+		glareAttackNpcs();
+		
 		/*移除死亡对象*/
 		removeDeath();
 		
@@ -188,6 +199,30 @@ public class StateGame implements Common{
 		/*游戏成功或失败*/
 		gameSuccessOrFail();
 	}
+	
+	/*判断激光枪是否击中狼*/
+	private void glareAttackNpcs() {
+		for(int i=weapon.glares.size()-1;i>=0;i--){
+			Weapon glare = (Weapon) weapon.glares.elementAt(i);
+			if(!glare.isUse){
+				for(int j=batches.npcs.size()-1;j>=0;j--){
+					Role npc = (Role) batches.npcs.elementAt(j);
+					if(npc.status == ROLE_ALIVE){
+						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, glare.mapx, glare.mapy, glare.width, glare.height)){
+							npc.status = ROLE_DEATH;		//TODO confirm the real effect of Glare
+							npc.speed += 10;
+						}
+					}
+				}
+			}
+			/*激光出界时移除*/
+			if(glare.mapy >= ScrH){
+				glare.isUse = false;
+				weapon.glares.removeElement(glare);
+			}
+		}
+	}
+
 	
 	private void gameSuccessOrFail() {
 		
@@ -393,20 +428,25 @@ public class StateGame implements Common{
 			sWidth = own.mapy - 154;
 			sTempy = own.mapy;
 		}
-		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), sWidth,        //上下移动的绳子
-				0, 379, 154, 20);                                                        	//竖直绳子 的纵坐标 154
+		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), sWidth,        			//上下移动的绳子
+				0, 379, 154, 20);                                                        		//竖直绳子 的纵坐标 154
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
 				0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
 		g.drawImage(playing_menu, 491, 0, 20);
 		
-		g.drawImage(playing_level, 491+32, 25, 20);				//游戏中 左侧的关卡图片		
-		g.drawImage(playing_point, 491+11, 66, 20);				//游戏中 左侧 的得分图片	
-		g.drawImage(sheep_head, 491+26, 142, 20);				//游戏中 右侧 的羊的头像		
-		g.drawImage(wolf_head, 12, 10, 20);						//游戏中 左侧 的狼的头像		
-		g.drawImage(multiply, 491+66, 147, 20);						
+		g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
+		drawNum(g, level, 491+32+playing_level.getWidth(), 25);
+		g.drawImage(playing_point, 491+11, 66, 20);						//游戏中 左侧 的得分图片	
+		drawNum(g, own.scores, playing_point.getWidth()+502, 66);
+		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
+		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
+		g.drawImage(multiply, 491+66, 147, 20);	
+		drawNum(g, 99, 491+66+multiply.getWidth()+10, 147+2);			//羊的生命数
 		g.drawImage(multiply, 45, 12, 20);	
+		drawNum(g, 99, 45+multiply.getWidth()+10, 12+2);
+
 		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
 		int numLeftX = 547,numRight = 612;
 		for(int i=0;i<4;i++){                                                                
