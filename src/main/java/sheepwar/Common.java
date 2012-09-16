@@ -24,6 +24,16 @@ public interface Common {
 	public final static short ON_THREE_LADDER = 3;  		//角色在第三个梯子上
 	public final static short ON_FOUR_LADDER = 4;  			//角色在第四个梯子上
 	
+	/*狼的移动方向*/
+	public final static int ROLE_MOVE_UP = 0;  		//上
+	public final static int ROLE_MOVE_DOWN = 1;		//下
+	public final static int ROLE_MOVE_LEFT = 2;		//左
+	public final static int ROLE_MOVE_RIGHT = 3;	//右
+	
+	/*狼的初始Y轴位置*/
+	public final static short WOLF_POSITION_TOP = 0;	//在上面
+	public final static short WOLF_POSITION_BOTTOM = 1;	//在下面
+	
 	/*狼在空中分布方式*/
 	public final static short NONE = 0;					//无
 	public final static short SPREED_BELOW = 1;			//斜下直线

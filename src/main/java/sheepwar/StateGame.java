@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public Role own; 
 
 	/*游戏关卡*/
-	public short level = 1; 
+	public short level = 2; 
 	public boolean isNext;
 	
 	/*当前关卡狼出现的批次*/
@@ -36,9 +36,9 @@ public class StateGame implements Common{
 	/*关卡信息*/
 	public static int[][] LEVEL_INFO = {
 		
-		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-*/
-		{1, 2, 3},  //第一关
-		{1, 32, 3},  //第二关
+		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, 1-下面）*/
+		{1, 2, 3, 0},  //第一关
+		{1, 32, 3, 1},  //第二关
 		{},  //第三关
 	};
 	
@@ -172,8 +172,31 @@ public class StateGame implements Common{
 		/*过关判断*/
 		nextLevel();
 		
+		/*每两关之后出现奖励关卡*/
+		rewardLevel();
 	}
 	
+	private void nextLevel(){
+		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
+			StateNextLevel stateLevel = new StateNextLevel();
+			stateLevel.processNextLevel();
+			isNext = true;
+			batch = 0;
+			level ++;
+			weapon.clearObjects();  //清空对象
+			batches.clearObject();	//清空对象
+		}
+	}
+	
+	private void rewardLevel() {
+		if(isNext && level==2/*(level-1)%2==0*/){
+			System.out.println("进入奖励关卡");
+			StateRewardLevel sr = new StateRewardLevel();
+			sr.processRewardLevel();
+			isNext = false;
+		}
+	}
+
 	/*判断狼是否击中玩家*/
 	private void boomAttackPlayer(){
 		for(int i = weapon.booms.size() - 1;i >=0;i--){
@@ -219,21 +242,10 @@ public class StateGame implements Common{
 	
 	}
 
-	private void nextLevel(){
-		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
-			StateNextLevel stateLevel = new StateNextLevel();
-			stateLevel.processNextLevel();
-			isNext = true;
-			level ++;
-			weapon.clearObjects();  //清空对象
-			batches.clearObject();	//清空对象
-		}
-	}
-	
 	private void createNpc(){
 		if(isAllDown()){
 			if(engine.timePass(LEVEL_INFO[level-1][2]*1000)){
-				batches.createBatches(level, batch);
+				batches.createBatches(level, batch, LEVEL_INFO[level-1][3]);
 				batch = (short) ((batch+1) % BatchesInfo[level-1].length);
 			}
 		}

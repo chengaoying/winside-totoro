@@ -148,8 +148,6 @@ public class Weapon implements Common {
 	
 	/*创建防狼套装*/
 	public void createProtect(Role player) {
-		System.out.println("玩家横纵标------"+player.mapx);
-		System.out.println("玩家纵纵标"+player.mapy);
        Weapon w = new Weapon();
        w.mapy = player.mapy + 30;
        w.mapx = player.mapx;

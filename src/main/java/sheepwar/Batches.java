@@ -18,12 +18,6 @@ public class Batches implements Common{
 	int pattern;			//空中分布方式
 	int ballonId;			//气球种类
 	
-	
-	public final static int ROLE_MOVE_UP = 0;  		//上
-	public final static int ROLE_MOVE_DOWN = 1;		//下
-	public final static int ROLE_MOVE_LEFT = 2;		//左
-	public final static int ROLE_MOVE_RIGHT = 3;	//右
-	
 	public Vector npcs = new Vector();   
 	private int[] coors = {60,110,160,210};  //狼下落点的横坐标
 
@@ -40,7 +34,7 @@ public class Batches implements Common{
 	};
 	
 	/*创建一批狼*/
-	public void createBatches(int level, int batch){
+	public void createBatches(int level, int batch, int position){
 		int count = BatchesInfo[level-1][batch][0];	//该批狼的数量
 		int spreed_mode = BatchesInfo[level-1][batch][2];
 		int ran = RandomValue.getRandInt(regular.length-1);  //折线方式
@@ -48,12 +42,17 @@ public class Batches implements Common{
 			Role wolf = new Role();
 			wolf.status = ROLE_ALIVE;
 			wolf.status2 = ROLE_ON_GROUND;
-			wolf.mapy = npcPara[4];
 			wolf.speed = npcPara[2];
 			wolf.width = npcPara[0];
 			wolf.height = npcPara[1];
-			wolf.direction = ROLE_MOVE_RIGHT;    
+			wolf.direction = ROLE_MOVE_RIGHT; 
+			wolf.position = position;
 			wolf.colorId = BatchesInfo[level-1][batch][1];
+			if(wolf.position == WOLF_POSITION_TOP){
+				wolf.mapy = npcPara[4];
+			}else{
+				wolf.mapy = 466;
+			}
 			setWolfInfo(count, spreed_mode, wolf, i, ran); 
 			
 			npcs.addElement(wolf);
@@ -179,7 +178,7 @@ public class Batches implements Common{
 		ballon.mapx = wolf.mapx+12;
 		ballon.mapy = ballon.height - (wolf.mapy+58);      
 		ballon.speed = wolf.speed;
-		
+		System.out.println("创建气球");
 		wolf.role = ballon;
 	}
 
@@ -191,102 +190,175 @@ public class Batches implements Common{
 		Role wolf = null;
 		for(int i=len-1;i>=0;i--){
 			wolf = (Role)npcs.elementAt(i);
-			int tempx = wolf.mapx;
-			int tempy = wolf.mapy;
-			if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
-				if(!StateGame.pasueState){
-					tempx += wolf.speed;
-					wolf.mapx = tempx;
-					wolf.frame = (wolf.frame + 1) % 6; 
-				}
-				g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
-			}else if(wolf.direction == ROLE_MOVE_DOWN){   //向下走
-				createBallon(wolf); //创建气球
-				wolf.status2 = ROLE_IN_AIR;
-				int tempx_ballon = wolf.role.mapx;
-				int tempy_ballon = wolf.role.mapy;
-				Image ballon = Resource.loadImage(wolf.role.id);
-				if(wolf.status == ROLE_ALIVE){
-					if(!StateGame.pasueState){
-						if(wolf.role.frame<2){
-							wolf.role.frame = (wolf.role.frame+1);
-						}else{
-							tempy += wolf.speed;
-							wolf.mapy = tempy;
-							tempy_ballon += wolf.role.speed;
-							wolf.role.mapy = tempy_ballon;
-						}
-						if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
-							if(wolf.mapy == 146){				
-								weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
-							}
-						}
-					}
-					g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
-					g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
-				}else if(wolf.status == ROLE_DEATH){
-					if(wolf.role.frame<4){
-						wolf.role.frame = (wolf.role.frame+1);
-						g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
-					}else{
-						tempy += wolf.speed;
-						wolf.mapy = tempy;
-					}
-					int w = wolf_down.getWidth()/2;
-					int h = wolf_down.getHeight();
-					wolf.frame = (wolf.frame+1)%2;
-					g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
-				}
+			if(wolf.position == WOLF_POSITION_TOP){  //狼由上往下
+				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
 				
-			}else if(wolf.direction == ROLE_MOVE_UP){    //向上走
-				wolf.frame = 0;
-				int positionY = 190;
-				if(wolf.position == ON_ONE_LADDER){
-					if(tempy >= positionY){
-						tempy -= wolf.speed;
-						wolf.mapy = tempy;
-						wolf.frame = (wolf.frame+1)%2;
-					}
-				}else if(wolf.position == ON_TWO_LADDER){
-					if(tempy >= positionY+89){
-						tempy -= wolf.speed;
-						wolf.mapy = tempy;
-						wolf.frame = (wolf.frame+1)%2;
-					}
-				}else if(wolf.position == ON_THREE_LADDER){
-					if(tempy >= positionY+89*2){
-						tempy -= wolf.speed;
-						wolf.mapy = tempy;
-						wolf.frame = (wolf.frame+1)%2;
-					}
-				}else if(wolf.position == ON_FOUR_LADDER){
-					if(tempy >= positionY+89*3){
-						tempy -= wolf.speed;
-						wolf.mapy = tempy;
-						wolf.frame = (wolf.frame+1)%2;
+				/*向下的临界点*/
+				if(wolf.mapx == wolf.coorX){    
+					wolf.direction = ROLE_MOVE_DOWN;
+				}
+				/*向右的临界点*/
+				if(wolf.mapy >= 463){
+					wolf.direction = ROLE_MOVE_RIGHT;
+				}
+				/*向上临界点*/
+				if(wolf.mapx == 420){     
+					wolf.direction = ROLE_MOVE_UP;
+					if(wolf.position == 0){
+						setWolfLadders(wolf);
 					}
 				}
-				int w = wolf_climb.getWidth()/2;
-				int h = wolf_climb.getHeight();
-				g.drawRegion(wolf_climb, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
-			}
-			
-			/*向下的临界点*/
-			if(wolf.mapx == wolf.coorX){    
-				wolf.direction = ROLE_MOVE_DOWN;
-			}
-			/*向右的临界点*/
-			if(wolf.mapy >= 463){
-				wolf.direction = ROLE_MOVE_RIGHT;
-			}
-			/*向上临界点*/
-			if(wolf.mapx == 420){     
-				wolf.direction = ROLE_MOVE_UP;
-				if(wolf.position == 0){
-					setWolfLadders(wolf);
+			}else if(wolf.position == WOLF_POSITION_BOTTOM){  //狼由下往上
+				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
+				
+				/*向上的临界点*/
+				if(wolf.mapx == wolf.coorX){    
+					wolf.direction = ROLE_MOVE_UP;
+				}
+				/*向右的临界点*/
+				if(wolf.mapy <= 26){
+					wolf.direction = ROLE_MOVE_RIGHT;
 				}
 			}
 		}	
+	}
+	
+	/*狼降落*/
+	private void wolfDown(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
+		int tempx = wolf.mapx;
+		int tempy = wolf.mapy;
+		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
+			if(!StateGame.pasueState){
+				tempx += wolf.speed;
+				wolf.mapx = tempx;
+				wolf.frame = (wolf.frame + 1) % 6; 
+			}
+			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+		}else if(wolf.direction == ROLE_MOVE_DOWN){   //向下走
+			createBallon(wolf); //创建气球
+			wolf.status2 = ROLE_IN_AIR;
+			int tempx_ballon = wolf.role.mapx;
+			int tempy_ballon = wolf.role.mapy;
+			Image ballon = Resource.loadImage(wolf.role.id);
+			if(wolf.status == ROLE_ALIVE){
+				if(!StateGame.pasueState){
+					if(wolf.role.frame<2){
+						wolf.role.frame = (wolf.role.frame+1);
+					}else{
+						tempy += wolf.speed;
+						wolf.mapy = tempy;
+						tempy_ballon += wolf.role.speed;
+						wolf.role.mapy = tempy_ballon;
+					}
+					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
+						if(wolf.mapy == 146){				
+							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+						}
+					}
+				}
+				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+			}else if(wolf.status == ROLE_DEATH){
+				if(wolf.role.frame<4){
+					wolf.role.frame = (wolf.role.frame+1);
+					g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+				}else{
+					tempy += wolf.speed;
+					wolf.mapy = tempy;
+				}
+				int w = wolf_down.getWidth()/2;
+				int h = wolf_down.getHeight();
+				wolf.frame = (wolf.frame+1)%2;
+				g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+			}
+			
+		}else if(wolf.direction == ROLE_MOVE_UP){    //向上走
+			wolf.frame = 0;
+			int positionY = 190;
+			if(wolf.position == ON_ONE_LADDER){
+				if(tempy >= positionY){
+					tempy -= wolf.speed;
+					wolf.mapy = tempy;
+					wolf.frame = (wolf.frame+1)%2;
+				}
+			}else if(wolf.position == ON_TWO_LADDER){
+				if(tempy >= positionY+89){
+					tempy -= wolf.speed;
+					wolf.mapy = tempy;
+					wolf.frame = (wolf.frame+1)%2;
+				}
+			}else if(wolf.position == ON_THREE_LADDER){
+				if(tempy >= positionY+89*2){
+					tempy -= wolf.speed;
+					wolf.mapy = tempy;
+					wolf.frame = (wolf.frame+1)%2;
+				}
+			}else if(wolf.position == ON_FOUR_LADDER){
+				if(tempy >= positionY+89*3){
+					tempy -= wolf.speed;
+					wolf.mapy = tempy;
+					wolf.frame = (wolf.frame+1)%2;
+				}
+			}
+			int w = wolf_climb.getWidth()/2;
+			int h = wolf_climb.getHeight();
+			g.drawRegion(wolf_climb, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+		}
+		
+	}
+	
+	/*狼上升*/
+	private void wolfUp(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
+		int tempx = wolf.mapx;
+		int tempy = wolf.mapy;
+		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
+			if(!StateGame.pasueState){
+				tempx += wolf.speed;
+				wolf.mapx = tempx;
+				wolf.frame = (wolf.frame + 1) % 6; 
+			}
+			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+		}else if(wolf.direction == ROLE_MOVE_UP){   //向上走
+			createBallon(wolf); //创建气球
+			wolf.status2 = ROLE_IN_AIR;
+			int tempx_ballon = wolf.role.mapx;
+			int tempy_ballon = wolf.role.mapy;
+			Image ballon = Resource.loadImage(wolf.role.id);
+			if(wolf.status == ROLE_ALIVE){
+				if(!StateGame.pasueState){
+					if(wolf.role.frame<2){
+						wolf.role.frame = (wolf.role.frame+1);
+					}else{
+						tempy -= wolf.speed;
+						wolf.mapy = tempy;
+						tempy_ballon -= wolf.role.speed;
+						wolf.role.mapy = tempy_ballon;
+					}
+					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
+						if(wolf.mapy == 146){				
+							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
+						}
+					}
+				}
+				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+			}else if(wolf.status == ROLE_DEATH){
+				if(wolf.role.frame<4){
+					wolf.role.frame = (wolf.role.frame+1);
+					g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+				}else{
+					tempy += wolf.speed;
+					wolf.mapy = tempy;
+				}
+				int w = wolf_down.getWidth()/2;
+				int h = wolf_down.getHeight();
+				wolf.frame = (wolf.frame+1)%2;
+				g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
+			}
+			
+		}else if(wolf.direction == ROLE_MOVE_UP){}
+		
+	
 	}
 	
 	/*没有被攻击到的狼，设置它在梯子上的位置*/
