@@ -51,8 +51,7 @@ public class CreateRole implements Common {
 					50 + role.mapy, 20); 
 
 			g.drawRegion(playing_sheep, 0, 0, playing_sheep.getWidth(),
-					playing_sheep.getHeight(), 0, 361, role.mapy,
-					20);
+					playing_sheep.getHeight(), 0, 361, role.mapy,20);
 
 			g.drawRegion(sheep_eye, 0, 0, sheep_eye.getWidth(),
 					sheep_eye.getHeight(), 0, 371 - 13,

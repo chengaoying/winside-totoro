@@ -216,6 +216,7 @@ public class Weapon implements Common {
 			}
 		}
 	}
+	
 	/*创建驱散竖琴*/
 	public void createHarp(Role player){
 		Weapon w = new Weapon();
@@ -245,6 +246,21 @@ public class Weapon implements Common {
 			}
 			g.drawRegion(harpEffect, w.frame*harpEffect.getWidth()/5, 0, harpEffect.getWidth()/5, harpEffect.getHeight(), 
 					0, 444, 156, 20);
+		}
+	}
+	
+	/*显示强力磁石效果*/
+	public void showMagnetEffect(SGraphics g,Batches batches) {
+		Image magnetEffect = Resource.loadImage(Resource.id_prop_7_effect);
+		for(int j = batches.npcs.size() - 1;j>=0;j--){
+			Role npc = (Role)batches.npcs.elementAt(j);
+			if(npc.direction == ROLE_IN_AIR && StateGame.magnetState){
+				npc.frame = (npc.frame+1)%2;
+				npc.status = ROLE_DEATH;
+				g.drawRegion(magnetEffect, npc.frame*magnetEffect.getWidth()/2, 0, magnetEffect.getWidth()/2, magnetEffect.getHeight(), 
+						0, npc.mapx, npc.mapy, 20);
+				batches.npcs.removeElement(npc);
+			}
 		}
 	}
 

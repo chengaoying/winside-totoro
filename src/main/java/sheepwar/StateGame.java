@@ -66,6 +66,12 @@ public class StateGame implements Common{
 	private long protectInterval = 5;
 	public static boolean protectState;
 	
+	/*强力磁石*/
+	private long magnetStartTime,magnetEndTime;
+	private long magnetInterval = 3;
+	public static boolean magnetState;
+	
+	
 	/*玩家复活数据*/
 	public static int lifeNum;
 	public static int scores;
@@ -81,7 +87,7 @@ public class StateGame implements Common{
 		} else if (keyState.containsMoveEventAndRemove(KeyCode.DOWN)) {
 			moveRole(1);
 			
-		} else if (keyState.containsAndRemove(KeyCode.OK)) {	
+		} else if (keyState.containsAndRemove(KeyCode.OK)&& own.status ==ROLE_ALIVE) {	
 			if(isAttack){ //普通攻击
 				weapon.createBomb(own, Weapon.WEAPON_MOVE_LEFT);
 				own.bombNum ++;
@@ -91,40 +97,36 @@ public class StateGame implements Common{
 				}
 			}
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM1)){    	//时光闹钟
+		}else if(keyState.containsAndRemove(KeyCode.NUM1)&& own.status ==ROLE_ALIVE){    	//时光闹钟
 			pasueState = true;
 			pasueTimeS = System.currentTimeMillis()/1000;
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM2)){ 	//捕狼网
+		}else if(keyState.containsAndRemove(KeyCode.NUM2)&& own.status ==ROLE_ALIVE){ 	//捕狼网
 			weapon.createNet(own, Weapon.WEAPON_MOVE_LEFT);
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM3)){		//盾牌
+		}else if(keyState.containsAndRemove(KeyCode.NUM3)&& own.status ==ROLE_ALIVE){		//盾牌
 			protectState = true;
-			if(own.status == ROLE_ALIVE){
-				weapon.createProtect(own);
-			}
+			weapon.createProtect(own);
 			proStartTime = System.currentTimeMillis()/1000;
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM4)){		//激光枪
-			if(own.status == ROLE_ALIVE){
-				weapon.createGlare(own,Weapon.WEAPON_MOVE_LEFT);
-			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//激光枪
+			weapon.createGlare(own,Weapon.WEAPON_MOVE_LEFT);
 
-		}else if(keyState.containsAndRemove(KeyCode.NUM5)){		//驱散竖琴
-			if(own.status == ROLE_ALIVE){
-				weapon.createHarp(own);
-			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM5)&& own.status ==ROLE_ALIVE){		//驱散竖琴
+			weapon.createHarp(own);
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM6)){		//加速
+		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//加速
 			if(!speedFlag){
 				addSpeedTime = System.currentTimeMillis()/1000;
 				own.speed = own.speed + 5;
 				speedFlag = true;
 			}
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
-			
-		}else if(keyState.containsAndRemove(KeyCode.NUM8)){		//木偶->可以增加一条生命
+		}else if(keyState.containsAndRemove(KeyCode.NUM7)&& own.status ==ROLE_ALIVE){
+			magnetStartTime = System.currentTimeMillis()/1000;
+			magnetState = true;
+		}else if(keyState.containsAndRemove(KeyCode.NUM8) && own.status ==ROLE_ALIVE){		//木偶->可以增加一条生命
+			own.lifeNum ++;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM9)){
 			
@@ -144,6 +146,7 @@ public class StateGame implements Common{
 		weapon.showProtect(g, own);
 		weapon.showGlare(g, own);
 		weapon.showHarp(g, batches);
+		weapon.showMagnetEffect(g, batches);
 	}
 	
 	public void execute(){
@@ -169,6 +172,15 @@ public class StateGame implements Common{
 		if(proEndTime - proStartTime > protectInterval){
 			protectState = false;
 		}
+		
+		/*强力磁石控制时间*/
+		magnetEndTime = System.currentTimeMillis()/1000;
+		if(magnetEndTime - magnetStartTime > magnetInterval){
+			magnetState = false;
+		}
+//		System.out.println("是否启用了强力磁石："+StateGame.magnetState);
+//		System.out.println("magnetEndTime"+magnetEndTime);
+//		System.out.println("magnetStartTime"+magnetStartTime);
 
 		/*创建狼*/
 		createNpc();
@@ -193,8 +205,6 @@ public class StateGame implements Common{
 		
 		/*每两关之后出现奖励关卡*/
 		rewardLevel();
-		
-		/**/
 		
 		/*游戏成功或失败*/
 		gameSuccessOrFail();
@@ -443,7 +453,7 @@ public class StateGame implements Common{
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);	
-		drawNum(g, 99, 491+66+multiply.getWidth()+10, 147+2);			//羊的生命数
+		drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147+2);			//羊的生命数
 		g.drawImage(multiply, 45, 12, 20);	
 		drawNum(g, 99, 45+multiply.getWidth()+10, 12+2);
 
