@@ -19,7 +19,8 @@ public class Batches implements Common{
 	int ballonId;			//气球种类
 	
 	public Vector npcs = new Vector();   
-	private int[] coors = {60,110,160,210};  //狼下落点的横坐标
+	private int[] coors = {60,110,160,210}; 					 //狼下落点的横坐标
+	private int[] coorY = {146,196,246,296,346,396,446,496};  	 //狼发射子弹的Y坐标
 
 	/* 气球属性 */
 	public static int bublePara[] = {
@@ -29,12 +30,12 @@ public class Batches implements Common{
 	
 	/*npc（狼）属性*/
 	public static int npcPara[] = {
-		/*0-图片宽度，1-图片高度，2-移动速度，3-初始X坐标，4-初始Y坐标,*/
-		45, 56, 5, -45-45, 26
+		/*0-图片宽度，1-图片高度，2-移动速度，3-初始X坐标*/
+		45, 56, 5, -45-45
 	};
 	
 	/*创建一批狼*/
-	public void createBatches(int level, int batch, int position){
+	public void createBatches(int level, int batch, int position2){
 		int count = BatchesInfo[level-1][batch][0];	//该批狼的数量
 		int spreed_mode = BatchesInfo[level-1][batch][2];
 		int ran = RandomValue.getRandInt(regular.length-1);  //折线方式
@@ -45,11 +46,13 @@ public class Batches implements Common{
 			wolf.speed = npcPara[2];
 			wolf.width = npcPara[0];
 			wolf.height = npcPara[1];
-			wolf.direction = ROLE_MOVE_RIGHT; 
-			wolf.position = position;
+			wolf.direction = ROLE_MOVE_RIGHT;
+			wolf.coorY = coorY[RandomValue.getRandInt(8)];
+			wolf.position = 0;
+			wolf.position2 = position2;
 			wolf.colorId = BatchesInfo[level-1][batch][1];
-			if(wolf.position == WOLF_POSITION_TOP){
-				wolf.mapy = npcPara[4];
+			if(wolf.position2 == WOLF_POSITION_TOP){
+				wolf.mapy = 26;
 			}else{
 				wolf.mapy = 466;
 			}
@@ -176,9 +179,8 @@ public class Batches implements Common{
 		ballon.height = bublePara[1];
 		ballon.scores = bublePara[2];
 		ballon.mapx = wolf.mapx+12;
-		ballon.mapy = ballon.height - (wolf.mapy+58);      
+		ballon.mapy = wolf.mapy+40 - ballon.height;      
 		ballon.speed = wolf.speed;
-		System.out.println("创建气球");
 		wolf.role = ballon;
 	}
 
@@ -190,9 +192,7 @@ public class Batches implements Common{
 		Role wolf = null;
 		for(int i=len-1;i>=0;i--){
 			wolf = (Role)npcs.elementAt(i);
-			if(wolf.position == WOLF_POSITION_TOP){  //狼由上往下
-				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
-				
+			if(wolf.position2 == WOLF_POSITION_TOP){  //狼由上往下
 				/*向下的临界点*/
 				if(wolf.mapx == wolf.coorX){    
 					wolf.direction = ROLE_MOVE_DOWN;
@@ -208,8 +208,9 @@ public class Batches implements Common{
 						setWolfLadders(wolf);
 					}
 				}
-			}else if(wolf.position == WOLF_POSITION_BOTTOM){  //狼由下往上
-				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
+				wolfDown(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
+				
+			}else if(wolf.position2 == WOLF_POSITION_BOTTOM){  //狼由下往上
 				
 				/*向上的临界点*/
 				if(wolf.mapx == wolf.coorX){    
@@ -218,12 +219,17 @@ public class Batches implements Common{
 				/*向右的临界点*/
 				if(wolf.mapy <= 26){
 					wolf.direction = ROLE_MOVE_RIGHT;
+					wolf.status = ROLE_SUCCESS;
+					if(wolf.position == 0){
+						setWolfLadders(wolf);
+					}
 				}
+				wolfUp(g, wolf, weapon, wolf_Image, wolf_down, wolf_climb);
 			}
 		}	
 	}
 	
-	/*狼降落*/
+	/*狼由上往下*/
 	private void wolfDown(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
@@ -251,7 +257,7 @@ public class Batches implements Common{
 						wolf.role.mapy = tempy_ballon;
 					}
 					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
-						if(wolf.mapy == 146){				
+						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}
 					}
@@ -276,28 +282,30 @@ public class Batches implements Common{
 			wolf.frame = 0;
 			int positionY = 190;
 			if(wolf.position == ON_ONE_LADDER){
-				if(tempy >= positionY){
+				if(tempy >= positionY+89*3){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
 				}
 			}else if(wolf.position == ON_TWO_LADDER){
-				if(tempy >= positionY+89){
-					tempy -= wolf.speed;
-					wolf.mapy = tempy;
-					wolf.frame = (wolf.frame+1)%2;
-				}
-			}else if(wolf.position == ON_THREE_LADDER){
 				if(tempy >= positionY+89*2){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
 				}
-			}else if(wolf.position == ON_FOUR_LADDER){
-				if(tempy >= positionY+89*3){
+			}else if(wolf.position == ON_THREE_LADDER){
+				if(tempy >= positionY+89){
 					tempy -= wolf.speed;
 					wolf.mapy = tempy;
 					wolf.frame = (wolf.frame+1)%2;
+				}
+			}else if(wolf.position == ON_FOUR_LADDER){
+				if(tempy >= positionY){
+					tempy -= wolf.speed;
+					wolf.mapy = tempy;
+					wolf.frame = (wolf.frame+1)%2;
+				}else{
+					StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
 				}
 			}
 			int w = wolf_climb.getWidth()/2;
@@ -307,14 +315,52 @@ public class Batches implements Common{
 		
 	}
 	
-	/*狼上升*/
+	/*狼由下往上*/
 	private void wolfUp(SGraphics g, Role wolf, Weapon weapon, Image wolf_Image, Image wolf_down,Image wolf_climb){
 		int tempx = wolf.mapx;
 		int tempy = wolf.mapy;
 		if(wolf.direction == ROLE_MOVE_RIGHT){  //向右走
 			if(!StateGame.pasueState){
-				tempx += wolf.speed;
-				wolf.mapx = tempx;
+				if(wolf.status == ROLE_SUCCESS){
+					int positionX = 210;
+					if(wolf.position == ON_ONE_LADDER){
+						if(tempx+wolf.speed <= positionX){
+							tempx += wolf.speed;
+							wolf.mapx = tempx;
+						}else{
+							wolf.mapx = tempx = positionX;
+						}
+					}else if(wolf.position == ON_TWO_LADDER){
+						if(tempx+wolf.speed <= positionX-wolf.width){
+							tempx += wolf.speed;
+							wolf.mapx = tempx;
+						}else if(tempx>positionX-wolf.width){
+							tempx -= wolf.speed;
+							wolf.mapx = tempx;
+						}
+					}else if(wolf.position == ON_THREE_LADDER){
+						if(tempx+wolf.speed < positionX-wolf.width*2){
+							tempx += wolf.speed;
+							wolf.mapx = tempx;
+						}else if(tempx>positionX-wolf.width*2){
+							tempx -= wolf.speed;
+							wolf.mapx = tempx;
+						}
+					}else if(wolf.position == ON_FOUR_LADDER){
+						if(tempx+wolf.speed < positionX-wolf.width*3){
+							tempx += wolf.speed;
+							wolf.mapx = tempx;
+						}else if(tempx>positionX-wolf.width*3){
+							tempx -= wolf.speed;
+							wolf.mapx = tempx;
+						}else{
+							StateGame.IS_FOUR_WOLF = true;  // 表明梯子上的狼满了
+						}
+					}
+				}else{
+					tempx += wolf.speed;
+					wolf.mapx = tempx;
+				}
 				wolf.frame = (wolf.frame + 1) % 6; 
 			}
 			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
@@ -335,7 +381,7 @@ public class Batches implements Common{
 						wolf.role.mapy = tempy_ballon;
 					}
 					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
-						if(wolf.mapy == 146){				
+						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}
 					}
@@ -355,33 +401,26 @@ public class Batches implements Common{
 				wolf.frame = (wolf.frame+1)%2;
 				g.drawRegion(wolf_down, wolf.frame*w, 0, w, h, 0, tempx, tempy, 20);
 			}
-			
-		}else if(wolf.direction == ROLE_MOVE_UP){}
-		
-	
+		}
 	}
 	
 	/*没有被攻击到的狼，设置它在梯子上的位置*/
 	private void setWolfLadders(Role wolf){
 		if(!StateGame.HASWOLF_ONE){
-			wolf.position = ON_FOUR_LADDER;
-			StateGame.HASWOLF_ONE = true;
-			return;
-		}
-		if(!StateGame.HASWOLF_TWO){
-			wolf.position = ON_THREE_LADDER;
-			StateGame.HASWOLF_TWO = true;
-			return;
-		}
-		if(!StateGame.HASWOLF_THREE){
-			wolf.position = ON_TWO_LADDER;
-			StateGame.HASWOLF_THREE = true;
-			return;
-		}
-		if(!StateGame.HASWOLF_FOUR){
 			wolf.position = ON_ONE_LADDER;
+			StateGame.HASWOLF_ONE = true;
+			
+		}else if(!StateGame.HASWOLF_TWO){
+			wolf.position = ON_TWO_LADDER;
+			StateGame.HASWOLF_TWO = true;
+			
+		}else if(!StateGame.HASWOLF_THREE){
+			wolf.position = ON_THREE_LADDER;
+			StateGame.HASWOLF_THREE = true;
+			
+		}else if(!StateGame.HASWOLF_FOUR){
+			wolf.position = ON_FOUR_LADDER;
 			StateGame.HASWOLF_FOUR = true;
-			return;
 		}
 	}
 	

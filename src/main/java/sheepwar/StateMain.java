@@ -55,7 +55,7 @@ public class StateMain implements Common{
 			stateGame.weapon = new Weapon();
 			stateGame.createRole = new CreateRole();
 			stateGame.batches = new Batches();
-			stateGame.own = stateGame.createRole.createSheep();
+			StateGame.own = stateGame.createRole.createSheep();
 		}
 	}
 	

@@ -9,11 +9,14 @@ import cn.ohyeah.stb.util.RandomValue;
 
 public class StateGame implements Common{
 	
-	/*从上往下判断四个梯子上是否有狼*/
+	/*从下往上判断四个梯子上是否有狼，从右到左*/
 	public static boolean HASWOLF_ONE;
 	public static boolean HASWOLF_TWO;
 	public static boolean HASWOLF_THREE;
 	public static boolean HASWOLF_FOUR;
+	
+	/*判断梯子上是否都有狼*/
+	public static boolean IS_FOUR_WOLF;
 	
 	private SheepWarGameEngine engine;
 	
@@ -24,10 +27,10 @@ public class StateGame implements Common{
 	public CreateRole createRole;
 	public Batches batches;
 	public Weapon weapon;
-	public Role own; 
+	public static Role own; 
 
 	/*游戏关卡*/
-	public short level = 2; 
+	public short level = 1; 
 	public boolean isNext;
 	
 	/*当前关卡狼出现的批次*/
@@ -38,7 +41,7 @@ public class StateGame implements Common{
 		
 		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, 1-下面）*/
 		{1, 2, 3, 0},  //第一关
-		{1, 32, 3, 1},  //第二关
+		{1, 32, 3, -1},  //第二关
 		{},  //第三关
 	};
 	
@@ -63,7 +66,12 @@ public class StateGame implements Common{
 	private long protectInterval = 5;
 	public static boolean protectState;
 	
-	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30;
+	/*玩家复活数据*/
+	public static int lifeNum;
+	public static int scores;
+	public static int eatNum;
+	
+	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30, sWidth = 155, sTempy = 309;
 	
 	public void handleKey(KeyState keyState){
 		
@@ -174,10 +182,42 @@ public class StateGame implements Common{
 		
 		/*每两关之后出现奖励关卡*/
 		rewardLevel();
+		
+		/**/
+		
+		/*游戏成功或失败*/
+		gameSuccessOrFail();
 	}
 	
+	private void gameSuccessOrFail() {
+		
+		if(own.lifeNum<=0){		/*游戏失败*/
+			System.out.println("isSuccess:"+false);
+			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
+			sgs.processGameSuccessOrFail(false);
+			engine.status = STATUS_MAIN_MENU;
+			
+		}else if(level > 15){	/*游戏通关*/
+			System.out.println("isSuccess:"+true);
+			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
+			sgs.processGameSuccessOrFail(true);
+			engine.status = STATUS_MAIN_MENU;
+		}
+		
+		
+		
+	}
+
 	private void nextLevel(){
 		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
+			StateNextLevel stateLevel = new StateNextLevel();
+			stateLevel.processNextLevel();
+			isNext = true;
+			batch = 0;
+			level ++;
+			weapon.clearObjects();  //清空对象
+			batches.clearObject();	//清空对象
+		}else if(level==2 && own.eatNum >= LEVEL_INFO[level-1][1]){
 			StateNextLevel stateLevel = new StateNextLevel();
 			stateLevel.processNextLevel();
 			isNext = true;
@@ -203,10 +243,10 @@ public class StateGame implements Common{
 			Weapon boom = (Weapon)weapon.booms.elementAt(i);
 			if(own.status == ROLE_ALIVE){
 				if(Collision.checkCollision(boom.mapx, boom.mapy, boom.width, boom.height, own.mapx, own.mapy, own.width, own.height)){
-					if(protectState){			//玩家是否有防狼套装
-						own.status = ROLE_ALIVE;
-					}else{
+					if(!protectState){			//玩家是否有防狼套装
 						own.status = ROLE_DEATH;
+						own.lifeNum --;
+						lifeNum = own.lifeNum;
 					}
 					weapon.booms.removeElement(boom);
 				}
@@ -286,6 +326,8 @@ public class StateGame implements Common{
 						
 						own.eatNum ++;
 						own.scores += ballon.scores;
+						scores = own.scores;
+						eatNum = own.eatNum;
 					}
 					else if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, npc.mapx, npc.mapy, npc.width, npc.height)){
 						bomb.direction = Weapon.WEAPON_MOVE_DOWN;
@@ -346,11 +388,15 @@ public class StateGame implements Common{
 			g.drawImage(playing_step, 377, 153+i*89, 20);
 			g.drawImage(ladder, 426, 183+i*89, 20);
 		}
-		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), (own.mapy-154),        //上下移动的绳子
-				0, 379, 154, 20);                                                        //竖直绳子 的纵坐标 154
-
+		
+		if(own.status == ROLE_ALIVE){
+			sWidth = own.mapy - 154;
+			sTempy = own.mapy;
+		}
+		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), sWidth,        //上下移动的绳子
+				0, 379, 154, 20);                                                        	//竖直绳子 的纵坐标 154
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
-				0, 342, 154+(own.mapy-154), 20);
+				0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
 		g.drawImage(playing_menu, 491, 0, 20);
@@ -358,7 +404,7 @@ public class StateGame implements Common{
 		g.drawImage(playing_level, 491+32, 25, 20);				//游戏中 左侧的关卡图片		
 		g.drawImage(playing_point, 491+11, 66, 20);				//游戏中 左侧 的得分图片	
 		g.drawImage(sheep_head, 491+26, 142, 20);				//游戏中 右侧 的羊的头像		
-		g.drawImage(wolf_head, 12, 10, 20);				//游戏中 左侧 的狼的头像		
+		g.drawImage(wolf_head, 12, 10, 20);						//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);						
 		g.drawImage(multiply, 45, 12, 20);	
 		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;

@@ -15,6 +15,7 @@ public interface Common {
 	
 	public final static short ROLE_ALIVE = 0; 			//角色活着状态 
 	public final static short ROLE_DEATH = -1;  		//角色活着状态 
+	public final static short ROLE_SUCCESS = 1;  		//狼逃脱的状态 
 	
 	public final static short ROLE_ON_GROUND = 0;  		//狼在地面
 	public final static short ROLE_IN_AIR = 1;  		//狼离开地面
@@ -31,8 +32,8 @@ public interface Common {
 	public final static int ROLE_MOVE_RIGHT = 3;	//右
 	
 	/*狼的初始Y轴位置*/
-	public final static short WOLF_POSITION_TOP = 0;	//在上面
-	public final static short WOLF_POSITION_BOTTOM = 1;	//在下面
+	public final static short WOLF_POSITION_TOP = 0;		//狼出现的初始位置（上面）
+	public final static short WOLF_POSITION_BOTTOM = -1;	//狼出现的初始位置（下面）
 	
 	/*狼在空中分布方式*/
 	public final static short NONE = 0;					//无
