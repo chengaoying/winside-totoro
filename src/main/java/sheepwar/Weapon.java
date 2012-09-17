@@ -33,10 +33,7 @@ public class Weapon implements Common {
 	public Vector booms = new Vector();
 	public Vector protects = new Vector();
 	public Vector glares = new Vector();
-	public Vector harps = new Vector();
-	
-	/*捕狼标识*/
-	public boolean isUseNet;
+	public Vector harps = new Vector();			//驱散竖琴
 	
 	/**
 	 * 创建普通武器 ---Shuriken

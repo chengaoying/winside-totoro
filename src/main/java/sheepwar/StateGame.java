@@ -31,7 +31,10 @@ public class StateGame implements Common{
 
 	/*游戏关卡*/
 	public short level = 1; 
-	public boolean isNext;
+	/*奖励关卡*/
+	public short rewardLevel = 1;
+	
+	public boolean isNext, isRewardLevel;
 	
 	/*当前关卡狼出现的批次*/
 	public short batch;
@@ -39,10 +42,18 @@ public class StateGame implements Common{
 	/*关卡信息*/
 	public static int[][] LEVEL_INFO = {
 		
-		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, 1-下面）*/
+		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, -1-下面）*/
 		{1, 2, 3, 0},  //第一关
-		{1, 32, 3, -1},  //第二关
-		{},  //第三关
+		{2, 2, 3, -1},  //第二关
+		{3, 2, 3, -1},  //第三关
+	};
+	
+	/*奖励关卡信息*/
+	public static int [][] REWARD_LEVEL_INFO = {
+		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, -1-下面）*/
+		{1,16,3,-1},			//奖励关卡一
+		{2,16,3,-1},			//奖励关卡二
+		{3,16,3,-1},			//奖励关卡三
 	};
 	
 	/*控制子弹发射的变量*/
@@ -115,13 +126,12 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)&& own.status ==ROLE_ALIVE){		//驱散竖琴
 			weapon.createHarp(own);
 			
-		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//加速
+		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//速度提升液
 			if(!speedFlag){
-				addSpeedTime = System.currentTimeMillis()/1000;
 				own.speed = own.speed + 5;
 				speedFlag = true;
+				addSpeedTime = System.currentTimeMillis()/1000;
 			}
-			
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)&& own.status ==ROLE_ALIVE){
 			magnetStartTime = System.currentTimeMillis()/1000;
 			magnetState = true;
@@ -150,7 +160,6 @@ public class StateGame implements Common{
 	}
 	
 	public void execute(){
-		
 		/*控制子弹发射间隔*/
 		endTime = System.currentTimeMillis()/1000; 
 		if(isAttack==false && endTime-startTime>=bulletInterval){
@@ -163,10 +172,10 @@ public class StateGame implements Common{
 		}
 		/*加速效果时间*/
 		addSpeedTime2 = System.currentTimeMillis()/1000;
-		if(addSpeedTime2 - addSpeedTime >= speedLiquidInterval){			
+		if(addSpeedTime2 - addSpeedTime >speedLiquidInterval){			
 			speedFlag = false;
+			own.speed = 5;
 		}
-		
 		/*防狼套装的时间控制*/
 		proEndTime = System.currentTimeMillis()/1000;
 		if(proEndTime - proStartTime > protectInterval){
@@ -178,9 +187,6 @@ public class StateGame implements Common{
 		if(magnetEndTime - magnetStartTime > magnetInterval){
 			magnetState = false;
 		}
-//		System.out.println("是否启用了强力磁石："+StateGame.magnetState);
-//		System.out.println("magnetEndTime"+magnetEndTime);
-//		System.out.println("magnetStartTime"+magnetStartTime);
 
 		/*创建狼*/
 		createNpc();
@@ -200,16 +206,74 @@ public class StateGame implements Common{
 		/*移除死亡对象*/
 		removeDeath();
 		
-		/*过关判断*/
-		nextLevel();
-		
 		/*每两关之后出现奖励关卡*/
 		rewardLevel();
+		
+		/*判断奖励关卡是否退出*/
+		if(isRewardLevel){
+			judgeRewardOverOrNot();
+		}else{
+			nextLevel();  /*过关判断*/
+		}
 		
 		/*游戏成功或失败*/
 		gameSuccessOrFail();
 	}
 	
+	/*奖励关卡结束的判断*/
+	private void judgeRewardOverOrNot() {
+		if(batch >= (RewardLevelBatchesInfo[rewardLevel-1].length - 1)){
+			System.out.println("奖励关卡结束");
+			rewardLevel++;
+			isRewardLevel = false;
+			batch = 0;
+			own.eatNum = 0;
+			isNext = true;
+			weapon.clearObjects(); // 清空对象
+			batches.clearObject(); // 清空对象
+		}
+	}
+
+	private void nextLevel(){
+		for (int i = 1; i < 16; i++) {
+			if (level == i && own.eatNum >= LEVEL_INFO[level - 1][1]) {
+				StateNextLevel stateLevel = new StateNextLevel();
+				stateLevel.processNextLevel();
+				System.out.println("下一关");
+				isNext = true;
+				own.eatNum = 0;
+				batch = 0;
+				level++;
+				weapon.clearObjects(); // 清空对象
+				batches.clearObject(); // 清空对象
+			}
+		}
+	}
+	
+	private void rewardLevel() {
+		if(!isRewardLevel && isNext && (level-1)%2==0){
+			System.out.println("进入奖励关卡");
+			isRewardLevel = true;
+		}
+	}
+	
+	private void gameSuccessOrFail() {
+		
+		if(own.lifeNum<=0){		/*游戏失败*/
+			System.out.println("isSuccess:"+false);
+			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
+			sgs.processGameSuccessOrFail(false);
+			engine.status = STATUS_MAIN_MENU;
+			
+		}else if(level > 15){	/*游戏通关*/
+			System.out.println("isSuccess:"+true);
+			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
+			sgs.processGameSuccessOrFail(true);
+			engine.status = STATUS_MAIN_MENU;
+		}
+	}
+
+
 	/*判断激光枪是否击中狼*/
 	private void glareAttackNpcs() {
 		for(int i=weapon.glares.size()-1;i>=0;i--){
@@ -230,55 +294,6 @@ public class StateGame implements Common{
 				glare.isUse = false;
 				weapon.glares.removeElement(glare);
 			}
-		}
-	}
-
-	
-	private void gameSuccessOrFail() {
-		
-		if(own.lifeNum<=0){		/*游戏失败*/
-			System.out.println("isSuccess:"+false);
-			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
-			sgs.processGameSuccessOrFail(false);
-			engine.status = STATUS_MAIN_MENU;
-			
-		}else if(level > 15){	/*游戏通关*/
-			System.out.println("isSuccess:"+true);
-			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
-			sgs.processGameSuccessOrFail(true);
-			engine.status = STATUS_MAIN_MENU;
-		}
-		
-		
-		
-	}
-
-	private void nextLevel(){
-		if(level==1 && own.eatNum >= LEVEL_INFO[level-1][1]){
-			StateNextLevel stateLevel = new StateNextLevel();
-			stateLevel.processNextLevel();
-			isNext = true;
-			batch = 0;
-			level ++;
-			weapon.clearObjects();  //清空对象
-			batches.clearObject();	//清空对象
-		}else if(level==2 && own.eatNum >= LEVEL_INFO[level-1][1]){
-			StateNextLevel stateLevel = new StateNextLevel();
-			stateLevel.processNextLevel();
-			isNext = true;
-			batch = 0;
-			level ++;
-			weapon.clearObjects();  //清空对象
-			batches.clearObject();	//清空对象
-		}
-	}
-	
-	private void rewardLevel() {
-		if(isNext && level==2/*(level-1)%2==0*/){
-			System.out.println("进入奖励关卡");
-			StateRewardLevel sr = new StateRewardLevel();
-			sr.processRewardLevel();
-			isNext = false;
 		}
 	}
 
@@ -313,6 +328,7 @@ public class StateGame implements Common{
 					if(npc.status == ROLE_ALIVE){
 						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, net.mapx, net.mapy, net.width, net.height)){
 							npc.status = ROLE_DEATH;
+							own.eatNum ++;
 							npc.speed += 10;
 						}
 					}
@@ -324,19 +340,26 @@ public class StateGame implements Common{
 				weapon.nets.removeElement(net);
 			}
 		}
-	
 	}
 
 	private void createNpc(){
 		if(isAllDown()){
-			if(engine.timePass(LEVEL_INFO[level-1][2]*1000)){
-				batches.createBatches(level, batch, LEVEL_INFO[level-1][3]);
-				batch = (short) ((batch+1) % BatchesInfo[level-1].length);
+			if(!isRewardLevel){
+				if(engine.timePass(LEVEL_INFO[level-1][2]*1000)){
+					batches.createBatches(level, batch, LEVEL_INFO[level-1][3]);
+					batch = (short) ((batch+1) % BatchesInfo[level-1].length);
+				}
+			}else{
+				if(engine.timePass(REWARD_LEVEL_INFO[rewardLevel -1][2]*1000)){			//奖励关卡创建npc
+					batches.createBatchesReward(rewardLevel, batch, REWARD_LEVEL_INFO[rewardLevel-1][3]);
+					batch = (short)((batch+1) % RewardLevelBatchesInfo[rewardLevel-1].length);
+					System.out.println("batch>>>>"+batch);
+				}
 			}
 		}
 	}
 	
-	/*判断狼是否都已经下降或者上升*/
+	/*判断狼是否都已经下降或者上升---->即狼在空中*/
 	private boolean isAllDown(){
 		int len = batches.npcs.size();
 		for(int i=len-1;i>=0;i--){
@@ -387,6 +410,9 @@ public class StateGame implements Common{
 		}
 	}
 	
+	private int cloudIndex, cloud2Index;
+	private int down_cloudIndex, down_cloud2Index;
+	int x1 = 20, x2 = 550, x3 = 424;
 	private void drawGamePlaying(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image playing_menu = Resource.loadImage(Resource.id_playing_menu);
@@ -407,37 +433,118 @@ public class StateGame implements Common{
 		Image sheep_head = Resource.loadImage(Resource.id_sheep_head);
 		Image wolf_head = Resource.loadImage(Resource.id_wolf_head);
 		Image multiply = Resource.loadImage(Resource.id_multiply);
+		/*奖励关卡图片资源*/
+		Image pass_cloud2 = Resource.loadImage(Resource.id_pass_cloud2);
+		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
+		Image passShadowCloud = Resource.loadImage(Resource.id_cloud1);
+		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
+		
 		g.drawImage(game_bg, 0, 0, 20);
-		
-		if(tempx+playing_cloudbig.getWidth()>0){
-			tempx -= 1;
+		if(isRewardLevel){		//画出奖励关卡界面
+			g.drawImage(pass_cloud, 50, 80, 20);
+			g.drawImage(pass_cloud, 216, 80, 20);
+			g.drawImage(pass_cloud, 404, 140, 20);		//轮子下面的云朵
+			for(int i=0;i<4;i++){			//固定的云层，TODO 南瓜
+				g.drawImage(passShadowCloud, 0+i*60, 80+10, 20);
+				g.drawImage(pass_cloud, 0+i*60, 80, 20);
+				
+			}
+			/*上面第二层云*/
+			int cloud2W = pass_cloud2.getWidth(),cloud2H = pass_cloud2.getHeight();
+			int len = cloud2W-ScrW;
+			int cloud2Y = -6;
+			cloud2Index=(cloud2Index+1)%cloud2W;
+			if(cloud2Index<=len){
+				g.drawRegion(pass_cloud2, len-cloud2Index, 0, ScrW, cloud2H, 0, 0, cloud2Y, 20);
+			}else{
+				g.drawRegion(pass_cloud2, (cloud2W-cloud2Index), 0, ScrW-(cloud2W-cloud2Index), cloud2H, 0, 0, cloud2Y, 20);
+				g.drawRegion(pass_cloud2, 0, 0, (cloud2W-cloud2Index), cloud2H, 0, ScrW-(cloud2W-cloud2Index), cloud2Y, 20);
+			}
+			
+			/*下面第二层云*/
+			int down_cloud2Y = 484;
+			down_cloud2Index=(down_cloud2Index+1)%cloud2W;
+			if(down_cloud2Index<=len){
+				g.drawRegion(pass_cloud2, len-down_cloud2Index, 0, ScrW, cloud2H, 0, 0, down_cloud2Y, 20);
+			}else{
+				g.drawRegion(pass_cloud2, (cloud2W-down_cloud2Index), 0, ScrW-(cloud2W-down_cloud2Index), cloud2H, 0, 0, down_cloud2Y, 20);
+				g.drawRegion(pass_cloud2, 0, 0, (cloud2W-down_cloud2Index), cloud2H, 0, ScrW-(cloud2W-down_cloud2Index), down_cloud2Y, 20);
+			}
+
+			/*中间的云*/
+			int cloudW = pass_cloud.getWidth();
+			if(x1+cloudW<=0){
+				x1 = ScrW;
+			}else{
+				x1 -= 1;
+			}
+			if(x2+cloudW<=0){
+				x2 = ScrW;
+			}else{
+				x2 -= 1;
+			}
+			if(x3+cloudW<=0){
+				x3 = ScrW;
+			}else{
+				x3 -= 1;
+			}
+			g.drawImage(pass_cloud, x1, 152, 20);
+			g.drawImage(pass_cloud, x2, 180, 20);
+			g.drawImage(pass_cloud, x3, 265, 20);
+			
+			/*上面第一层云*/
+			int cloud1W = pass_cloud1.getWidth(),cloud1H = pass_cloud1.getHeight();
+			int cloud1Y = -23;
+			cloudIndex=(cloudIndex+1)%cloud1W;
+			if(cloudIndex<=cloud1W-ScrW){
+				g.drawRegion(pass_cloud1, cloudIndex, 0, ScrW, cloud1H, 0, 0, cloud1Y, 20);
+			}else{
+				g.drawRegion(pass_cloud1, cloudIndex, 0, cloud1W-cloudIndex, cloud1H, 0, 0, cloud1Y, 20);
+				g.drawRegion(pass_cloud1, 0, 0, cloudIndex, cloud1H, 0, cloud1W-cloudIndex, cloud1Y, 20);
+			}
+			
+			/*下面第一层云*/
+			int down_cloud1Y = 496;
+			down_cloudIndex=(down_cloudIndex+1)%cloud1W;
+			if(down_cloudIndex<=cloud1W-ScrW){
+				g.drawRegion(pass_cloud1, down_cloudIndex, 0, ScrW, cloud1H, 0, 0, down_cloud1Y, 20);
+			}else{
+				g.drawRegion(pass_cloud1, down_cloudIndex, 0, cloud1W-down_cloudIndex, cloud1H, 0, 0, down_cloud1Y, 20);
+				g.drawRegion(pass_cloud1, 0, 0, down_cloudIndex, cloud1H, 0, cloud1W-down_cloudIndex, down_cloud1Y, 20);
+			}
+			
 		}else{
-			tempy = RandomValue.getRandInt(0, 114);
-			tempx = ScrW;
-		}
-		g.drawRegion(playing_cloudbig, 0, 0, playing_cloudbig.getWidth(), playing_cloudbig.getHeight(), 
-				0, tempx, tempy, 20);
-		
-		if(tempx2+playing_cloudsmall.getWidth()>0){
-			tempx2 -= 2;
-		}else{
-			tempy2 = RandomValue.getRandInt(0, 114);
-			tempx2 = ScrW;
-		}
-		g.drawRegion(playing_cloudsmall, 0, 0, playing_cloudsmall.getWidth(), playing_cloudsmall.getHeight(), 
-				0, tempx2, tempy2, 20);
-		g.drawImage(playing_lawn, 0, 499, 20);
-		g.drawImage(playing_tree, 0, 72, 20);
-		g.drawImage(playing_shenzi1, 399, 135, 20);
-		for(int i=0;i<4;i++){   //阶梯
-			g.drawImage(playing_step, 377, 153+i*89, 20);
-			g.drawImage(ladder, 426, 183+i*89, 20);
+			
+			if(tempx+playing_cloudbig.getWidth()>0){
+				tempx -= 1;
+			}else{
+				tempy = RandomValue.getRandInt(0, 114);
+				tempx = ScrW;
+			}
+			g.drawRegion(playing_cloudbig, 0, 0, playing_cloudbig.getWidth(), playing_cloudbig.getHeight(), 
+					0, tempx, tempy, 20);
+			
+			if(tempx2+playing_cloudsmall.getWidth()>0){
+				tempx2 -= 2;
+			}else{
+				tempy2 = RandomValue.getRandInt(0, 114);
+				tempx2 = ScrW;
+			}
+			g.drawRegion(playing_cloudsmall, 0, 0, playing_cloudsmall.getWidth(), playing_cloudsmall.getHeight(), 
+					0, tempx2, tempy2, 20);
+			g.drawImage(playing_lawn, 0, 499, 20);
+			g.drawImage(playing_tree, 0, 72, 20);
+			for(int i=0;i<4;i++){   //阶梯
+				g.drawImage(playing_step, 377, 153+i*89, 20);
+				g.drawImage(ladder, 426, 183+i*89, 20);
+			}
 		}
 		
 		if(own.status == ROLE_ALIVE){
 			sWidth = own.mapy - 154;
 			sTempy = own.mapy;
 		}
+		g.drawImage(playing_shenzi1, 399, 135, 20);												//横放的绳子
 		g.drawRegion(playing_shenzi, 0, 0, playing_shenzi.getWidth(), sWidth,        			//上下移动的绳子
 				0, 379, 154, 20);                                                        		//竖直绳子 的纵坐标 154
 		g.drawRegion(playing_lift, 0, 0, playing_lift.getWidth(), playing_lift.getHeight(),     //羊的吊篮
@@ -447,15 +554,15 @@ public class StateGame implements Common{
 		g.drawImage(playing_menu, 491, 0, 20);
 		
 		g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
-		drawNum(g, level, 491+32+playing_level.getWidth(), 25);
+		drawNum(g, level, 491+32+playing_level.getWidth()+10, 25);
 		g.drawImage(playing_point, 491+11, 66, 20);						//游戏中 左侧 的得分图片	
 		drawNum(g, own.scores, playing_point.getWidth()+502, 66);
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);	
-		drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147+2);			//羊的生命数
+		drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 		g.drawImage(multiply, 45, 12, 20);	
-		drawNum(g, 99, 45+multiply.getWidth()+10, 12+2);
+		drawNum(g, own.eatNum, 45+multiply.getWidth()+10, 12);
 
 		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
 		int numLeftX = 547,numRight = 612;
@@ -470,7 +577,7 @@ public class StateGame implements Common{
 			drawNum(g, i+4+1, numRight, propMenuY+playing_prop_memu.getHeight()-29
 					+i*(distanceMenuY+playing_prop_memu.getHeight()));//提示技能键5-8{}
 		}
-		g.drawImage(playing_stop, 500,459, 20);//暂停游戏按钮
+		g.drawImage(playing_stop, 500,459, 20);			//暂停游戏按钮
 	}
 	
 	private void moveRole(int towards) {
@@ -541,6 +648,10 @@ public class StateGame implements Common{
 		Resource.freeImage(Resource.id_sheep_head);   
 		Resource.freeImage(Resource.id_wolf_head);   
 		Resource.freeImage(Resource.id_multiply);   
+		/*奖励关卡图片资源释放*/
+		Resource.freeImage(Resource.id_pass_cloud2);   
+		Resource.freeImage(Resource.id_pass_cloud1);   
+		Resource.freeImage(Resource.id_pass_cloud);   
 	}
 
 }

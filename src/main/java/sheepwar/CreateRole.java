@@ -35,9 +35,9 @@ public class CreateRole implements Common {
 		role.lifeNum = StateGame.lifeNum;
 		role.scores = StateGame.scores;
 		role.eatNum = StateGame.eatNum;
-		System.out.println("lifeNum:"+role.lifeNum);
-		System.out.println("scores:"+role.scores);
-		System.out.println("eatNum:"+role.eatNum);
+//		System.out.println("lifeNum:"+role.lifeNum);
+//		System.out.println("scores:"+role.scores);
+//		System.out.println("eatNum:"+role.eatNum);
 		return role;
 	}
 	

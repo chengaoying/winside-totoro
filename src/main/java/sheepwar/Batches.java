@@ -62,6 +62,34 @@ public class Batches implements Common{
 		}
 	}
 	
+	/*创建奖励关卡一批狼*/
+	public void createBatchesReward(int level, int batch, int position2){
+		int count = RewardLevelBatchesInfo[level-1][batch][0];	//该批狼的数量
+		int spreed_mode = RewardLevelBatchesInfo[level-1][batch][2];
+		int ran = RandomValue.getRandInt(regular.length-1);  //折线方式
+		for(int i=0;i<count;i++){
+			Role wolf = new Role();
+			wolf.status = ROLE_ALIVE;
+			wolf.status2 = ROLE_ON_GROUND;
+			wolf.speed = npcPara[2];
+			wolf.width = npcPara[0];
+			wolf.height = npcPara[1];
+			wolf.direction = ROLE_MOVE_RIGHT;
+			wolf.coorY = coorY[RandomValue.getRandInt(8)];
+			wolf.position = 0;
+			wolf.position2 = position2;
+			wolf.colorId = RewardLevelBatchesInfo[level-1][batch][1];
+			if(wolf.position2 == WOLF_POSITION_TOP){
+				wolf.mapy = 26;
+			}else{
+				wolf.mapy = 466;
+			}
+			setWolfInfo(count, spreed_mode, wolf, i, ran); 
+			
+			npcs.addElement(wolf);
+		}
+	}
+	
 	/**
 	 * 根据该批狼的数量，分布方式设置狼的起始坐标和降落点
 	 * @param count  狼的数量
@@ -256,7 +284,7 @@ public class Batches implements Common{
 						tempy_ballon += wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
+					if(wolf.colorId != orange ){			//根据狼气球的颜色区分是否攻击的狼
 						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}
@@ -363,7 +391,7 @@ public class Batches implements Common{
 				}
 				wolf.frame = (wolf.frame + 1) % 6; 
 			}
-			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
+			g.drawRegion(wolf_Image, wolf.frame*wolf.width, 0, wolf.width, wolf.height, 0, tempx, tempy+10, 20);
 		}else if(wolf.direction == ROLE_MOVE_UP){   //向上走
 			createBallon(wolf); //创建气球
 			wolf.status2 = ROLE_IN_AIR;
@@ -380,7 +408,7 @@ public class Batches implements Common{
 						tempy_ballon -= wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != blue ){			//根据狼气球的颜色区分是否攻击的狼
+					if(wolf.colorId != orange ){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
 						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}

@@ -59,7 +59,7 @@ public interface Common {
 		{3,1,2,4},
 	};
 	
-	/*每批狼出现的方式*/
+	/*正常关卡（15关），每批狼出现的方式*/
 	public static int[][][] BatchesInfo = {
 		
 		/*第一关*/
@@ -87,9 +87,24 @@ public interface Common {
 		/*第三关*/
 		{   
 			/*0-数量， 1-气球ID(对应颜色), 2-空中分布方式*/
-			{},
-			{},
+			{4, orange, SPREED_IRREGULAR },
+			{4, orange, SPREED_IRREGULAR },
+			{4, orange, SPREED_IRREGULAR },
 		}
+	};
+	
+	/*奖励关卡中狼出现的方式*/
+	public static int [][][] RewardLevelBatchesInfo = {
+		/*奖励关卡第一关*/
+		{/*0-数量， 1-气球ID(对应颜色) 2-空中分布方式 */
+			{2,orange,SPREED_ABOVE},
+			{4,orange,SPREED_ABOVE},
+			{4,orange,SPREED_ABOVE},
+			{2,orange,SPREED_ABOVE},
+			{2,orange,SPREED_ABOVE},
+			{2,orange,SPREED_ABOVE},
+		},
+		{},
 	};
 	
 }
