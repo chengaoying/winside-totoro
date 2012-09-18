@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public CreateRole createRole;
 	public Batches batches;
 	public Weapon weapon;
-	public static Role own; 
+	public static Role own; 			//玩家
 
 	/*游戏关卡*/
 	public short level = 1; 
@@ -41,11 +41,22 @@ public class StateGame implements Common{
 	
 	/*关卡信息*/
 	public static int[][] LEVEL_INFO = {
-		
 		/*0-关卡，1-该关卡击中狼的数量， 2-每批狼出现的间隔时间（秒），3-该关卡狼的位置（0-上面, -1-下面）*/
 		{1, 2, 3, 0},  //第一关
 		{2, 2, 3, -1},  //第二关
-		{3, 2, 3, -1},  //第三关
+		{3, 2, 3, 0},  //第三关
+		{4, 2, 3, -1},  //第四关
+		{5, 2, 3, 0},  //第五关
+		{6, 2, 3, -1},  
+		{7, 2, 2, 0},  
+		{8, 2, 2, -1},  
+		{9, 2, 1, 0},  
+		{10, 2, 1, -1},  
+		{11, 2, 3,0},  
+		{12, 2, 3, -1},  
+		{13, 2, 3, 0},  
+		{14, 2, 3, -1},  
+		{15, 2, 3, 0},  
 	};
 	
 	/*奖励关卡信息*/
@@ -54,6 +65,10 @@ public class StateGame implements Common{
 		{1,16,3,-1},			//奖励关卡一
 		{2,16,3,-1},			//奖励关卡二
 		{3,16,3,-1},			//奖励关卡三
+		{4,16,3,-1},			
+		{5,16,3,-1},			
+		{6,16,3,-1},			
+		{7,16,3,-1},			
 	};
 	
 	/*控制子弹发射的变量*/
@@ -157,6 +172,9 @@ public class StateGame implements Common{
 		weapon.showGlare(g, own);
 		weapon.showHarp(g, batches);
 		weapon.showMagnetEffect(g, batches);
+		if((level % 2!=0 && level != 1 )||(rewardLevel % 2 ==0)){
+			batches.showRedWolf(g);				//显示红太狼
+		}
 	}
 	
 	public void execute(){
@@ -190,7 +208,7 @@ public class StateGame implements Common{
 
 		/*创建狼*/
 		createNpc();
-		
+		createRedNpc();
 		/*检测普通攻击是否击中目标*/
 		bombAttackNpcs();
 		
@@ -207,7 +225,7 @@ public class StateGame implements Common{
 		removeDeath();
 		
 		/*每两关之后出现奖励关卡*/
-		rewardLevel();
+			rewardLevel();
 		
 		/*判断奖励关卡是否退出*/
 		if(isRewardLevel){
@@ -224,11 +242,11 @@ public class StateGame implements Common{
 	private void judgeRewardOverOrNot() {
 		if(batch >= (RewardLevelBatchesInfo[rewardLevel-1].length - 1)){
 			System.out.println("奖励关卡结束");
-			rewardLevel++;
 			isRewardLevel = false;
+			rewardLevel++;
 			batch = 0;
 			own.eatNum = 0;
-			isNext = true;
+			isNext = false;
 			weapon.clearObjects(); // 清空对象
 			batches.clearObject(); // 清空对象
 		}
@@ -240,6 +258,11 @@ public class StateGame implements Common{
 				StateNextLevel stateLevel = new StateNextLevel();
 				stateLevel.processNextLevel();
 				System.out.println("下一关");
+//				if(level % 2==0){
+//					isRewardLevel = true;
+//				}else{
+//					isRewardLevel = false;
+//				}
 				isNext = true;
 				own.eatNum = 0;
 				batch = 0;
@@ -251,7 +274,7 @@ public class StateGame implements Common{
 	}
 	
 	private void rewardLevel() {
-		if(!isRewardLevel && isNext && (level-1)%2==0){
+		if(!isRewardLevel && isNext && (level - 1)%2==0){
 			System.out.println("进入奖励关卡");
 			isRewardLevel = true;
 		}
@@ -342,6 +365,25 @@ public class StateGame implements Common{
 		}
 	}
 
+	/*创建红太狼npc*/
+	private void createRedNpc(){
+//		Role redWolf = batches.createRedWolf();
+		System.out.println("是不是奖励关卡：》》》》》》》》"+isRewardLevel);
+		if(isRewardLevel){
+			System.out.println("当前奖励关卡--------->"+rewardLevel);
+			if(rewardLevel % 2 ==0){		//偶数奖励关卡出现红太狼
+				batches.createRedWolf();
+//				batches.createFruits(redWolf);
+			}
+		}else{
+			
+			System.out.println("当前关卡："+level);
+			if(level % 2!=0 && level != 1){			//奇数关卡会有红太狼的出现
+				batches.createRedWolf();
+//				batches.createFruits(redWolf);
+			}
+		}
+	}
 	private void createNpc(){
 		if(isAllDown()){
 			if(!isRewardLevel){
@@ -353,7 +395,6 @@ public class StateGame implements Common{
 				if(engine.timePass(REWARD_LEVEL_INFO[rewardLevel -1][2]*1000)){			//奖励关卡创建npc
 					batches.createBatchesReward(rewardLevel, batch, REWARD_LEVEL_INFO[rewardLevel-1][3]);
 					batch = (short)((batch+1) % RewardLevelBatchesInfo[rewardLevel-1].length);
-					System.out.println("batch>>>>"+batch);
 				}
 			}
 		}
@@ -391,7 +432,6 @@ public class StateGame implements Common{
 						npc.status = ROLE_DEATH;
 						npc.speed += 10;
 						weapon.bombs.removeElement(bomb);
-						
 						own.eatNum ++;
 						own.scores += ballon.scores;
 						scores = own.scores;
@@ -447,7 +487,6 @@ public class StateGame implements Common{
 			for(int i=0;i<4;i++){			//固定的云层，TODO 南瓜
 				g.drawImage(passShadowCloud, 0+i*60, 80+10, 20);
 				g.drawImage(pass_cloud, 0+i*60, 80, 20);
-				
 			}
 			/*上面第二层云*/
 			int cloud2W = pass_cloud2.getWidth(),cloud2H = pass_cloud2.getHeight();
@@ -512,9 +551,12 @@ public class StateGame implements Common{
 				g.drawRegion(pass_cloud1, down_cloudIndex, 0, cloud1W-down_cloudIndex, cloud1H, 0, 0, down_cloud1Y, 20);
 				g.drawRegion(pass_cloud1, 0, 0, down_cloudIndex, cloud1H, 0, cloud1W-down_cloudIndex, down_cloud1Y, 20);
 			}
+			g.drawImage(playing_menu, 491, 0, 20);
+			g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
+			drawNum(g, rewardLevel, 491+32+playing_level.getWidth()+10, 25);
+			drawNum(g, 1, 491+66+multiply.getWidth()+10, 147);			//奖励关卡羊的生命数
 			
 		}else{
-			
 			if(tempx+playing_cloudbig.getWidth()>0){
 				tempx -= 1;
 			}else{
@@ -538,6 +580,11 @@ public class StateGame implements Common{
 				g.drawImage(playing_step, 377, 153+i*89, 20);
 				g.drawImage(ladder, 426, 183+i*89, 20);
 			}
+			
+			g.drawImage(playing_menu, 491, 0, 20);
+			g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
+			drawNum(g, level, 491+32+playing_level.getWidth()+10, 25);
+			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 		}
 		
 		if(own.status == ROLE_ALIVE){
@@ -551,16 +598,11 @@ public class StateGame implements Common{
 				0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
-		g.drawImage(playing_menu, 491, 0, 20);
-		
-		g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
-		drawNum(g, level, 491+32+playing_level.getWidth()+10, 25);
 		g.drawImage(playing_point, 491+11, 66, 20);						//游戏中 左侧 的得分图片	
 		drawNum(g, own.scores, playing_point.getWidth()+502, 66);
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);	
-		drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
 		g.drawImage(multiply, 45, 12, 20);	
 		drawNum(g, own.eatNum, 45+multiply.getWidth()+10, 12);
 

@@ -50,6 +50,19 @@ public interface Common {
 	public final static short yellow = Resource.id_balloon_yellow;				//黄气球
 	public final static short orange = Resource.id_balloon_yellowred;			//橙色气球
 	
+	/*水果id*/
+	public final static short apple = Resource.id_apple;				//苹果
+	public final static short lemon = Resource.id_lemon;				//柠檬
+	public final static short pear = Resource.id_orange;				//鸭梨
+	public final static short watermelon = Resource.id_watermelon;				//西瓜
+	
+	/*水果状态*/
+	public final static short FRUIT_ON_TOP = 0;
+	public final static boolean FRUIT_ON_SELECT = false;		//水果被选择
+	public final static boolean FRUIT_IS_ATTACKED = false;		//水果是不是被击中
+	
+	/*随即选中水果*/
+	public final static short selectFruit[] = {apple,lemon,pear,watermelon};
 	/*折线方式*/
 	public final static short[][] regular = {
 		{4,2,3,1},
@@ -90,10 +103,40 @@ public interface Common {
 			{4, orange, SPREED_IRREGULAR },
 			{4, orange, SPREED_IRREGULAR },
 			{4, orange, SPREED_IRREGULAR },
-		}
+		},
+		{/*第四关*/
+			{1,green,NONE},
+			{2,green,SPREED_VERTICAL},
+			{2,green,SPREED_BELOW},
+			{2,green,SPREED_ABOVE},
+			{4,red,SPREED_ABOVE},
+			{4,red,SPREED_ABOVE},
+			{4,red,SPREED_ABOVE},
+			{4,green,SPREED_ABOVE},
+		},
+		{/*第五关*/
+			{4,green,SPREED_BELOW},
+			{4,green,SPREED_VERTICAL},
+		},
+		{/*第六关*/
+			{1,multicolour,NONE},
+			{2,green,SPREED_BELOW},				//斜下直线
+			{2,green,SPREED_VERTICAL},			//竖直线
+			{2,red,SPREED_BELOW},
+			{3,green,SPREED_ABOVE},				//斜上直线
+			{3,red,SPREED_BELOW},
+			{4,red,SPREED_ABOVE},
+			{4,red,SPREED_VERTICAL},
+			{4,green,SPREED_VERTICAL},
+			{4,green,SPREED_ABOVE},
+		},
+		{/*第七关*/
+			{},
+		},
+		{},
 	};
 	
-	/*奖励关卡中狼出现的方式*/
+	/*奖励关卡中role出现的方式*/
 	public static int [][][] RewardLevelBatchesInfo = {
 		/*奖励关卡第一关*/
 		{/*0-数量， 1-气球ID(对应颜色) 2-空中分布方式 */
@@ -104,7 +147,15 @@ public interface Common {
 			{2,orange,SPREED_ABOVE},
 			{2,orange,SPREED_ABOVE},
 		},
-		{},
+		/*奖励关卡第二关*/
+		{	/*0-数量， 1-水果ID， 2-空中分布方式 */
+			{2,apple,SPREED_BELOW},
+			{4,lemon,SPREED_BELOW},
+			{4,pear,SPREED_BELOW},
+			{2,watermelon,SPREED_BELOW},
+			{2,lemon,SPREED_BELOW},
+			{2,apple,SPREED_BELOW},
+		},
 	};
 	
 }

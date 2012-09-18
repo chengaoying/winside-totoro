@@ -33,6 +33,13 @@ public class Batches implements Common{
 		/*0-图片宽度，1-图片高度，2-移动速度，3-初始X坐标*/
 		45, 56, 5, -45-45
 	};
+	/*水果属性*/
+	public static int fruitPara[] = {
+		/*0-图片宽度，1-图片高度，2提供的积分*/
+		35,45,100,
+	};
+	public Vector fruits = new Vector();
+//	private int []furitX = {60,110,160,210};							//水果下落的横坐标
 	
 	/*创建一批狼*/
 	public void createBatches(int level, int batch, int position2){
@@ -415,11 +422,11 @@ public class Batches implements Common{
 					}
 				}
 				g.drawRegion(wolf_Image, 0, 0, wolf.width, wolf.height, 0, tempx, tempy, 20);
-				g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+				g.drawRegion(ballon, wolf.role.frame*ballon.getWidth()/5, 0, ballon.getWidth()/5, ballon.getHeight(), 0, tempx_ballon, tempy_ballon, 20);
 			}else if(wolf.status == ROLE_DEATH){
 				if(wolf.role.frame<4){
-					wolf.role.frame = (wolf.role.frame+1);
-					g.drawRegion(ballon, wolf.role.frame*wolf.role.width, 0, wolf.role.width, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
+					wolf.role.frame = (wolf.role.frame+1)%5;
+					g.drawRegion(ballon, wolf.role.frame*ballon.getWidth()/5, 0, ballon.getWidth()/5, wolf.role.height, 0, tempx_ballon, tempy_ballon, 20);
 				}else{
 					tempy += wolf.speed;
 					wolf.mapy = tempy;
@@ -452,7 +459,103 @@ public class Batches implements Common{
 		}
 	}
 	
+	/*创建红太狼*/
+	public Role createRedWolf() {
+		Role role = new Role();
+		role.speed = 5;
+		role.mapx = 10;
+		role.mapy = 100;
+		role.width = 47;
+		role.height = 59;
+		return role;
+	}
+	
+	/*显示红太狼*/
+	public void showRedWolf(SGraphics g) {
+			int temx = 110;
+			Image redWolfI = Resource.loadImage(Resource.id_playing_sheep);		//红太郎图片暂无 TODO
+			g.drawRegion(redWolfI, 0, 0, redWolfI.getWidth(), redWolfI.getHeight(), 0, temx, 100, 20);
+			
+			Image appleF = Resource.loadImage(Resource.id_apple);
+			Image lemonF = Resource.loadImage(Resource.id_lemon);
+			Image pearF = Resource.loadImage(Resource.id_orange);
+			Image watermelonF = Resource.loadImage(Resource.id_watermelon);
+
+			Role fruit = null;
+			for(int i = fruits.size() - 1;i>=0;i--){
+				fruit = (Role)fruits.elementAt(i);
+				int temy = fruit.mapy + fruit.speed;
+				fruit.frame = (fruit.frame + 1) % 3;
+				if(FRUIT_ON_SELECT){
+					if(fruit.id == apple){
+						g.drawRegion(appleF, fruit.frame*appleF.getWidth()/3, appleF.getHeight(), appleF.getWidth()/3, appleF.getHeight(), 0,
+								110, temy, 20);
+					}
+					if(fruit.id == pear){
+						g.drawImage(pearF, 0, 0, 20);
+					}
+					if(fruit.id == lemon){
+						g.drawImage(lemonF, 0, 0, 20);
+					}
+					if(fruit.id == watermelon){
+						g.drawImage(watermelonF, 0, 0, 20);
+					}
+				}else{
+					System.out.println("没有选中水果就不用显示了");
+				}
+			}
+			
+	}
+	
+	/*创建水果*/
+	public void createFruits(Role redWolf) {
+		
+		Role fruit = new Role();
+		fruit.width = fruitPara[0];
+		fruit.height = fruitPara[1];
+		fruit.scores = fruitPara[2];
+		fruit.speed = 10;
+		fruit.mapy = 110;
+		fruit.status = FRUIT_ON_TOP;
+		redWolf.role = fruit;
+		fruit.id = RandomValue.getRandInt(selectFruit.length - 1);			//随即分配水果id
+		fruits.addElement(fruit);
+	}
+	
+	/*显示水果*/
+	public void showFruits(SGraphics g,Role redWolf) {
+		Image appleF = Resource.loadImage(Resource.id_apple);
+		Image lemonF = Resource.loadImage(Resource.id_lemon);
+		Image pearF = Resource.loadImage(Resource.id_orange);
+		Image watermelonF = Resource.loadImage(Resource.id_watermelon);
+
+		Role fruit = null;
+		for(int i = fruits.size() - 1;i>=0;i--){
+			fruit = (Role)fruits.elementAt(i);
+			int temy = fruit.mapy + fruit.speed;
+			fruit.frame = (fruit.frame + 1) % 3;
+			if(FRUIT_ON_SELECT){
+				if(fruit.id == apple){
+					g.drawRegion(appleF, fruit.frame*appleF.getWidth()/3, appleF.getHeight(), appleF.getWidth()/3, appleF.getHeight(), 0,
+							redWolf.mapx, temy, 20);
+				}
+				if(fruit.id == pear){
+					g.drawImage(pearF, 0, 0, 20);
+				}
+				if(fruit.id == lemon){
+					g.drawImage(lemonF, 0, 0, 20);
+				}
+				if(fruit.id == watermelon){
+					g.drawImage(watermelonF, 0, 0, 20);
+				}
+			}else{
+				System.out.println("没有选中水果就不用显示了");
+			}
+		}
+	}
+	
 	public void clearObject(){
 		npcs.removeAllElements();
+		fruits.removeAllElements();
 	}
 }
