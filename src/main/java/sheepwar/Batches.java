@@ -291,7 +291,7 @@ public class Batches implements Common{
 						tempy_ballon += wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != orange ){			//根据狼气球的颜色区分是否攻击的狼
+					if(wolf.colorId != orange /*|| wolf.colorId != multicolour*/){			//根据狼气球的颜色区分是否攻击的狼
 						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}
@@ -415,7 +415,7 @@ public class Batches implements Common{
 						tempy_ballon -= wolf.role.speed;
 						wolf.role.mapy = tempy_ballon;
 					}
-					if(wolf.colorId != orange ){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
+					if(wolf.colorId != orange /*|| wolf.colorId != multicolour*/){			//根据狼气球的颜色区分是否攻击的狼,橙色和彩色不会攻击
 						if(wolf.mapy == wolf.coorY){				
 							weapon.createBoom(wolf, Weapon.WEAPON_MOVE_RIGHT);
 						}
@@ -460,27 +460,39 @@ public class Batches implements Common{
 	}
 	
 	/*创建红太狼*/
-	public Role createRedWolf() {
+	/*public Role createRedWolf() {
 		Role role = new Role();
 		role.speed = 5;
-		role.mapx = 10;
-		role.mapy = 100;
-		role.width = 47;
-		role.height = 59;
+		role.width = 29;
+		role.height = 55;
+		role.mapx = 300;
+		role.mapy = 70-45;
 		return role;
-	}
+	}*/
 	
 	/*显示红太狼*/
-	public void showRedWolf(SGraphics g) {
-			int temx = 110;
-			Image redWolfI = Resource.loadImage(Resource.id_playing_sheep);		//红太郎图片暂无 TODO
-			g.drawRegion(redWolfI, 0, 0, redWolfI.getWidth(), redWolfI.getHeight(), 0, temx, 100, 20);
-			
-			Image appleF = Resource.loadImage(Resource.id_apple);
-			Image lemonF = Resource.loadImage(Resource.id_lemon);
-			Image pearF = Resource.loadImage(Resource.id_orange);
-			Image watermelonF = Resource.loadImage(Resource.id_watermelon);
-
+	/*private int redTx ,retTy = 28;
+	public void showRedWolf(SGraphics g,Batches batches) {
+		Image appleF = Resource.loadImage(Resource.id_apple);
+		Image lemonF = Resource.loadImage(Resource.id_lemon);
+		Image pearF = Resource.loadImage(Resource.id_orange);
+		Image watermelonF = Resource.loadImage(Resource.id_watermelon);
+		Image redWolfI = Resource.loadImage(Resource.id_red_wolf);	
+		Role red = batches.createRedWolf();
+		System.out.println("红太狼的位置判断："+(red.mapx+red.frame*redWolfI.getWidth()/2>=300));
+			red.frame = (red.frame+1)%2;
+			if(red.mapx+red.frame*redWolfI.getWidth()/2<300){
+				redTx = red.mapx + red.speed;
+				red.mapx = redTx;
+				g.drawRegion(redWolfI, red.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth()/2, redWolfI.getHeight(), 
+						0, redTx, retTy, 20);
+			}else if(red.mapx+red.frame*redWolfI.getWidth()/2>=300){
+				System.out.println("红太狼的位置<<<<<<<<<<<<<<<<："+redTx);
+				red.mapx -= red.speed;
+				redTx = red.mapx;
+				g.drawRegion(redWolfI, red.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth()/2, redWolfI.getHeight(), 
+						0, redTx, retTy, 20);
+			}
 			Role fruit = null;
 			for(int i = fruits.size() - 1;i>=0;i--){
 				fruit = (Role)fruits.elementAt(i);
@@ -505,7 +517,7 @@ public class Batches implements Common{
 				}
 			}
 			
-	}
+	}*/
 	
 	/*创建水果*/
 	public void createFruits(Role redWolf) {

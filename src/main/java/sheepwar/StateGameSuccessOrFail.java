@@ -55,7 +55,6 @@ public class StateGameSuccessOrFail {
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			pt.setText("游戏失败，按确认键返回主菜单");
 		}
-		
 	}
 	
 	private void handleGameSuccessOrFail(KeyState keyState) {

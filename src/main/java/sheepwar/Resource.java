@@ -111,6 +111,7 @@ public class Resource implements Common {
 	public static short id_lemon = NUMS++;    
 	public static short id_orange = NUMS++;    
 	public static short id_watermelon = NUMS++;    
+	public static short id_red_wolf = NUMS++;    
 	
 	
 	public static String[] imagesrcs = {
@@ -210,6 +211,7 @@ public class Resource implements Common {
 		"/lemon.png",             
 		"/orange.png",             
 		"/watermelon.png",             
+		"/red_wolf.png",             
 		
 	};
 	

@@ -58,11 +58,12 @@ public interface Common {
 	
 	/*水果状态*/
 	public final static short FRUIT_ON_TOP = 0;
-	public final static boolean FRUIT_ON_SELECT = false;		//水果被选择
-	public final static boolean FRUIT_IS_ATTACKED = false;		//水果是不是被击中
+	public static boolean FRUIT_ON_SELECT = false;		//水果被选择
+	public static boolean FRUIT_IS_ATTACKED = false;		//水果是不是被击中
 	
 	/*随即选中水果*/
 	public final static short selectFruit[] = {apple,lemon,pear,watermelon};
+	
 	/*折线方式*/
 	public final static short[][] regular = {
 		{4,2,3,1},
@@ -74,31 +75,25 @@ public interface Common {
 	
 	/*正常关卡（15关），每批狼出现的方式*/
 	public static int[][][] BatchesInfo = {
-		
-		/*第一关*/
-		{   
+		{/*第一关*/   
 			/*0-数量， 1-气球ID(对应颜色) 2-空中分布方式 */
 			{4, orange, SPREED_ABOVE },
 			{2, blue, SPREED_VERTICAL },
 			{2, orange, SPREED_BELOW },
 			{2, blue, SPREED_ABOVE },
 			{3, orange, SPREED_BELOW },
-			{1, blue, NONE },
+			{1, blue, SPREED_IRREGULAR },
 			{4, blue, SPREED_ABOVE },
 			{2, red, SPREED_VERTICAL },
 			{2, orange, SPREED_ABOVE },
 		},
-		
-		/*第二关*/
-		{   
+		{/*第二关*/   
 			/*0-数量， 1-气球ID(对应颜色), 2-空中分布方式*/
 			{4, orange, SPREED_IRREGULAR },
 			{4, orange, SPREED_IRREGULAR },
 			{4, orange, SPREED_IRREGULAR },
 		},
-		
-		/*第三关*/
-		{   
+		{/*第三关*/   
 			/*0-数量， 1-气球ID(对应颜色), 2-空中分布方式*/
 			{4, orange, SPREED_IRREGULAR },
 			{4, orange, SPREED_IRREGULAR },
@@ -131,9 +126,93 @@ public interface Common {
 			{4,green,SPREED_ABOVE},
 		},
 		{/*第七关*/
-			{},
+			{1, green, NONE },
+			{1, multicolour, NONE},
+			{2, green, SPREED_VERTICAL },
+			{2, green, SPREED_ABOVE },
+			{4, green, SPREED_ABOVE },
+			{4, green, SPREED_BELOW },
+			{4, green, NONE },			//TODO 空中方式改为折线
 		},
-		{},
+		{/*第八关*/
+			{1, multicolour, NONE },
+			{1, yellow, NONE},
+			{2, green, SPREED_VERTICAL },
+			{2, green, SPREED_ABOVE },
+			{4, green, SPREED_VERTICAL },
+			{5, green, SPREED_BELOW },	// 空中方式改为折线
+			{5, green, NONE },			// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+		},
+		{/*第九关*/
+			{1, multicolour, NONE },
+			{1, yellow, NONE},
+			{4, green, SPREED_ABOVE },
+			{4, green, SPREED_ABOVE },		//折线方式
+			{4, green, SPREED_VERTICAL },
+			{5, green, SPREED_BELOW },	// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+		},
+		{/*第十关*/
+			{1, yellow, NONE },
+			{1, multicolour, NONE},
+			{4, green, SPREED_VERTICAL },
+			{4, green, SPREED_ABOVE },		
+			{4, green, SPREED_VERTICAL },//折线方式
+			{4, green, SPREED_BELOW },	// 空中方式改为折线
+			{5, green, SPREED_VERTICAL },
+			{5, green, SPREED_BELOW },	// 空中方式改为折线
+			{6, green, SPREED_ABOVE },			
+			{6, green, NONE },			// 空中方式改为折线
+			{6, green, NONE },			// 空中方式改为折线
+		},
+		{/*第十一关*/
+			{4, yellow, SPREED_ABOVE},
+			{4, yellow, SPREED_VERTICAL },	
+			{3, yellow, SPREED_BELOW},	
+			{2, yellow, SPREED_VERTICAL },	
+			{2, yellow, SPREED_ABOVE},	
+			{5, yellow, SPREED_VERTICAL },
+			{1, multicolour, NONE },
+		},
+		{/*第十二关*/
+			{4, yellow, SPREED_ABOVE},
+			{4, yellow, SPREED_VERTICAL },	
+			{6, yellow, SPREED_BELOW},	//折线	
+			{2, yellow, SPREED_ABOVE},	
+			{5, yellow, SPREED_VERTICAL },
+			{1, multicolour, NONE },
+		},
+		{/*第十三关*/
+			{4, yellow, SPREED_ABOVE},
+			{4, yellow, SPREED_VERTICAL },
+			{2, yellow, SPREED_BELOW},	
+			{2, yellow, SPREED_ABOVE},
+			{5, yellow, SPREED_VERTICAL },
+			{1, multicolour, NONE },
+		},
+		{/*第十四关*/
+			{4, yellow, SPREED_ABOVE},
+			{4, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_BELOW },
+			{2, yellow, SPREED_BELOW},	
+			{2, yellow, SPREED_ABOVE},
+			{5, yellow, SPREED_VERTICAL },
+			{1, multicolour, NONE },
+		},
+		{/*第十五关*/
+			{4, yellow, SPREED_ABOVE},
+			{4, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_BELOW },
+			{2, yellow, SPREED_BELOW},	
+			{2, yellow, SPREED_ABOVE},
+			{5, yellow, SPREED_VERTICAL },
+			{1, multicolour, NONE },
+			{1, yellow, NONE },
+		},
 	};
 	
 	/*奖励关卡中role出现的方式*/
@@ -147,14 +226,42 @@ public interface Common {
 			{2,orange,SPREED_ABOVE},
 			{2,orange,SPREED_ABOVE},
 		},
-		/*奖励关卡第二关*/
+		/*奖励关卡2*/
 		{	/*0-数量， 1-水果ID， 2-空中分布方式 */
-			{2,apple,SPREED_BELOW},
-			{4,lemon,SPREED_BELOW},
-			{4,pear,SPREED_BELOW},
-			{2,watermelon,SPREED_BELOW},
-			{2,lemon,SPREED_BELOW},
-			{2,apple,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{2,green,SPREED_BELOW},
+		},
+		{//奖励关卡3
+			{2,red,SPREED_BELOW},
+			{4,green,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{2,multicolour,SPREED_BELOW},
+		},
+		{//奖励关卡4
+			{2,red,SPREED_BELOW},
+			{4,green,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
+		},
+		{//奖励关卡5
+			{2,orange,SPREED_BELOW},
+			{2,orange,SPREED_BELOW},
+			{2,multicolour,SPREED_BELOW},
+		},
+		{//奖励关卡6
+			{2,red,SPREED_BELOW},
+			{4,green,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
+		},
+		{//奖励关卡7
+			{2,red,SPREED_BELOW},
+			{4,green,SPREED_BELOW},
+			{4,orange,SPREED_BELOW},
 		},
 	};
 	

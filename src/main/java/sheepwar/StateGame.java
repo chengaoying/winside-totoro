@@ -28,6 +28,7 @@ public class StateGame implements Common{
 	public Batches batches;
 	public Weapon weapon;
 	public static Role own; 			//玩家
+	public CreateRedWolf createRed=new CreateRedWolf();
 
 	/*游戏关卡*/
 	public short level = 1; 
@@ -97,7 +98,6 @@ public class StateGame implements Common{
 	private long magnetInterval = 3;
 	public static boolean magnetState;
 	
-	
 	/*玩家复活数据*/
 	public static int lifeNum;
 	public static int scores;
@@ -106,7 +106,6 @@ public class StateGame implements Common{
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30, sWidth = 155, sTempy = 309;
 	
 	public void handleKey(KeyState keyState){
-		
 		if (keyState.containsMoveEventAndRemove(KeyCode.UP)) {
 			moveRole(0);
 			
@@ -161,6 +160,7 @@ public class StateGame implements Common{
 		}
 	}
 	
+//	private int redTx=300 ,redTy = 28;
 	public void show(SGraphics g){
 		drawGamePlaying(g);
 		createRole.showSheep(g,own);
@@ -173,7 +173,7 @@ public class StateGame implements Common{
 		weapon.showHarp(g, batches);
 		weapon.showMagnetEffect(g, batches);
 		if((level % 2!=0 && level != 1 )||(rewardLevel % 2 ==0)){
-			batches.showRedWolf(g);				//显示红太狼
+			createRed.showRedWolf(g);				//显示红太狼
 		}
 	}
 	
@@ -258,11 +258,6 @@ public class StateGame implements Common{
 				StateNextLevel stateLevel = new StateNextLevel();
 				stateLevel.processNextLevel();
 				System.out.println("下一关");
-//				if(level % 2==0){
-//					isRewardLevel = true;
-//				}else{
-//					isRewardLevel = false;
-//				}
 				isNext = true;
 				own.eatNum = 0;
 				batch = 0;
@@ -281,7 +276,6 @@ public class StateGame implements Common{
 	}
 	
 	private void gameSuccessOrFail() {
-		
 		if(own.lifeNum<=0){		/*游戏失败*/
 			System.out.println("isSuccess:"+false);
 			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
@@ -352,6 +346,11 @@ public class StateGame implements Common{
 						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, net.mapx, net.mapy, net.width, net.height)){
 							npc.status = ROLE_DEATH;
 							own.eatNum ++;
+							System.out.println("npc的子单位如气球："+npc.role);
+							if(npc.role != null){
+								own.scores += npc.role.scores;
+								scores = own.scores;
+							}
 							npc.speed += 10;
 						}
 					}
@@ -372,15 +371,15 @@ public class StateGame implements Common{
 		if(isRewardLevel){
 			System.out.println("当前奖励关卡--------->"+rewardLevel);
 			if(rewardLevel % 2 ==0){		//偶数奖励关卡出现红太狼
-				batches.createRedWolf();
-//				batches.createFruits(redWolf);
+				createRed.createRedWolf();
+				if(createRed.createRedWolf().mapx ==200){
+				}
 			}
 		}else{
 			
 			System.out.println("当前关卡："+level);
 			if(level % 2!=0 && level != 1){			//奇数关卡会有红太狼的出现
-				batches.createRedWolf();
-//				batches.createFruits(redWolf);
+				createRed.createRedWolf();
 			}
 		}
 	}
