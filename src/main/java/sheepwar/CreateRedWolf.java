@@ -14,7 +14,9 @@ public class CreateRedWolf implements Common {
 		/*0-图片宽度，1-图片高度，2提供的积分*/
 		35,45,100,
 	};
-
+	
+	public Role redWolf;
+	
 	public Role createRedWolf() {
 		Role role = new Role();
 		role.speed = 5;
@@ -26,52 +28,58 @@ public class CreateRedWolf implements Common {
 	}
 	
 	/*创建水果*/
-	public void createFruits() {
+	public void createFruits(Role redWolf) {
 		Role fruit = new Role();
 		fruit.width = fruitPara[0];
 		fruit.height = fruitPara[1];
 		fruit.scores = fruitPara[2];
 		fruit.speed = 10;
-		fruit.mapy = 110;
+		fruit.mapy = redWolf.mapy;
+		fruit.mapx = redWolf.mapx;
 		fruit.status = FRUIT_ON_TOP;
-		fruit.id = RandomValue.getRandInt(selectFruit.length - 1);			//随即分配水果id
-//		fruit.FRUIT_ON_SELECT = true;
+		fruit.id = selectFruit[RandomValue.getRandInt(selectFruit.length - 1)];			//随即分配水果id
 		fruits.addElement(fruit);
+		System.out.println("fruits:"+fruits.size());
 	}
 	
 	
-	private int redTx=300 ,redTy = 28;
-	private int frame;
+	private int redTx ,redTy = 28, temx,temy;
 	public void showRedWolf(SGraphics g) {
 		Image appleF = Resource.loadImage(Resource.id_apple);
 		Image lemonF = Resource.loadImage(Resource.id_lemon);
 		Image pearF = Resource.loadImage(Resource.id_orange);
 		Image watermelonF = Resource.loadImage(Resource.id_watermelon);
 		Image redWolfI = Resource.loadImage(Resource.id_red_wolf);
-//		System.out.println("红狼横坐标："+redTx);
-		 frame = (frame + 1)%2;
+		redTx = redWolf.mapx;
+		redTy = redWolf.mapy;
+		 redWolf.frame = (redWolf.frame + 1)%2;
 		if ( redTx+ redWolfI.getWidth() / 2 >=0) {
+			System.out.println(2222);
 			redTx -= 5;
-		} else if(redTx +redWolfI.getWidth()/2 < 0){
+		} else {
 			redTx = 300;
 		}
+		redWolf.mapx = redTx;
 		/*if(!StateGame.pasueState){
 			g.drawRegion(redWolfI, frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth() / 2,
 					redWolfI.getHeight(), 0, redTx, redTy, 20);
 		}*/
-		g.drawRegion(redWolfI, frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth() / 2,
+		g.drawRegion(redWolfI, redWolf.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth() / 2,
 				redWolfI.getHeight(), 0, redTx, redTy, 20);
 		if(redTx == 180 || redTx == 240){
-			createFruits();
+			createFruits(redWolf);
 			Role fruit = null;
 			for(int i = fruits.size() - 1;i>=0;i--){
 				fruit = (Role)fruits.elementAt(i);
-				int temy = fruit.mapy + fruit.speed;
+				temx = fruit.mapx;
+				temy = fruit.mapy + fruit.speed;
+				fruit.mapy = temy;
 				fruit.frame = (fruit.frame + 1) % 3;
-				if(FRUIT_ON_SELECT){
+				System.out.println("fruit.id=="+fruit.id);
+				//if(FRUIT_ON_SELECT){
 					if(fruit.id == apple){
-						g.drawRegion(appleF, fruit.frame*appleF.getWidth()/3, appleF.getHeight(), appleF.getWidth()/3, appleF.getHeight(), 0,
-								110, temy, 20);
+						g.drawRegion(appleF, /*fruit.frame*appleF.getWidth()/3*/0, 0, appleF.getWidth()/3, appleF.getHeight(), 0,
+								temx, temy, 20);
 					}
 					if(fruit.id == pear){
 						g.drawImage(pearF, 0, 0, 20);
@@ -82,9 +90,9 @@ public class CreateRedWolf implements Common {
 					if(fruit.id == watermelon){
 						g.drawImage(watermelonF, 0, 0, 20);
 					}
-				}else{
-					System.out.println("没有选中水果就不用显示了");
-				}
+				//}else{
+					//System.out.println("没有选中水果就不用显示了");
+				//}
 			}	
 		}
 		

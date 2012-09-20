@@ -28,14 +28,15 @@ public class StateGame implements Common{
 	public Batches batches;
 	public Weapon weapon;
 	public static Role own; 			//玩家
-	public CreateRedWolf createRed=new CreateRedWolf();
+	public Role redWolf;
+	public CreateRedWolf createRed;
 
 	/*游戏关卡*/
 	public short level = 1; 
 	/*奖励关卡*/
-	public short rewardLevel = 1;
+	public short rewardLevel = 2;
 	
-	public boolean isNext, isRewardLevel;
+	public boolean isNext, isRewardLevel=true;
 	
 	/*当前关卡狼出现的批次*/
 	public short batch;
@@ -173,7 +174,9 @@ public class StateGame implements Common{
 		weapon.showHarp(g, batches);
 		weapon.showMagnetEffect(g, batches);
 		if((level % 2!=0 && level != 1 )||(rewardLevel % 2 ==0)){
-			createRed.showRedWolf(g);				//显示红太狼
+			if(createRed.redWolf!=null){
+				createRed.showRedWolf(g);				//显示红太狼
+			}
 		}
 	}
 	
@@ -290,7 +293,6 @@ public class StateGame implements Common{
 		}
 	}
 
-
 	/*判断激光枪是否击中狼*/
 	private void glareAttackNpcs() {
 		for(int i=weapon.glares.size()-1;i>=0;i--){
@@ -370,16 +372,17 @@ public class StateGame implements Common{
 		System.out.println("是不是奖励关卡：》》》》》》》》"+isRewardLevel);
 		if(isRewardLevel){
 			System.out.println("当前奖励关卡--------->"+rewardLevel);
-			if(rewardLevel % 2 ==0){		//偶数奖励关卡出现红太狼
-				createRed.createRedWolf();
-				if(createRed.createRedWolf().mapx ==200){
+			if(rewardLevel % 2 ==0 && redWolf==null){		//偶数奖励关卡出现红太狼
+				redWolf = createRed.createRedWolf();
+				createRed.redWolf = redWolf;
+				if(redWolf.mapx ==200){
 				}
 			}
 		}else{
 			
 			System.out.println("当前关卡："+level);
-			if(level % 2!=0 && level != 1){			//奇数关卡会有红太狼的出现
-				createRed.createRedWolf();
+			if(level % 2!=0 && level != 1 && redWolf==null){			//奇数关卡会有红太狼的出现
+				createRed.redWolf = createRed.createRedWolf();
 			}
 		}
 	}
@@ -391,7 +394,7 @@ public class StateGame implements Common{
 					batch = (short) ((batch+1) % BatchesInfo[level-1].length);
 				}
 			}else{
-				if(engine.timePass(REWARD_LEVEL_INFO[rewardLevel -1][2]*1000)){			//奖励关卡创建npc
+				if(engine.timePass(REWARD_LEVEL_INFO[rewardLevel -1][2]*1000)&&rewardLevel%2!=0){			//奖励关卡创建npc
 					batches.createBatchesReward(rewardLevel, batch, REWARD_LEVEL_INFO[rewardLevel-1][3]);
 					batch = (short)((batch+1) % RewardLevelBatchesInfo[rewardLevel-1].length);
 				}
