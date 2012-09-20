@@ -29,14 +29,13 @@ public class StateGame implements Common{
 	public Weapon weapon;
 	public static Role own; 			//玩家
 	public Role redWolf;
-	public CreateRedWolf createRed;
 
 	/*游戏关卡*/
 	public short level = 1; 
 	/*奖励关卡*/
-	public short rewardLevel = 2;
+	public short rewardLevel = 1;
 	
-	public boolean isNext, isRewardLevel=true;
+	public boolean isNext, isRewardLevel;
 	
 	/*当前关卡狼出现的批次*/
 	public short batch;
@@ -161,22 +160,20 @@ public class StateGame implements Common{
 		}
 	}
 	
-//	private int redTx=300 ,redTy = 28;
 	public void show(SGraphics g){
 		drawGamePlaying(g);
 		createRole.showSheep(g,own);
 		batches.showWolf(g, weapon);
 		weapon.showBomb(g);
-		weapon.showBoom(g,own);			//显示狼发射的子弹
+		weapon.showBoom(g,own);			
 		weapon.showNet(g);
 		weapon.showProtect(g, own);
 		weapon.showGlare(g, own);
 		weapon.showHarp(g, batches);
 		weapon.showMagnetEffect(g, batches);
-		if((level % 2!=0 && level != 1 )||(rewardLevel % 2 ==0)){
-			if(createRed.redWolf!=null){
-				createRed.showRedWolf(g);				//显示红太狼
-			}
+		weapon.showFruit(g);
+		if(batches.redWolf!=null){
+			batches.showRedWolf(g,weapon);				
 		}
 	}
 	
@@ -209,9 +206,21 @@ public class StateGame implements Common{
 			magnetState = false;
 		}
 
+		/*每两关之后出现奖励关卡*/
+		rewardLevel();
+		
+		/*判断奖励关卡是否退出*/
+		if(isRewardLevel){
+			judgeRewardOverOrNot();
+		}else{
+			nextLevel();  /*过关判断*/
+		}
+		
 		/*创建狼*/
 		createNpc();
+		
 		createRedNpc();
+		
 		/*检测普通攻击是否击中目标*/
 		bombAttackNpcs();
 		
@@ -226,17 +235,7 @@ public class StateGame implements Common{
 		
 		/*移除死亡对象*/
 		removeDeath();
-		
-		/*每两关之后出现奖励关卡*/
-			rewardLevel();
-		
-		/*判断奖励关卡是否退出*/
-		if(isRewardLevel){
-			judgeRewardOverOrNot();
-		}else{
-			nextLevel();  /*过关判断*/
-		}
-		
+
 		/*游戏成功或失败*/
 		gameSuccessOrFail();
 	}
@@ -252,14 +251,14 @@ public class StateGame implements Common{
 			isNext = false;
 			weapon.clearObjects(); // 清空对象
 			batches.clearObject(); // 清空对象
+			StateNextLevel stateLevel = new StateNextLevel();
+			stateLevel.processNextLevel();
 		}
 	}
 
 	private void nextLevel(){
 		for (int i = 1; i < 16; i++) {
 			if (level == i && own.eatNum >= LEVEL_INFO[level - 1][1]) {
-				StateNextLevel stateLevel = new StateNextLevel();
-				stateLevel.processNextLevel();
 				System.out.println("下一关");
 				isNext = true;
 				own.eatNum = 0;
@@ -267,6 +266,8 @@ public class StateGame implements Common{
 				level++;
 				weapon.clearObjects(); // 清空对象
 				batches.clearObject(); // 清空对象
+				StateNextLevel stateLevel = new StateNextLevel();
+				stateLevel.processNextLevel();
 			}
 		}
 	}
@@ -368,21 +369,17 @@ public class StateGame implements Common{
 
 	/*创建红太狼npc*/
 	private void createRedNpc(){
-//		Role redWolf = batches.createRedWolf();
-		System.out.println("是不是奖励关卡：》》》》》》》》"+isRewardLevel);
 		if(isRewardLevel){
 			System.out.println("当前奖励关卡--------->"+rewardLevel);
+			System.out.println("rewardLevel % 2=="+(rewardLevel % 2));
 			if(rewardLevel % 2 ==0 && redWolf==null){		//偶数奖励关卡出现红太狼
-				redWolf = createRed.createRedWolf();
-				createRed.redWolf = redWolf;
-				if(redWolf.mapx ==200){
-				}
+				redWolf = batches.createRedWolf();
+				batches.redWolf = redWolf;
 			}
 		}else{
-			
 			System.out.println("当前关卡："+level);
 			if(level % 2!=0 && level != 1 && redWolf==null){			//奇数关卡会有红太狼的出现
-				createRed.redWolf = createRed.createRedWolf();
+				batches.redWolf = batches.createRedWolf();
 			}
 		}
 	}
@@ -402,7 +399,7 @@ public class StateGame implements Common{
 		}
 	}
 	
-	/*判断狼是否都已经下降或者上升---->即狼在空中*/
+	/*判断狼是否都已经下降或者上升*/
 	private boolean isAllDown(){
 		int len = batches.npcs.size();
 		for(int i=len-1;i>=0;i--){
@@ -419,6 +416,13 @@ public class StateGame implements Common{
 			Role npc = (Role) batches.npcs.elementAt(j);
 			if(npc.status == ROLE_DEATH && npc.mapy >= 446){
 				batches.npcs.removeElement(npc);
+			}
+		}
+		/*水果出界移除*/
+		for(int k=weapon.fruits.size()-1;k>=0;k--){
+			Weapon fruit = (Weapon) weapon.fruits.elementAt(k);
+			if(fruit.mapx>=gameW || fruit.mapx+fruit.width <=0 || fruit.mapy>=ScrH){
+				weapon.fruits.removeElement(fruit);
 			}
 		}
 	}
@@ -445,6 +449,16 @@ public class StateGame implements Common{
 					}
 				}
 			}
+			
+			/*射水果*/
+			for(int k=weapon.fruits.size()-1;k>=0;k--){
+				Weapon fruit = (Weapon) weapon.fruits.elementAt(k);
+				if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, fruit.mapx, fruit.mapy, fruit.width, fruit.height)){
+					own.scores += fruit.scores;
+					weapon.bombs.removeElement(bomb);
+				}
+			}
+			
 			/*子弹出界时移除*/
 			if((bomb.mapx+bomb.width <=0) || bomb.mapy >= 466){
 				weapon.bombs.removeElement(bomb);

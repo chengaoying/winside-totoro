@@ -3,6 +3,7 @@ package sheepwar;
 import java.util.Vector;
 
 import javax.microedition.lcdui.Image;
+import javax.microedition.lcdui.game.Sprite;
 
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.util.RandomValue;
@@ -19,8 +20,10 @@ public class Batches implements Common{
 	int ballonId;			//气球种类
 	
 	public Vector npcs = new Vector();   
+	public Role redWolf;
 	private int[] coors = {60,110,160,210}; 					 //狼下落点的横坐标
-	private int[] coorY = {146,196,246,296,346,396,446,496};  	 //狼发射子弹的Y坐标
+	private int[] coorY = {246,196,246,296,346,396,446,396};  	 //狼发射子弹的Y坐标
+	private long startTime,endTime;
 
 	/* 气球属性 */
 	public static int bublePara[] = {
@@ -38,11 +41,9 @@ public class Batches implements Common{
 		/*0-图片宽度，1-图片高度，2提供的积分*/
 		35,45,100,
 	};
-	public Vector fruits = new Vector();
-//	private int []furitX = {60,110,160,210};							//水果下落的横坐标
 	
 	/*创建一批狼*/
-	public void createBatches(int level, int batch, int position2){
+ 	public void createBatches(int level, int batch, int position2){
 		int count = BatchesInfo[level-1][batch][0];	//该批狼的数量
 		int spreed_mode = BatchesInfo[level-1][batch][2];
 		int ran = RandomValue.getRandInt(regular.length-1);  //折线方式
@@ -202,6 +203,20 @@ public class Batches implements Common{
 		
 		npcs.addElement(wolf);
 	}*/
+	
+	/*创建红太狼*/
+	public Role createRedWolf(){
+		Role role = new Role();
+		role.speed = 3;
+		role.width = 29;
+		role.height = 55;
+		role.mapx = 300;
+		role.mapy = 40;
+		role.direction = ROLE_MOVE_LEFT;
+		startTime = System.currentTimeMillis()/1000;
+		System.out.println("创建红太狼");
+		return role;
+	}
 	
 	/*气球*/
 	public void createBallon(Role wolf){
@@ -459,115 +474,32 @@ public class Batches implements Common{
 		}
 	}
 	
-	/*创建红太狼*/
-	/*public Role createRedWolf() {
-		Role role = new Role();
-		role.speed = 5;
-		role.width = 29;
-		role.height = 55;
-		role.mapx = 300;
-		role.mapy = 70-45;
-		return role;
-	}*/
-	
-	/*显示红太狼*/
-	/*private int redTx ,retTy = 28;
-	public void showRedWolf(SGraphics g,Batches batches) {
-		Image appleF = Resource.loadImage(Resource.id_apple);
-		Image lemonF = Resource.loadImage(Resource.id_lemon);
-		Image pearF = Resource.loadImage(Resource.id_orange);
-		Image watermelonF = Resource.loadImage(Resource.id_watermelon);
-		Image redWolfI = Resource.loadImage(Resource.id_red_wolf);	
-		Role red = batches.createRedWolf();
-		System.out.println("红太狼的位置判断："+(red.mapx+red.frame*redWolfI.getWidth()/2>=300));
-			red.frame = (red.frame+1)%2;
-			if(red.mapx+red.frame*redWolfI.getWidth()/2<300){
-				redTx = red.mapx + red.speed;
-				red.mapx = redTx;
-				g.drawRegion(redWolfI, red.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth()/2, redWolfI.getHeight(), 
-						0, redTx, retTy, 20);
-			}else if(red.mapx+red.frame*redWolfI.getWidth()/2>=300){
-				System.out.println("红太狼的位置<<<<<<<<<<<<<<<<："+redTx);
-				red.mapx -= red.speed;
-				redTx = red.mapx;
-				g.drawRegion(redWolfI, red.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth()/2, redWolfI.getHeight(), 
-						0, redTx, retTy, 20);
-			}
-			Role fruit = null;
-			for(int i = fruits.size() - 1;i>=0;i--){
-				fruit = (Role)fruits.elementAt(i);
-				int temy = fruit.mapy + fruit.speed;
-				fruit.frame = (fruit.frame + 1) % 3;
-				if(FRUIT_ON_SELECT){
-					if(fruit.id == apple){
-						g.drawRegion(appleF, fruit.frame*appleF.getWidth()/3, appleF.getHeight(), appleF.getWidth()/3, appleF.getHeight(), 0,
-								110, temy, 20);
-					}
-					if(fruit.id == pear){
-						g.drawImage(pearF, 0, 0, 20);
-					}
-					if(fruit.id == lemon){
-						g.drawImage(lemonF, 0, 0, 20);
-					}
-					if(fruit.id == watermelon){
-						g.drawImage(watermelonF, 0, 0, 20);
-					}
-				}else{
-					System.out.println("没有选中水果就不用显示了");
-				}
-			}
-			
-	}*/
-	
-	/*创建水果*/
-	public void createFruits(Role redWolf) {
+	public void showRedWolf(SGraphics g, Weapon weapon){
+		Image redWolfI = Resource.loadImage(Resource.id_red_wolf);
+		if(redWolf.mapx<=0){
+			redWolf.direction = ROLE_MOVE_RIGHT;
+		}
+		if(redWolf.mapx>=300){
+			redWolf.direction = ROLE_MOVE_LEFT;
+		}
+		if(redWolf.direction == ROLE_MOVE_LEFT){
+			redWolf.mapx -= redWolf.speed;
+		}else{
+			redWolf.mapx += redWolf.speed;
+		}
+		redWolf.frame = (redWolf.frame+1)%2;
+		g.drawRegion(redWolfI, redWolf.frame*redWolfI.getWidth()/2, 0, redWolfI.getWidth() / 2, redWolfI.getHeight(),
+				redWolf.direction==ROLE_MOVE_LEFT?0:Sprite.TRANS_MIRROR, redWolf.mapx, redWolf.mapy, 20);
 		
-		Role fruit = new Role();
-		fruit.width = fruitPara[0];
-		fruit.height = fruitPara[1];
-		fruit.scores = fruitPara[2];
-		fruit.speed = 10;
-		fruit.mapy = 110;
-		fruit.status = FRUIT_ON_TOP;
-		redWolf.role = fruit;
-		fruit.id = RandomValue.getRandInt(selectFruit.length - 1);			//随即分配水果id
-		fruits.addElement(fruit);
-	}
-	
-	/*显示水果*/
-	public void showFruits(SGraphics g,Role redWolf) {
-		Image appleF = Resource.loadImage(Resource.id_apple);
-		Image lemonF = Resource.loadImage(Resource.id_lemon);
-		Image pearF = Resource.loadImage(Resource.id_orange);
-		Image watermelonF = Resource.loadImage(Resource.id_watermelon);
-
-		Role fruit = null;
-		for(int i = fruits.size() - 1;i>=0;i--){
-			fruit = (Role)fruits.elementAt(i);
-			int temy = fruit.mapy + fruit.speed;
-			fruit.frame = (fruit.frame + 1) % 3;
-			if(FRUIT_ON_SELECT){
-				if(fruit.id == apple){
-					g.drawRegion(appleF, fruit.frame*appleF.getWidth()/3, appleF.getHeight(), appleF.getWidth()/3, appleF.getHeight(), 0,
-							redWolf.mapx, temy, 20);
-				}
-				if(fruit.id == pear){
-					g.drawImage(pearF, 0, 0, 20);
-				}
-				if(fruit.id == lemon){
-					g.drawImage(lemonF, 0, 0, 20);
-				}
-				if(fruit.id == watermelon){
-					g.drawImage(watermelonF, 0, 0, 20);
-				}
-			}else{
-				System.out.println("没有选中水果就不用显示了");
-			}
+		endTime = System.currentTimeMillis()/1000;
+		if(endTime-startTime>=5){
+			weapon.createFruit(redWolf);
+			startTime = System.currentTimeMillis()/1000;
 		}
 	}
 	
 	public void clearObject(){
 		npcs.removeAllElements();
-		fruits.removeAllElements();
+		redWolf = null;
 	}
 }

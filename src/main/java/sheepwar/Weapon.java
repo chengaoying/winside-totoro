@@ -5,6 +5,7 @@ import java.util.Vector;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.util.RandomValue;
 
 
 /**
@@ -22,6 +23,7 @@ public class Weapon implements Common {
 	int mapy;				//Y轴坐标
 	int width;				//武器宽度
 	int height;				//武器高度
+	int scores;				//提供的积分
 	boolean isUse;			//是否在使用
 	
 	public final static int WEAPON_MOVE_LEFT = 0;
@@ -33,7 +35,8 @@ public class Weapon implements Common {
 	public Vector booms = new Vector();
 	public Vector protects = new Vector();
 	public Vector glares = new Vector();
-	public Vector harps = new Vector();			//驱散竖琴
+	public Vector harps = new Vector();			
+	public Vector fruits = new Vector();
 	
 	/**
 	 * 创建普通武器 ---Shuriken
@@ -125,7 +128,7 @@ public class Weapon implements Common {
 		w.mapy = npc.mapy + npc.height/2;
 		w.height = 22;
 		w.width = 14;
-		w.speedX = 10;		//子弹横向速度
+		w.speedX = 10;		
 		booms.addElement(w);
 	}
 	
@@ -137,9 +140,9 @@ public class Weapon implements Common {
 		int tempx = 0,tempy = 0;
 		for(int i = booms.size() - 1;i>=0;i --){
 			w = (Weapon)booms.elementAt(i);
-				w.mapx += w.speedX;
-				tempy = w.mapy;
-				tempx = w.mapx;
+			w.mapx += w.speedX;
+			tempy = w.mapy;
+			tempx = w.mapx;
 			g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
 		}
 		g.setClip(0, 0, ScrW, ScrH);
@@ -261,6 +264,49 @@ public class Weapon implements Common {
 		}
 	}
 
+	/*水果*/
+	public void createFruit(Role redWolf){
+		Weapon fruit = new Weapon();
+		fruit.width = 35;
+		fruit.height = 45;
+		fruit.speedX = 5;
+		fruit.speedY = 10;
+		fruit.mapy = redWolf.mapy;
+		fruit.mapx = redWolf.mapx;
+		fruit.id = selectFruit[RandomValue.getRandInt(selectFruit.length)];	
+		fruit.scores = getScores(fruit.id);
+		fruits.addElement(fruit);
+	}
+	
+	/*根据id获取对应的积分*/
+	private int getScores(int id){
+		if(id == apple){
+			return 100;
+		}else if(id == lemon){
+			return 50;
+		}else if(id == pear){
+			return 200;
+		}else {
+			return 500;
+		}
+	}
+	
+	public void showFruit(SGraphics g){
+		g.setClip(0, 0, gameW, ScrH);
+		Image fruitImg = null;
+		Weapon w = null;
+		int tempx = 0,tempy = 0;
+		for(int i = fruits.size() - 1;i>=0;i --){
+			w = (Weapon)fruits.elementAt(i);
+			fruitImg = Resource.loadImage(w.id);
+			w.mapy += w.speedY;
+			//w.mapx += w.speedX;
+			tempy = w.mapy;
+			tempx = w.mapx;
+			g.drawRegion(fruitImg, 0, 0, fruitImg.getWidth()/3, fruitImg.getHeight(), 0, tempx, tempy, 20);
+		}
+		g.setClip(0, 0, ScrW, ScrH);
+	}
 	
 	/*清除内存中的对象*/
 	public void clearObjects() {
@@ -270,5 +316,6 @@ public class Weapon implements Common {
       protects.removeAllElements();
       glares.removeAllElements();
       harps.removeAllElements();
+      fruits.removeAllElements();
 	}
 }
