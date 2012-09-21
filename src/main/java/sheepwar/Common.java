@@ -51,9 +51,9 @@ public interface Common {
 	public final static short orange = Resource.id_balloon_yellowred;			//橙色气球
 	
 	/*水果id*/
-	public final static short apple = Resource.id_apple;				//苹果
-	public final static short lemon = Resource.id_lemon;				//柠檬
-	public final static short pear = Resource.id_orange;				//鸭梨
+	public final static short apple = Resource.id_apple;						//苹果
+	public final static short lemon = Resource.id_lemon;						//柠檬
+	public final static short pear = Resource.id_orange;						//鸭梨
 	public final static short watermelon = Resource.id_watermelon;				//西瓜
 	
 	/*水果状态*/
@@ -151,9 +151,9 @@ public interface Common {
 			{4, green, SPREED_ABOVE },
 			{4, green, SPREED_ABOVE },		//折线方式
 			{4, green, SPREED_VERTICAL },
-			{5, green, SPREED_BELOW },	// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
+			{5, green, SPREED_BELOW },		// 空中方式改为折线
+			{6, green, NONE },				// 空中方式改为折线
+			{6, green, NONE },				// 空中方式改为折线
 		},
 		{/*第十关*/
 			{1, yellow, NONE },
