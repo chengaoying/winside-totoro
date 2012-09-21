@@ -45,7 +45,6 @@ public class StateHelp implements Common{
 	}
 
 	private void showHelp(SGraphics g) {
-
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);       //{137,108}
 		Image game_help = Resource.loadImage(Resource.id_game_help);     //{214,18}

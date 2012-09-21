@@ -21,6 +21,7 @@ public class CreateRole implements Common {
 		role.lifeNum = 3;
 		role.scores = 0;
 		role.eatNum = 0;
+		role.status = ROLE_ALIVE;
 		return role;
 	}
 	
@@ -32,6 +33,7 @@ public class CreateRole implements Common {
 		role.width = 49;
 		role.height = 59;
 		role.speed = 5;
+		role.status = ROLE_ALIVE;
 		role.lifeNum = StateGame.lifeNum;
 		role.scores = StateGame.scores;
 		role.eatNum = StateGame.eatNum;

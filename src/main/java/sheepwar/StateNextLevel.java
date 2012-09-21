@@ -13,7 +13,7 @@ public class StateNextLevel implements Common{
 	private int cloudIndex, cloud2Index;
 	private int down_cloudIndex, down_cloud2Index;
 	
-	public void processNextLevel(){
+	public void processNextLevel(Role own){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
@@ -22,7 +22,7 @@ public class StateNextLevel implements Common{
 				handleNextLevel(keyState);
 				if (running) {
 					long t1 = System.currentTimeMillis();
-					showNextLevel(g);
+					showNextLevel(g, own);
 					engine.flushGraphics();
 					System.gc();
 					int sleepTime = (int)(125-(System.currentTimeMillis()-t1));
@@ -45,7 +45,7 @@ public class StateNextLevel implements Common{
 	
 	int x1 = 20, x2 = 550, x3 = 424;
 	int ballonY = 114, ballon2Y = 336, ballon3Y = 59, ballon4Y = 420, ballon5Y = 560;
-	private void showNextLevel(SGraphics g) {
+	private void showNextLevel(SGraphics g, Role own) {
 		Image pass_bg = Resource.loadImage(Resource.id_pass_bg);
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
@@ -114,7 +114,7 @@ public class StateNextLevel implements Common{
 		g.drawImage(pass_star, 125, 130, 20);
 		/*»ý·Ö*/
 		g.drawImage(pass_score, 242, 286, 20);
-		drawNum(g, 12345, 242, 332);
+		drawNum(g, own.scores, 242, 332);
 		
 		/*²Êºç*/
 		g.drawImage(pass_rainbow, 395, 258, 20);

@@ -211,10 +211,9 @@ public class Batches implements Common{
 		role.width = 29;
 		role.height = 55;
 		role.mapx = 300;
-		role.mapy = 40;
+		role.mapy = 26;
 		role.direction = ROLE_MOVE_LEFT;
 		startTime = System.currentTimeMillis()/1000;
-		System.out.println("´´½¨ºìÌ«ÀÇ");
 		return role;
 	}
 	
@@ -494,6 +493,7 @@ public class Batches implements Common{
 		endTime = System.currentTimeMillis()/1000;
 		if(endTime-startTime>=5){
 			weapon.createFruit(redWolf);
+			redWolf.bombNum ++;
 			startTime = System.currentTimeMillis()/1000;
 		}
 	}

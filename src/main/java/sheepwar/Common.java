@@ -57,9 +57,8 @@ public interface Common {
 	public final static short watermelon = Resource.id_watermelon;				//西瓜
 	
 	/*水果状态*/
-	public final static short FRUIT_ON_TOP = 0;
-	public static boolean FRUIT_ON_SELECT = false;		//水果被选择
-	public static boolean FRUIT_IS_ATTACKED = false;		//水果是不是被击中
+	public static short FRUIT_NOT_HIT = 0;			//水果被击中
+	public static short FRUIT_HIT = 1;				//水果未被击中
 	
 	/*随即选中水果*/
 	public final static short selectFruit[] = {apple,lemon,pear,watermelon};

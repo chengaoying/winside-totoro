@@ -14,6 +14,7 @@ import cn.ohyeah.stb.util.RandomValue;
  */
 public class Weapon implements Common {
 	int id;                 //武器id
+	int status;				//状态
 	int objectId;			//武器所属者	ID
 	int speedX;             //X轴移动速度
 	int speedY;             //Y轴移动速度
@@ -37,6 +38,10 @@ public class Weapon implements Common {
 	public Vector glares = new Vector();
 	public Vector harps = new Vector();			
 	public Vector fruits = new Vector();
+	
+	/*捕狼网持续时间*/
+	public static long netTimeS, netTimeE;
+	public static int netInterval = 3;
 	
 	/**
 	 * 创建普通武器 ---Shuriken
@@ -113,7 +118,7 @@ public class Weapon implements Common {
 					w.mapy = w.mapy+6-w.height/2;
 					w.isUse = true;
 				}else{
-					w.mapy += w.speedX;
+					netTimeS = System.currentTimeMillis()/1000;
 				}
 				g.drawImage(net2, w.mapx, w.mapy, 20);
 			}
@@ -267,9 +272,10 @@ public class Weapon implements Common {
 	/*水果*/
 	public void createFruit(Role redWolf){
 		Weapon fruit = new Weapon();
+		fruit.status = FRUIT_NOT_HIT;
 		fruit.width = 35;
 		fruit.height = 45;
-		fruit.speedX = 5;
+		fruit.speedX = 3;
 		fruit.speedY = 10;
 		fruit.mapy = redWolf.mapy;
 		fruit.mapx = redWolf.mapx;
@@ -299,11 +305,23 @@ public class Weapon implements Common {
 		for(int i = fruits.size() - 1;i>=0;i --){
 			w = (Weapon)fruits.elementAt(i);
 			fruitImg = Resource.loadImage(w.id);
-			w.mapy += w.speedY;
-			//w.mapx += w.speedX;
-			tempy = w.mapy;
-			tempx = w.mapx;
-			g.drawRegion(fruitImg, 0, 0, fruitImg.getWidth()/3, fruitImg.getHeight(), 0, tempx, tempy, 20);
+			int fruitW = fruitImg.getWidth()/3, fruitH = fruitImg.getHeight();
+			if(w.status == FRUIT_NOT_HIT){
+				w.mapy += w.speedY;
+				w.mapx += w.speedX;
+				tempy = w.mapy;
+				tempx = w.mapx;
+				g.drawRegion(fruitImg, 0, 0, fruitW, fruitH, 0, tempx, tempy, 20);
+			}else{
+				tempy = w.mapy;
+				tempx = w.mapx;
+				if(w.frame<2){
+					w.frame = w.frame+1;
+					g.drawRegion(fruitImg, w.frame*fruitW, 0, fruitW, fruitH, 0, tempx, tempy, 20);
+				}else{
+					fruits.removeElement(w);
+				}
+			}
 		}
 		g.setClip(0, 0, ScrW, ScrH);
 	}
@@ -317,5 +335,15 @@ public class Weapon implements Common {
       glares.removeAllElements();
       harps.removeAllElements();
       fruits.removeAllElements();
+	}
+	
+	public void printSize(){
+		System.out.println("bombs.size:"+bombs.size());
+		System.out.println("nets.size:"+nets.size());
+		System.out.println("booms.size:"+booms.size());
+		System.out.println("protects.size:"+protects.size());
+		System.out.println("glares.size:"+glares.size());
+		System.out.println("harps.size:"+harps.size());
+		System.out.println("fruits.size:"+fruits.size());
 	}
 }

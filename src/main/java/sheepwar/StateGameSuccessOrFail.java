@@ -14,7 +14,7 @@ public class StateGameSuccessOrFail implements Common{
 	private int cloudIndex, cloud2Index;
 	private int down_cloudIndex, down_cloud2Index;
 	
-	public void processGameSuccessOrFail(boolean isSuccess){
+	public void processGameSuccessOrFail(boolean isSuccess, Role own){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
@@ -23,7 +23,7 @@ public class StateGameSuccessOrFail implements Common{
 				handleGameSuccessOrFail(keyState);
 				if (running) {
 					long t1 = System.currentTimeMillis();
-					showGameSuccessOrFail(g, isSuccess);
+					showGameSuccessOrFail(g, isSuccess, own);
 					engine.flushGraphics();
 					System.gc();
 					int sleepTime = (int)(125-(System.currentTimeMillis()-t1));
@@ -46,7 +46,7 @@ public class StateGameSuccessOrFail implements Common{
 
 	int x1 = 20, x2 = 550, x3 = 424;
 	int ballonY = 114, ballon2Y = 336, ballon3Y = 59, ballon4Y = 420, ballon5Y = 560;
-	private void showGameSuccessOrFail(SGraphics g, boolean isSuccess) {
+	private void showGameSuccessOrFail(SGraphics g, boolean isSuccess, Role own) {
 		Image pass_bg = Resource.loadImage(Resource.id_pass_bg);
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
@@ -109,9 +109,9 @@ public class StateGameSuccessOrFail implements Common{
 		g.drawImage(pass_cloud, x3, 265, 20);
 		
 		if(isSuccess){
-			g.drawRegion(game_result, 0, 0, game_result.getWidth()/2, game_result.getHeight(), 0, 320, 55, 20);
+			g.drawRegion(game_result, 0, 0, game_result.getWidth()/2, game_result.getHeight(), 0, 260, 55, 20);
 		}else{
-			g.drawRegion(game_result, game_result.getWidth()/2, 0, game_result.getWidth()/2, game_result.getHeight(), 0, 320, 55, 20);
+			g.drawRegion(game_result, game_result.getWidth()/2, 0, game_result.getWidth()/2, game_result.getHeight(), 0, 260, 55, 20);
 		}
 		/*°µÐÇÐÇ*/
 		int space = 130;
@@ -122,7 +122,7 @@ public class StateGameSuccessOrFail implements Common{
 		g.drawImage(pass_star, 125, 130, 20);
 		/*»ý·Ö*/
 		g.drawImage(pass_score, 242, 286, 20);
-		drawNum(g, 12345, 242, 332);
+		drawNum(g, own.scores, 242, 332);
 		
 		/*²Êºç*/
 		g.drawImage(pass_rainbow, 395, 258, 20);
@@ -185,7 +185,7 @@ public class StateGameSuccessOrFail implements Common{
 		g.drawImage(logo, 6, 2, 20);
 		
 		/*return*/
-		g.drawRegion(game_return, game_return.getWidth()/2, 0, game_return.getWidth()/2, game_return.getHeight(), 0, 530, 460, 20);
+		g.drawRegion(game_return, game_return.getWidth()/2, 0, game_return.getWidth()/2, game_return.getHeight(), 0, 570, 460, 20);
 	}
 	
 	private void drawNum(SGraphics g, int num, int x, int y){
