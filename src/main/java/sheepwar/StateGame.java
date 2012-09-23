@@ -17,9 +17,10 @@ public class StateGame implements Common{
 	
 	/*判断梯子上是否都有狼*/
 	public static boolean IS_FOUR_WOLF;
+	public static boolean isGameOver;
+	public static boolean isSuccess;
 	
 	private SheepWarGameEngine engine;
-	
 	public StateGame(SheepWarGameEngine engine){
 		this.engine = engine;
 	}
@@ -154,11 +155,12 @@ public class StateGame implements Common{
 			magnetState = true;
 		}else if(keyState.containsAndRemove(KeyCode.NUM8) && own.status ==ROLE_ALIVE){		//木偶->可以增加一条生命
 			own.lifeNum ++;
+			lifeNum = own.lifeNum;
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM9)){		//暂停							
 			
 		}else if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)){ 	//返回
-			engine.status = STATUS_MAIN_MENU;
+			engine.state = STATUS_MAIN_MENU;
 			clear();
 		}
 	}
@@ -215,10 +217,10 @@ public class StateGame implements Common{
 		/*关卡过关判断*/
 		isNextLevel();  			
 		
-		/*创建狼*/
+		/*创建一批狼*/
 		createNpc();
 		
-		/*创建一批狼*/
+		/*创建狼*/
 		createRedNpc();
 		
 		/*普通攻击碰撞检测*/
@@ -239,15 +241,19 @@ public class StateGame implements Common{
 		/*判断4个位置上是否都有狼*/
 		checkFourPosition();
 		
-		/*游戏成功或失败*/
+		/*判断游戏成功或失败*/
 		gameSuccessOrFail();
+		
+		gameOver();
 	}
 
 	private void checkFourPosition() {
-		if(HASWOLF_ONE && HASWOLF_TWO && HASWOLF_THREE && HASWOLF_FOUR){
-			IS_FOUR_WOLF = true;
+		if(IS_FOUR_WOLF){
+			IS_FOUR_WOLF = false;
 			own.status = ROLE_DEATH;
 			own.lifeNum --;
+			lifeNum = own.lifeNum;
+			System.out.println("生命数减一");
 			for(int j = batches.npcs.size() - 1;j>=0;j--){
 				Role npc = (Role)batches.npcs.elementAt(j);
 				if(npc.position == ON_ONE_LADDER || npc.position ==ON_TWO_LADDER 
@@ -269,14 +275,8 @@ public class StateGame implements Common{
 				if (level == i && own.eatNum >= LEVEL_INFO[level - 1][1]) {
 					System.out.println("过关");
 					gameBufferTimeS = System.currentTimeMillis()/1000;
-					if(level%2==0){
-						isRewardLevel = true;
-						System.out.println("下一关为奖励关卡");
-					}
+					eatNum = own.eatNum = 0;
 					goNext = true;
-					own.eatNum = 0;
-					batch = 0;
-					level++;
 				}
 			}
 		}else{	//奖励关卡过关判断
@@ -285,47 +285,60 @@ public class StateGame implements Common{
 				System.out.println("奖励关卡结束");
 				gameBufferTimeS = System.currentTimeMillis()/1000;
 				goNext = true;
-				isRewardLevel = false;
-				rewardLevel++;
-				own.eatNum = 0;
+				eatNum = own.eatNum = 0;
 				if(batches.redWolf!=null){
 					batches.redWolf.bombNum = 0;
 				}
-				batch = 0;
 			}
 		}
 		
 		/*上述判断为true则进入过关界面*/
 		if(goNext==true && gameBufferTimeE-gameBufferTimeS>1){
 			goNext = false;
-			HASWOLF_ONE = false;
-			HASWOLF_TWO = false;
-			HASWOLF_THREE = false;
-			HASWOLF_FOUR = false;
-			weapon.clearObjects(); // 清空对象
-			batches.clearObject(); // 清空对象
+			initDataNextLevel();	//清空数据
 			StateNextLevel stateLevel = new StateNextLevel();
 			stateLevel.processNextLevel(own);
+			if(isRewardLevel){
+				isRewardLevel = false;
+				rewardLevel++;
+			}else{
+				if(level%2==0){
+					isRewardLevel = true;
+					System.out.println("下一关为奖励关卡");
+				}
+				level++;
+			}
 		}
 	}
 	
 	private void gameSuccessOrFail() {
-		if(own.lifeNum<=0){		/*游戏失败*/
-			System.out.println("isSuccess:"+false);
-			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
-			sgs.processGameSuccessOrFail(false, own);
-			engine.status = STATUS_MAIN_MENU;
+		if(own.lifeNum<=0 && !isGameOver){		/*游戏失败*/
+			System.out.println("游戏失败:");
+			isGameOver = true;
+			isSuccess = false;
+			gameBufferTimeS = System.currentTimeMillis()/1000;
 			
-		}else if(level > 15){	/*游戏通关*/
-			System.out.println("isSuccess:"+true);
+		}else if(level > 15 && !isGameOver){	/*游戏通关*/
+			System.out.println("游戏成功：");
+			isGameOver = true;
+			isSuccess = true;
+			gameBufferTimeS = System.currentTimeMillis()/1000;
+		}
+	}
+	
+	private void gameOver(){
+		//System.out.println("gameBufferTimeE-gameBufferTimeS="+(gameBufferTimeE-gameBufferTimeS));
+		if(isGameOver && gameBufferTimeE-gameBufferTimeS>1){
+			isGameOver=false;
+			initDataGameOver();  //清空数据
 			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
-			sgs.processGameSuccessOrFail(true, own);
-			engine.status = STATUS_MAIN_MENU;
+			sgs.processGameSuccessOrFail(isSuccess, own);
+			engine.state = STATUS_MAIN_MENU;
 		}
 	}
 
 	/*判断激光枪是否击中狼*/
-	private void glareAttackNpcs() {
+ 	private void glareAttackNpcs() {
 		for(int i=weapon.glares.size()-1;i>=0;i--){
 			Weapon glare = (Weapon) weapon.glares.elementAt(i);
 			if(!glare.isUse){
@@ -378,6 +391,7 @@ public class StateGame implements Common{
 						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, net.mapx, net.mapy, net.width, net.height)){
 							npc.status = ROLE_DEATH;
 							own.eatNum ++;
+							eatNum = own.eatNum;
 							if(npc.role != null){
 								own.scores += npc.role.scores;
 								scores = own.scores;
@@ -498,6 +512,7 @@ public class StateGame implements Common{
 				Weapon fruit = (Weapon) weapon.fruits.elementAt(k);
 				if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, fruit.mapx, fruit.mapy, fruit.width, fruit.height)){
 					own.scores += fruit.scores;
+					scores = own.scores;
 					fruit.status = FRUIT_HIT;
 					weapon.bombs.removeElement(bomb);
 				}
@@ -616,7 +631,7 @@ public class StateGame implements Common{
 			drawNum(g, rewardLevel, 491+32+playing_level.getWidth()+10, 25);
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//奖励关卡羊的生命数
 			
-		}else{
+		}else {
 			if(tempx+playing_cloudbig.getWidth()>0){
 				tempx -= 1;
 			}else{
@@ -658,8 +673,13 @@ public class StateGame implements Common{
 				0, 342, sTempy, 20);
 		
 		g.drawImage(playing_lunzi, 374,132, 20);
-		g.drawImage(playing_point, 491+11, 66, 20);						//游戏中 左侧 的得分图片	
-		drawNum(g, own.scores, playing_point.getWidth()+502, 66);
+		//g.drawImage(playing_point, 491+11, 66, 20);						//游戏中 左侧 的得分图片	
+		g.drawRegion(playing_point, 0, 0, 46, playing_point.getHeight()/2, 0, 491+35, 66, 20);
+		if(own.scores>100000){
+			drawNum(g, own.scores, 491+15, 98);
+		}else{
+			drawNum(g, own.scores, 491+35, 98);
+		}
 		g.drawImage(sheep_head, 491+26, 142, 20);						//游戏中 右侧 的羊的头像		
 		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);	
@@ -714,6 +734,32 @@ public class StateGame implements Common{
 			g.drawRegion(playing_prop, (number.charAt(i) - '0')* playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8,
 					playing_prop.getHeight(), 0, x+i * (playing_prop.getWidth()/8 + 1), y, 0);
 		}
+	}
+	
+	/*过关要清楚的据*/
+	private void initDataNextLevel(){
+		batch = 0;
+		HASWOLF_ONE = false;
+		HASWOLF_TWO = false;
+		HASWOLF_THREE = false;
+		HASWOLF_FOUR = false;
+		weapon.clearObjects(); // 清空对象
+		batches.clearObject(); // 清空对象
+	}
+	
+	/*游戏结束要清楚的数据*/
+	private void initDataGameOver(){
+		eatNum = own.eatNum = 0;
+		lifeNum = own.lifeNum = 0;
+		level = 1;
+		rewardLevel = 1;
+		batch = 0;
+		HASWOLF_ONE = false;
+		HASWOLF_TWO = false;
+		HASWOLF_THREE = false;
+		HASWOLF_FOUR = false;
+		weapon.clearObjects(); // 清空对象
+		batches.clearObject(); // 清空对象
 	}
 	
 	private void clear() {

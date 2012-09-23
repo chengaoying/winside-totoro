@@ -62,7 +62,7 @@ public class StateMain implements Common{
 	/*注意和界面按钮的顺序一致*/
 	private void processSubMenu() {
 		if (mainIndex == 0) { //新游戏
-			engine.status = STATUS_GAME_PLAYING;
+			engine.state = STATUS_GAME_PLAYING;
 			
 		} else if (mainIndex == 1) {// 道具商城
 			StateShop ss =  new StateShop();

@@ -131,7 +131,7 @@ public interface Common {
 			{2, green, SPREED_ABOVE },
 			{4, green, SPREED_ABOVE },
 			{4, green, SPREED_BELOW },
-			{4, green, NONE },			//TODO 空中方式改为折线
+			{4, green, SPREED_IRREGULAR },			
 		},
 		{/*第八关*/
 			{1, multicolour, NONE },
@@ -139,34 +139,30 @@ public interface Common {
 			{2, green, SPREED_VERTICAL },
 			{2, green, SPREED_ABOVE },
 			{4, green, SPREED_VERTICAL },
-			{5, green, SPREED_BELOW },	// 空中方式改为折线
-			{5, green, NONE },			// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
+			{4, green, SPREED_BELOW },	
+			{4, green, SPREED_IRREGULAR },			
+			{4, green, SPREED_IRREGULAR },			
 		},
 		{/*第九关*/
 			{1, multicolour, NONE },
 			{1, yellow, NONE},
 			{4, green, SPREED_ABOVE },
-			{4, green, SPREED_ABOVE },		//折线方式
+			{4, green, SPREED_ABOVE },			
 			{4, green, SPREED_VERTICAL },
-			{5, green, SPREED_BELOW },		// 空中方式改为折线
-			{6, green, NONE },				// 空中方式改为折线
-			{6, green, NONE },				// 空中方式改为折线
+			{4, green, SPREED_BELOW },		
+			{4, green, SPREED_IRREGULAR },				
+			{4, green, SPREED_IRREGULAR },				
 		},
 		{/*第十关*/
 			{1, yellow, NONE },
 			{1, multicolour, NONE},
 			{4, green, SPREED_VERTICAL },
 			{4, green, SPREED_ABOVE },		
-			{4, green, SPREED_VERTICAL },//折线方式
-			{4, green, SPREED_BELOW },	// 空中方式改为折线
-			{5, green, SPREED_VERTICAL },
-			{5, green, SPREED_BELOW },	// 空中方式改为折线
-			{6, green, SPREED_ABOVE },			
-			{6, green, NONE },			// 空中方式改为折线
-			{6, green, NONE },			// 空中方式改为折线
+			{4, green, SPREED_VERTICAL },	
+			{4, green, SPREED_IRREGULAR },		
+			{4, green, SPREED_VERTICAL },
+			{4, green, SPREED_IRREGULAR },		
+			{4, green, SPREED_ABOVE },			
 		},
 		{/*第十一关*/
 			{4, yellow, SPREED_ABOVE},
@@ -174,15 +170,15 @@ public interface Common {
 			{3, yellow, SPREED_BELOW},	
 			{2, yellow, SPREED_VERTICAL },	
 			{2, yellow, SPREED_ABOVE},	
-			{5, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_VERTICAL },
 			{1, multicolour, NONE },
 		},
 		{/*第十二关*/
 			{4, yellow, SPREED_ABOVE},
 			{4, yellow, SPREED_VERTICAL },	
-			{6, yellow, SPREED_BELOW},	//折线	
+			{4, yellow, SPREED_BELOW},	//折线	
 			{2, yellow, SPREED_ABOVE},	
-			{5, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_VERTICAL },
 			{1, multicolour, NONE },
 		},
 		{/*第十三关*/
@@ -199,7 +195,7 @@ public interface Common {
 			{4, yellow, SPREED_BELOW },
 			{2, yellow, SPREED_BELOW},	
 			{2, yellow, SPREED_ABOVE},
-			{5, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_VERTICAL },
 			{1, multicolour, NONE },
 		},
 		{/*第十五关*/
@@ -208,7 +204,7 @@ public interface Common {
 			{4, yellow, SPREED_BELOW },
 			{2, yellow, SPREED_BELOW},	
 			{2, yellow, SPREED_ABOVE},
-			{5, yellow, SPREED_VERTICAL },
+			{4, yellow, SPREED_VERTICAL },
 			{1, multicolour, NONE },
 			{1, yellow, NONE },
 		},

@@ -55,7 +55,7 @@ public class Weapon implements Common {
 		w.mapy = own.mapy+45;  
 		w.width = 18;
 		w.height = 19;
-		w.speedX = 10;
+		w.speedX = 20;
 		bombs.addElement(w);
 	}
 	

@@ -6,7 +6,6 @@ import cn.ohyeah.stb.game.GameCanvasEngine;
 
 /**
  * 游戏引擎
- * 
  * @author Administrator
  */
 public class SheepWarGameEngine extends GameCanvasEngine implements Common {
@@ -22,6 +21,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public StateMain stateMain;
 	public StateGame stateGame;
+	public Prop[] props;
 
 	private SheepWarGameEngine(MIDlet midlet) {
 		super(midlet);
@@ -32,13 +32,13 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		stateMain = new StateMain(this,stateGame);
 	}
 
-	public int status;
+	public int state;
 	public int mainIndex, playingIndex;
 	
 	protected void loop() {
 		
 		/*处理键值*/
-		switch (status) {   	
+		switch (state) {   	
 		case STATUS_INIT:
 			init();
 			break;
@@ -51,7 +51,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 
 		/*显示界面*/
-		switch (status) {
+		switch (state) {
 		case STATUS_INIT:
 			//showInit(g);
 			break;
@@ -64,7 +64,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		}
 		
 		/*执行逻辑*/
-		switch (status) {
+		switch (state) {
 		case STATUS_INIT:
 			//showInit(g);
 			break;
@@ -81,7 +81,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
-		status = STATUS_MAIN_MENU;                           
+		state = STATUS_MAIN_MENU;                           
 	}
 	private void exit(){
 		if(stateMain.exit){
