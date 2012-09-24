@@ -10,85 +10,83 @@ import cn.ohyeah.stb.ui.PopupText;
 public class PropManager implements Common{
 	
 	public SheepWarGameEngine engine;
-	public Prop[] props;   			//用户总道具数
+	public Prop[] props;   			//玩家道具列表
+	
+	public int[] propIds = {53,54,55,56,57,58,59,60};		//道具id 
+	public int[] propPrice = {20,20,30,30,30,30,50,50};		//道具价格
 	
 	public PropManager(SheepWarGameEngine e){
 		this.engine = e;
 		props = engine.props;
 	}
 	
-	/*查询道具*/
-	public void queryAllProps(){
+	/*查询玩家道具*/
+	public void queryAllOwnProps(){
+		
+		initProps(props);
 		ServiceWrapper sw = engine.getServiceWrapper();
 		OwnProp[] propList = sw.queryOwnPropList();
 		if(propList==null){
 			return;
 		}
 		for(int i=0;i<propList.length;i++){
-			if(propList[i].getPropId()==44){
+			if(propList[i].getPropId()==propIds[0]){
 				props[0].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==45){
+			if(propList[i].getPropId()==propIds[1]){
 				props[1].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==46){
+			if(propList[i].getPropId()==propIds[2]){
 				props[2].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==47){
+			if(propList[i].getPropId()==propIds[3]){
 				props[3].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==48){
+			if(propList[i].getPropId()==propIds[4]){
 				props[4].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==49){
+			if(propList[i].getPropId()==propIds[5]){
 				props[5].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==50){
+			if(propList[i].getPropId()==propIds[6]){
 				props[6].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==51){
+			if(propList[i].getPropId()==propIds[7]){
 				props[7].setNums(propList[i].getCount());
 			}
-			if(propList[i].getPropId()==52){
-				props[8].setNums(propList[i].getCount());
-			}
 		}
 		
-		//card_assign_props = props;  
-		
-		/*for(int i=0;i<card_assign_props.length;i++){
-			System.out.println("道具名称=="+card_assign_props[i].getName());
-			System.out.println("道具数量=="+props[i].getNums());
-		}*/
-	}
-	
-	/*计算道具数量*/
-	public int getGamePropNums(Prop[] props){
-		int count = 0;
 		for(int i=0;i<props.length;i++){
-			int m = props[i].getNums();
-			while(m>0){
-				count++;
-				m--;
-			}
+			System.out.println("道具ID=="+props[i].getPropId());
+			System.out.println("道具数量=="+props[i].getNums());
 		}
-		return count;
 	}
 	
 	/*初始道具设为0*/
 	public void initProps(Prop[] p){
+		System.out.println("初始化道具");
 		for(int i=0;i<p.length;i++){
 			Prop prop = new Prop();
 			p[i] = prop;
 			p[i].setId(i);
 			p[i].setNums(0);
+			p[i].setPropId(53+i);
+			p[i].setPrice(propPrice[i]);
 		}
 	}
 	
+	/*根据道具ID查询该道具数量*/
+	public int getPropNumsById(int propId){
+		int len = props.length;
+		for(int i=len-1;i>=0;i--){
+			if(props[i].getPropId()==propId){
+				return props[i].getNums();
+			}
+		}
+		return -1;
+	}
 	
-	private boolean buyProp(int propId, int propCount){
-		String propName = props[propId-44].getName();
-		int price = props[propId-44].getPrice();
+	private boolean buyProp(int propId, int propCount, int price, String propName){
 		if (engine.getEngineService().getBalance() >= price) {
 			ServiceWrapper sw = engine.getServiceWrapper();
 			sw.purchaseProp(propId, propCount, "购买"+propName);
@@ -115,60 +113,62 @@ public class PropManager implements Common{
 	}
 	
 	/*购买道具*/
-	public void purchaseProp(int shopx,int shopy){
+	public void purchaseProp(int shopX, int shopY) {
 		
-		if(shopy==0 && shopx==0){
-			if (buyProp(44, 1)) {
+		if (shopX == 0 && shopY == 0) {
+			int propId = propIds[0];
+			if (buyProp(propId, 1, propPrice[0], "时光闹钟")) {
 				props[0].setNums(props[0].getNums()+1);
 			}
 		}
-		if(shopy==0 && shopx==1){
-			if (buyProp(45, 1)) {
+		if (shopX == 0 && shopY == 1) {
+			int propId = propIds[1];
+			if (buyProp(propId, 1, propPrice[1], "捕狼网")) {
 				props[1].setNums(props[1].getNums()+1);
 			}
 		}
-		if(shopy==0 && shopx==2){
-			if (buyProp(46, 1)) {
+		if (shopX == 0 && shopY == 2) {
+			int propId = propIds[2];
+			if (buyProp(propId, 1, propPrice[2], "防狼套装")) {
 				props[2].setNums(props[2].getNums()+1);
 			}
 		}
-		if(shopy==1 && shopx==0){
-			if (buyProp(47, 1)) {
+		if (shopX == 0 && shopY == 3) {
+			int propId = propIds[3];
+			if (buyProp(propId, 1, propPrice[3], "激光枪")) {
 				props[3].setNums(props[3].getNums()+1);
 			}
 		}
-		if(shopy==1 && shopx==1){
-			if (buyProp(48, 1)) {
+		if (shopX == 1 && shopY == 0) {
+			int propId = propIds[4];
+			if (buyProp(propId, 1, propPrice[4], "驱散竖琴")) {
 				props[4].setNums(props[4].getNums()+1);
 			}
 		}
-		if(shopy==1 && shopx==2){
-			if (buyProp(49, 1)) {
+		if (shopX == 1 && shopY == 1) {
+			int propId = propIds[5];
+			if (buyProp(propId, 1, propPrice[5], "速度提升液")) {
 				props[5].setNums(props[5].getNums()+1);
 			}
 		}
-		if(shopy==2 && shopx==0){
-			if (buyProp(50, 1)) {
+		if (shopX == 1 && shopY == 2) {
+			int propId = propIds[6];
+			if (buyProp(propId, 1, propPrice[6], "强力磁石")) {
 				props[6].setNums(props[6].getNums()+1);
 			}
 		}
-		if(shopy==2 && shopx==1){
-			if (buyProp(51, 1)) {
+		if (shopX == 1 && shopY == 3) {
+			int propId = propIds[7];
+			if (buyProp(propId, 1, propPrice[7], "替身玩偶")) {
 				props[7].setNums(props[7].getNums()+1);
 			}
-		}
-		if(shopy==2 && shopx==2){
-			if (buyProp(52, 1)) {
-				props[8].setNums(props[8].getNums()+1);
-			}
-		}
-	}
+		}}
 	
 
 	/*同步道具*/
 	public void sysProps(){
-		int[] ids = new int[9];
-		int[] counts = new int[9];
+		int[] ids = new int[8];
+		int[] counts = new int[8];
 		for(int i=0;i<props.length;i++){
 			ids[i] = props[i].getPropId();
 			counts[i] = props[i].getNums();

@@ -21,15 +21,18 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public StateMain stateMain;
 	public StateGame stateGame;
+	public PropManager pm;
 	public Prop[] props;
 
 	private SheepWarGameEngine(MIDlet midlet) {
 		super(midlet);
-		setRelease(true);
+		setRelease(false);
 		ScrW = screenWidth;
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
 		stateMain = new StateMain(this,stateGame);
+		props = new Prop[8];
+		pm = new PropManager(this);
 	}
 
 	public int state;
@@ -81,6 +84,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
+		pm.queryAllOwnProps();
 		state = STATUS_MAIN_MENU;                           
 	}
 	private void exit(){

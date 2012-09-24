@@ -58,11 +58,12 @@ public class Batches implements Common{
 			wolf.coorY = coorY[RandomValue.getRandInt(8)];
 			wolf.position = 0;
 			wolf.position2 = position2;
+			wolf.scores = bublePara[2];
 			wolf.colorId = BatchesInfo[level-1][batch][1];
 			if(wolf.position2 == WOLF_POSITION_TOP){
 				wolf.mapy = 26;
 			}else{
-				wolf.mapy = 466;
+				wolf.mapy = 460;
 			}
 			setWolfInfo(count, spreed_mode, wolf, i, ran); 
 			
@@ -86,11 +87,12 @@ public class Batches implements Common{
 			wolf.coorY = coorY[RandomValue.getRandInt(8)];
 			wolf.position = 0;
 			wolf.position2 = position2;
+			wolf.scores = bublePara[2];
 			wolf.colorId = RewardLevelBatchesInfo[level-1][batch][1];
 			if(wolf.position2 == WOLF_POSITION_TOP){
 				wolf.mapy = 26;
 			}else{
-				wolf.mapy = 466;
+				wolf.mapy = 460;
 			}
 			setWolfInfo(count, spreed_mode, wolf, i, ran); 
 			

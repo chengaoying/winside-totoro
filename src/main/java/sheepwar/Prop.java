@@ -16,6 +16,9 @@ public class Prop {
 	/*道具ID*/
 	private int propId;
 	
+	/*扣费点*/
+	private int feeCode;
+	
 	/*道具数量*/
 	private int nums;
 	
@@ -25,6 +28,14 @@ public class Prop {
 	/*道具价格*/
 	private int price;
 	
+
+	public int getFeeCode() {
+		return feeCode;
+	}
+
+	public void setFeeCode(int feeCode) {
+		this.feeCode = feeCode;
+	}
 
 	public int getPrice() {
 		return price;

@@ -3,6 +3,7 @@ package sheepwar;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.game.StateRecharge;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.ui.TextView;
@@ -62,52 +63,40 @@ public class StateShop implements Common{
 		g.drawImage(shop, 217, 18, 20);
 		g.drawImage(shop_big, 29, 103, 20);
 		g.drawImage(shop_balance, 46, 454, 20);
-	
-		int x =42, y = 120, spaceX = 15, spaceY = 8;//
-		for(int i=0;i<4;i++){
-			for(int j=0;j<2;j++){
-				g.drawRegion(shop_small_base, 0, 0, shop_small_base.getWidth(), shop_small_base.getHeight(),
-						0, x+(spaceX+shop_small_base.getWidth())*j, y+(spaceY+shop_small_base.getHeight())*i, 20);
-			}
-		}
 		g.drawImage(shop_midding, 434, 103, 20);
-		for(int i=0;i<2;i++){             //midding下的按钮阴影
-			g.drawRegion(shop_out_base, 0, 0, shop_out_base.getWidth(), shop_out_base.getHeight(), 
-					0, 457, 381+(spaceY+shop_out_base.getHeight())*i, 20);
-			}
-		int mapx=37,mapy=112;       //被选中后出现阴影效果的坐标
-		int propMessageX = 444,propMessageY = 140,propMessageW = 162,propMessageH = 220 ;		//propMessageX 信息出现的横纵坐标和显示的宽高
-		int rowSpace = 5;   	//信息文字间的行距
+		
+		int x =42, y = 120, spaceX = 15, spaceY = 8;
+		int mapx=37,mapy=112;       
+		int smallW = shop_small.getWidth(), smallH = shop_small.getHeight();
+		int p_propW = playing_prop.getWidth()/8, p_propH = playing_prop.getHeight();
+		int baseW = shop_small_base.getWidth(), baseH = shop_small_base.getHeight();
+		int /*outW = shop_out_base.getWidth(), */outH = shop_out_base.getHeight();
 		for(int i=0;i<4;i++){
 		     for(int j=0;j<2;j++){
+		    	 g.drawImage(shop_out_base, 457, 381+(spaceY+outH)*j, 20);
+		    	 g.drawImage(shop_small_base, x+(spaceX+baseW)*j, y+(spaceY+baseH)*i, 20);
 				if(shopX==j && shopY==i){
-					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(),
-							0, mapx+(spaceX+shop_small.getWidth())*j, mapy+(spaceY+shop_small.getHeight())*i, 20);
-					g.drawImage(price_quantity, mapx+(spaceX+shop_small.getWidth())*j+65, 
-							mapy+(spaceY+shop_small.getHeight())*i+12, 20);
-					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
-							mapx+(spaceX+shop_small.getWidth())*j+8, mapy+(spaceY+shop_small.getHeight())*i+9, 20);
-					drawNum(g, 111, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+11);
-					drawNum(g, 333, mapx+(spaceX+shop_small.getWidth())*j+119, mapy+(spaceY+shop_small.getHeight())*i+36);
-					g.setColor(0xffffff);				//设置字体颜色
+					g.drawImage(shop_small, mapx+(spaceX+smallW)*j, mapy+(spaceY+smallH)*i, 20);
+					g.drawImage(price_quantity, mapx+(spaceX+smallW)*j+65, mapy+(spaceY+smallH)*i+12, 20);
+					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,mapx+(spaceX+smallW)*j+8, mapy+(spaceY+smallH)*i+9, 20);
+					drawNum(g, engine.props[getPropIndex(i, j)].getPrice(), mapx+(spaceX+smallW)*j+119, mapy+(spaceY+smallH)*i+11);
+					drawNum(g, engine.props[getPropIndex(i, j)].getNums(), mapx+(spaceX+smallW)*j+119, mapy+(spaceY+smallH)*i+36);
+					g.setColor(0xffffff);				
 					engine.setFont(19);	
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], rowSpace,
-							propMessageX, propMessageY, propMessageW, propMessageH);
+					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 140, 162, 220);
 					engine.setDefaultFont();
 				}else{
-					g.drawRegion(shop_small, 0, 0, shop_small.getWidth(), shop_small.getHeight(), 0,
-							x+(spaceX+shop_small.getWidth())*j, y+(spaceY+shop_small.getHeight())*i, 20);
-					g.drawImage(price_quantity, x+(spaceX+shop_small.getWidth())*j+65, 
-							y+(spaceY+shop_small.getHeight())*i+12, 20);
-					g.drawRegion(playing_prop, getIndex(j, i)*playing_prop.getWidth()/8, 0, playing_prop.getWidth()/8, playing_prop.getHeight(), 0,
-							x+(spaceX+shop_small.getWidth())*j+8, y+(spaceY+shop_small.getHeight())*i+9, 20);
-					drawNum(g, 111, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+11);
-					drawNum(g, 333, x+(spaceX+shop_small.getWidth())*j+119, y+(spaceY+shop_small.getHeight())*i+36);
+					System.out.println("index:"+getPropIndex(i, j));
+					g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
+					g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
+					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+8, y+(spaceY+smallH)*i+9, 20);
+					drawNum(g, engine.props[getPropIndex(i, j)].getPrice(), x+(spaceX+smallW)*j+119, y+(spaceY+smallH)*i+11);
+					drawNum(g, engine.props[getPropIndex(i, j)].getNums(), x+(spaceX+smallW)*j+119, y+(spaceY+smallH)*i+36);
 				}
 			}
 		}
 		 if(shopX==2){          //充值和返回被选择的阴影效果
-			 if(shopY==0){    //控制方向由左到右的入口方向
+			 if(shopY==0){      //控制方向由左到右的入口方向
 				 g.drawImage(shop_go_pay, 457-8, 381-5, 20);
 			   	 g.drawImage(shop_out, 457, 429, 20);
 			  }else{
@@ -118,8 +107,20 @@ public class StateShop implements Common{
 		    	g.drawImage(shop_go_pay, 457, 381, 20);
 		   		g.drawImage(shop_out, 457, 429, 20);
 		    }
-		drawNum(g, 10, 103,452);                                          //TODO 添加数字
+		drawNum(g, engine.getEngineService().getBalance(), 103,452);  //用戶于余額
 	
+	}
+	
+	private int getPropIndex(int x, int y){
+		if(x==0 && y==0)return 0;
+		if(x==1 && y==0)return 1;
+		if(x==2 && y==0)return 2;
+		if(x==3 && y==0)return 3;
+		if(x==0 && y==1)return 4;
+		if(x==1 && y==1)return 5;
+		if(x==2 && y==1)return 6;
+		if(x==3 && y==1)return 7;
+		return -1;
 	}
 	
 	private void handleShop(KeyState keyState) {
@@ -165,11 +166,14 @@ public class StateShop implements Common{
 		if (keyState.contains(KeyCode.OK)) {
 			keyState.remove(KeyCode.OK);
 			if(shopX==2 && shopY==0){//进入充值
+				StateRecharge sr = new StateRecharge(engine);
+				sr.recharge();
 				
-			}
-			if(shopX==2 && shopY==1){
+			}else if(shopX==2 && shopY==1){
 				running = false;
 				shopX = 0;shopY = 0;
+			}else{
+				engine.pm.purchaseProp(shopX, shopY);
 			}
 		}
 	
@@ -183,20 +187,6 @@ public class StateShop implements Common{
 					imgNumeber.getWidth()/10, imgNumeber.getHeight(), 0, x + i * (imgNumeber.getWidth()/10 + 1), y, 0);
 		}
 	}
-	
-	private int getIndex(int x, int y){    //取出对应商店商场左侧的位置
-		if(y==0 && x==0)return 0;
-		if(y==1 && x==0)return 1;
-		if(y==2 && x==0)return 2;
-		if(y==3 && x==0)return 3;
-		if(y==0 && x==1)return 4;
-		if(y==1 && x==1)return 5;
-		if(y==2 && x==1)return 6;
-		if(y==3 && x==1)return 7;
-		if(x==2)        return 8;
-		return -1;
-	}
-
 	
 	private void clear() {
 		Resource.freeImage(Resource.id_shop);

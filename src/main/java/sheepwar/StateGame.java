@@ -35,7 +35,7 @@ public class StateGame implements Common{
 	/*奖励关卡*/
 	public short rewardLevel = 1;
 	
-	public boolean isRewardLevel;
+	public boolean isRewardLevel, isReward;
 	
 	/*当前关卡狼出现的批次*/
 	public short batch;
@@ -74,7 +74,7 @@ public class StateGame implements Common{
 	
 	/*游戏过度时间*/
 	private long gameBufferTimeS, gameBufferTimeE;
-	private boolean goNext;
+	private boolean isNextLevel;
 	
 	/*控制子弹发射的变量*/
 	private long startTime, endTime;
@@ -127,41 +127,88 @@ public class StateGame implements Common{
 			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM1)&& own.status ==ROLE_ALIVE){    	//时光闹钟
-			pasueState = true;
-			pasueTimeS = System.currentTimeMillis()/1000;
+			if(engine.pm.getPropNumsById(engine.pm.propIds[0])>0 || engine.isDebugMode()){
+				pasueState = true;
+				pasueTimeS = System.currentTimeMillis()/1000;
+				int propId = engine.pm.propIds[0]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 			
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)&& own.status ==ROLE_ALIVE){ 		//捕狼网
-			weapon.createNet(own, Weapon.WEAPON_MOVE_LEFT);
-			
+			if(engine.pm.getPropNumsById(engine.pm.propIds[1])>0 || engine.isDebugMode()){
+				weapon.createNet(own, Weapon.WEAPON_MOVE_LEFT);
+				int propId = engine.pm.propIds[1]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)&& own.status ==ROLE_ALIVE){		//盾牌
-			protectState = true;
-			weapon.createProtect(own);
-			proStartTime = System.currentTimeMillis()/1000;
-			
+			if(engine.pm.getPropNumsById(engine.pm.propIds[2])>0 || engine.isDebugMode()){
+				protectState = true;
+				weapon.createProtect(own);
+				proStartTime = System.currentTimeMillis()/1000;
+				int propId = engine.pm.propIds[2]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)&& own.status ==ROLE_ALIVE){		//激光枪
-			weapon.createGlare(own,Weapon.WEAPON_MOVE_LEFT);
+			if(engine.pm.getPropNumsById(engine.pm.propIds[3])>0 || engine.isDebugMode()){
+				weapon.createGlare(own,Weapon.WEAPON_MOVE_LEFT);
+				int propId = engine.pm.propIds[3]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)&& own.status ==ROLE_ALIVE){		//驱散竖琴
-			weapon.createHarp(own);
-			
+			if(engine.pm.getPropNumsById(engine.pm.propIds[4])>0 || engine.isDebugMode()){
+				weapon.createHarp(own);
+				int propId = engine.pm.propIds[4]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)&& own.status ==ROLE_ALIVE){		//速度提升液
-			if(!speedFlag){
-				own.speed = own.speed + 5;
-				speedFlag = true;
-				addSpeedTime = System.currentTimeMillis()/1000;
+			if(engine.pm.getPropNumsById(engine.pm.propIds[5])>0 || engine.isDebugMode()){
+				if(!speedFlag){
+					own.speed = own.speed + 5;
+					speedFlag = true;
+					addSpeedTime = System.currentTimeMillis()/1000;
+					int propId = engine.pm.propIds[5]-53;
+					if(!engine.isDebugMode()){
+						engine.props[propId].setNums(engine.props[propId].getNums()-1);
+					}
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)&& own.status ==ROLE_ALIVE){		//强力磁石
-			magnetStartTime = System.currentTimeMillis()/1000;
-			magnetState = true;
+			if(engine.pm.getPropNumsById(engine.pm.propIds[6])>0 || engine.isDebugMode()){
+				magnetStartTime = System.currentTimeMillis()/1000;
+				magnetState = true;
+				int propId = engine.pm.propIds[6]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM8) && own.status ==ROLE_ALIVE){		//木偶->可以增加一条生命
-			own.lifeNum ++;
-			lifeNum = own.lifeNum;
-			
+			if(engine.pm.getPropNumsById(engine.pm.propIds[7])>0 || engine.isDebugMode()){
+				own.lifeNum ++;
+				lifeNum = own.lifeNum;
+				int propId = engine.pm.propIds[7]-53;
+				if(!engine.isDebugMode()){
+					engine.props[propId].setNums(engine.props[propId].getNums()-1);
+				}
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM9)){		//暂停							
 			
 		}else if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)){ 	//返回
 			engine.state = STATUS_MAIN_MENU;
 			clear();
+			
+			/*同步道具*/
+			engine.pm.sysProps();
 		}
 	}
 	
@@ -210,7 +257,7 @@ public class StateGame implements Common{
 		if(magnetEndTime - magnetStartTime > magnetInterval){
 			magnetState = false;
 		}
-		System.out.println("own.life:"+own.lifeNum);
+		
 		/*游戏过度时间*/
 		gameBufferTimeE = System.currentTimeMillis()/1000;
 		
@@ -276,7 +323,12 @@ public class StateGame implements Common{
 					System.out.println("过关");
 					gameBufferTimeS = System.currentTimeMillis()/1000;
 					eatNum = own.eatNum = 0;
-					goNext = true;
+					isNextLevel = true;
+					if(level%2==0){
+						isRewardLevel = true;
+						System.out.println("下一关为奖励关卡");
+					}
+					level++;
 				}
 			}
 		}else{	//奖励关卡过关判断
@@ -284,21 +336,26 @@ public class StateGame implements Common{
 					||(rewardLevel%2==0 && batches.redWolf.bombNum>=16)){
 				System.out.println("奖励关卡结束");
 				gameBufferTimeS = System.currentTimeMillis()/1000;
-				goNext = true;
+				isNextLevel = true;
+				batch = 0;
 				eatNum = own.eatNum = 0;
+				isRewardLevel = false;
+				isReward = true;
+				rewardLevel++;
 				if(batches.redWolf!=null){
 					batches.redWolf.bombNum = 0;
 				}
 			}
 		}
 		
-		/*上述判断为true则进入过关界面*/
-		if(goNext==true && gameBufferTimeE-gameBufferTimeS>1){
-			goNext = false;
+		/*进入过关界面*/
+		if(isNextLevel==true && gameBufferTimeE-gameBufferTimeS>1){
+			isNextLevel = false;
 			initDataNextLevel();	//清空数据
 			StateNextLevel stateLevel = new StateNextLevel();
 			stateLevel.processNextLevel(own);
-			if(isRewardLevel){
+			isReward = false;
+			/*if(isRewardLevel){
 				isRewardLevel = false;
 				rewardLevel++;
 			}else{
@@ -308,6 +365,7 @@ public class StateGame implements Common{
 				}
 				level++;
 			}
+			System.out.println("isRewardLevel=="+isRewardLevel);*/
 		}
 	}
 	
@@ -346,8 +404,10 @@ public class StateGame implements Common{
 					Role npc = (Role) batches.npcs.elementAt(j);
 					if(npc.status == ROLE_ALIVE){
 						if(Collision.checkCollision(npc.mapx, npc.mapy, npc.width, npc.height, glare.mapx, glare.mapy, glare.width, glare.height)){
-							npc.status = ROLE_DEATH;		//TODO confirm the real effect of Glare
+							npc.status = ROLE_DEATH;		
 							npc.speed += 10;
+							own.eatNum++;
+							own.scores += npc.scores;
 						}
 					}
 				}
@@ -422,23 +482,25 @@ public class StateGame implements Common{
 
 	/*创建红太狼npc*/
 	private void createRedNpc(){
-		if(isRewardLevel){
-			System.out.println("当前奖励关卡:"+rewardLevel);
-			if(rewardLevel % 2 ==0 && batches.redWolf==null){					//偶数奖励关卡出现红太狼
-				System.out.println("奖励关卡创建红太狼");
-				batches.redWolf = batches.createRedWolf();
-			}
-		}else{
-			System.out.println("当前关卡："+level);
-			if(level % 2!=0 && level != 1 && batches.redWolf==null){			//奇数关卡会有红太狼的出现
-				System.out.println("普通关卡创建红太狼");
-				batches.redWolf = batches.createRedWolf();
+		if(!isNextLevel){
+			if(isRewardLevel){
+				System.out.println("当前奖励关卡:"+rewardLevel);
+				if(rewardLevel % 2 ==0 && batches.redWolf==null){					//偶数奖励关卡出现红太狼
+					System.out.println("奖励关卡创建红太狼");
+					batches.redWolf = batches.createRedWolf();
+				}
+			}else{
+				System.out.println("当前关卡："+level);
+				if(level % 2!=0 && level != 1 && batches.redWolf==null){			//奇数关卡会有红太狼的出现
+					System.out.println("普通关卡创建红太狼");
+					batches.redWolf = batches.createRedWolf();
+				}
 			}
 		}
 	}
 	
 	private void createNpc(){
-		if(isAllDown()){
+		if(isAllDown() && !isNextLevel){
 			if(!isRewardLevel){
 				if(engine.timePass(LEVEL_INFO[level-1][2]*1000)){
 					System.out.println("普通关卡创建一批狼");
@@ -555,7 +617,7 @@ public class StateGame implements Common{
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
 		
 		g.drawImage(game_bg, 0, 0, 20);
-		if(isRewardLevel && !goNext){		//画出奖励关卡界面
+		if((isRewardLevel && !isNextLevel) || isReward){		//画出奖励关卡界面
 			g.drawImage(pass_cloud, 50, 80, 20);
 			g.drawImage(pass_cloud, 216, 80, 20);
 			g.drawImage(pass_cloud, 404, 140, 20);		//轮子下面的云朵
