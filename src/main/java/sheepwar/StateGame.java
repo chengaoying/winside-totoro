@@ -271,7 +271,6 @@ public class StateGame implements Common{
 		}
 		/*控制拳套时间间隔*/
 		gloveEndTime = System.currentTimeMillis()/1000;
-		System.out.println("gloveEndTime  - gloveStartTime="+(gloveEndTime  - gloveStartTime));
 		if(golveFlag && (gloveEndTime  - gloveStartTime >= gloveInterval)){
 			isShowGlove = true;
 			golveFlag = false;
@@ -307,14 +306,14 @@ public class StateGame implements Common{
 		/*游戏过度时间*/
 		gameBufferTimeE = System.currentTimeMillis()/1000;
 		
-		/*关卡过关判断*/
-		isNextLevel();  			
-		
 		/*创建一批狼*/
 		createNpc();
 		
 		/*创建狼*/
 		createRedNpc();
+		
+		/*关卡过关判断*/
+		isNextLevel();  			
 		
 		/*普通攻击碰撞检测*/
 		bombAttackNpcs();
@@ -365,37 +364,41 @@ public class StateGame implements Common{
 	}
 
 	private void isNextLevel(){
-		if(!isRewardLevel){  //普通关卡过关判断
-			for (int i = 1; i < 16; i++) {
-				if (level == i && own.hitNum >= LEVEL_INFO[level - 1][1]) {
-					System.out.println("过关");
-					gameBufferTimeS = System.currentTimeMillis()/1000;
-					hitNum = own.hitNum = 0;
-					isNextLevel = true;
-					if(level%2==0){
-						isRewardLevel = true;
-						System.out.println("下一关为奖励关卡");
+		if(!isNextLevel){
+			if(!isRewardLevel){  //普通关卡过关判断
+				for (int i = 1; i < 16; i++) {
+					if ((level == i && own.hitNum >= LEVEL_INFO[level - 1][1]) 
+							|| (engine.isDebugMode() && own.hitNum>=3)) {
+						System.out.println("过关");
+						gameBufferTimeS = System.currentTimeMillis()/1000;
+						hitNum = own.hitNum = 0;
+						isNextLevel = true;
+						if(level%2==0){
+							isRewardLevel = true;
+							System.out.println("下一关为奖励关卡");
+						}
+						level++;
 					}
-					level++;
 				}
-			}
-		}else{	//奖励关卡过关判断
-			if((rewardLevel%2==1 && batch >= (RewardLevelBatchesInfo[rewardLevel-1].length - 1))
-					||(rewardLevel%2==0 && batches.redWolf.bombNum>=16)){
-				System.out.println("奖励关卡结束");
-				gameBufferTimeS = System.currentTimeMillis()/1000;
-				isNextLevel = true;
-				batch = 0;
-				hitNum = own.hitNum = 0;
-				isRewardLevel = false;
-				isReward = true;
-				rewardLevel++;
-				if(batches.redWolf!=null){
-					batches.redWolf.bombNum = 0;
+			}else{	//奖励关卡过关判断
+				if((rewardLevel%2==1 && batch >= (RewardLevelBatchesInfo[rewardLevel-1].length - 1))
+						||(rewardLevel%2==0 && batches.redWolf.bombNum>=16) 
+						|| (engine.isDebugMode() && (batch>1 || (rewardLevel%2==0 && batches.redWolf.bombNum>1)))){
+					System.out.println("奖励关卡结束");
+					gameBufferTimeS = System.currentTimeMillis()/1000;
+					isNextLevel = true;
+					batch = 0;
+					hitNum = own.hitNum = 0;
+					isRewardLevel = false;
+					isReward = true;
+					rewardLevel++;
+					if(batches.redWolf!=null){
+						batches.redWolf.bombNum = 0;
+					}
 				}
 			}
 		}
-		
+
 		/*进入过关界面*/
 		if(isNextLevel==true && gameBufferTimeE-gameBufferTimeS>1){
 			isNextLevel = false;
@@ -418,6 +421,15 @@ public class StateGame implements Common{
 			isGameOver = true;
 			isSuccess = true;
 			gameBufferTimeS = System.currentTimeMillis()/1000;
+			//同步道具
+			engine.pm.sysProps();
+			
+			//保存成就
+			ServiceWrapper sw = engine.getServiceWrapper();
+			GameAttainment ga = sw.readAttainment(engine.attainmentId);
+			if(((ga==null && own.scores>0) || (ga.getScores()<=own.scores) && own.scores>0)){
+				engine.saveAttainment(own);
+			}
 		}
 	}
 	
@@ -429,6 +441,7 @@ public class StateGame implements Common{
 			StateGameSuccessOrFail sgs = new StateGameSuccessOrFail();
 			sgs.processGameSuccessOrFail(isSuccess, own);
 			engine.state = STATUS_MAIN_MENU;
+			clear();
 		}
 	}
 	
@@ -829,7 +842,10 @@ public class StateGame implements Common{
 		for(int j=0;j<4;j++){
 			for(int k=0;k<2;k++){
 				String str = String.valueOf(engine.props[getPropIndex(j, k)].getNums());
+				int color = g.getColor();
+				g.setColor(0x000000);
 				g.drawString(str, propX+spaceX*k, propY+spaceY*j, 20);
+				g.setColor(color);
 			}
 		}
 		

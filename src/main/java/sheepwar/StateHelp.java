@@ -11,7 +11,7 @@ public class StateHelp implements Common{
 	
 	private SheepWarGameEngine engine = SheepWarGameEngine.instance;
 	private boolean running;
-	private int helpIndex, helpX;
+	private int  helpX;
 	private int pageIndex;
 	
 	public void processHelp(){
@@ -57,40 +57,35 @@ public class StateHelp implements Common{
 		
 		int helpLeftRightX = 380,helpLeftRightY = 452,sapceLeftRight = 52;				//°ïÖú½çÃæÖÐµÄ°´Å¥ºá×Ý×ø±ê,sapceLeftRight×óÓÒ¼ä¾à
 		int helpShadowX = 4,helpShadowY = 4;
-		g.drawImage(slash, helpLeftRightX+achievement_left_right.getWidth()/2+15, helpLeftRightY+7, 20);
-		drawNum(g, 3, helpLeftRightX+achievement_left_right.getWidth()/2+slash.getWidth()+14, helpLeftRightY+8);
-		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2, 		//·­Ò³×ó°´Å¥
+		int achLeftW = achievement_left_right.getWidth()/2;
+		int achRight1W = achievement_left_right1.getWidth()/2;
+		g.drawImage(slash, helpLeftRightX+achLeftW+15, helpLeftRightY+7, 20);
+		drawNum(g, 3, helpLeftRightX+achLeftW+slash.getWidth()+14, helpLeftRightY+8);
+		g.drawRegion(achievement_left_right1, 0, 0, achRight1W, 		//·­Ò³×ó°´Å¥
 				achievement_left_right1.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
-		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//·­Ò³ÓÒ°´Å¥
-				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-				0, helpLeftRightX+sapceLeftRight+achievement_left_right1.getWidth()/2, helpLeftRightY, 20);
-		if(helpX == 0){
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
+		g.drawRegion(achievement_left_right1, achRight1W, 0,			//·­Ò³ÓÒ°´Å¥
+				achRight1W, achievement_left_right1.getHeight(),
+				0, helpLeftRightX+sapceLeftRight+achRight1W, helpLeftRightY, 20);
+		if(pageIndex == 0){
+			g.drawRegion(achievement_left_right, 0, 0, achLeftW, 		//·­Ò³×ó°´Å¥
 					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX, helpLeftRightY-helpShadowY, 20);
-			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8); 		//Ò³ÃæÂë
-			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
-					achievement_left_right.getHeight(), 0, helpLeftRightX+sapceLeftRight+achievement_left_right.getWidth()/2,
+			drawNum(g,helpX+1,helpLeftRightX+achLeftW+3,helpLeftRightY+8); 		//Ò³ÃæÂë
+			g.drawRegion(achievement_left_right, 1*achLeftW, 0, achLeftW,
+					achievement_left_right.getHeight(), 0, helpLeftRightX+sapceLeftRight+achLeftW,
 					helpLeftRightY, 20);
-		}else if(helpX == 1){
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
+		}else if(pageIndex == 1){
+			g.drawRegion(achievement_left_right, 0, 0, achLeftW, 		//·­Ò³×ó°´Å¥
 					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
-			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8);; 		//Ò³ÃæÂë
-			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
-					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX+sapceLeftRight+achievement_left_right.getWidth()/2,
+			drawNum(g,helpX+1,helpLeftRightX+achLeftW+3,helpLeftRightY+8);; 		//Ò³ÃæÂë
+			g.drawRegion(achievement_left_right, 1*achLeftW, 0, achLeftW,
+					achievement_left_right.getHeight(), 0, helpLeftRightX-helpShadowX+sapceLeftRight+achLeftW,
 					helpLeftRightY-helpShadowY, 20);
-		}else{
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
-					achievement_left_right.getHeight(), 0, helpLeftRightX, helpLeftRightY, 20);
-			drawNum(g,helpIndex+1,helpLeftRightX+achievement_left_right.getWidth()/2+3,helpLeftRightY+8); 		//Ò³ÃæÂë
-			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0,			//·­Ò³ÓÒ°´Å¥
-					achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-					0, helpLeftRightX+sapceLeftRight+achievement_left_right.getWidth()/2, helpLeftRightY, 20);
 		}
 		g.drawImage(game_help, 214,18, 20);
 		g.drawImage(achievement_out1, 17,498, 20);
 		g.setColor(0xffffff);				//ÉèÖÃ×ÖÌåÑÕÉ«
 		engine.setFont(19);					//ÉèÖÃ×ÖÌå´óÐ¡
-		TextView.showMultiLineText(g, Resource.gameInfo[helpIndex], 8,150, 130, 360, 334);			//Ð´³öÃèÊöÐÅÏ¢
+		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 8,150, 130, 360, 334);			//Ð´³öÃèÊöÐÅÏ¢
 		engine.setDefaultFont();
 	
 	}
@@ -98,35 +93,19 @@ public class StateHelp implements Common{
 	private void handleHelp(KeyState keyState) {
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
-		}
-		if (keyState.containsAndRemove(KeyCode.OK)
-				|| keyState.containsAndRemove(KeyCode.LEFT)
-				|| keyState.containsAndRemove(KeyCode.RIGHT)) { // ·­Ò³µÄÅÐ¶Ï
-			if (pageIndex == 0) {
-				if (helpIndex > 0) {
-					helpIndex--;
-				}
-			}
-			if (pageIndex == 1) {
-				if (helpIndex < 2) {
-					helpIndex++;
-				}
-			}
-		}
-		if (keyState.containsAndRemove(KeyCode.LEFT)) {
+		}else if (keyState.containsAndRemove(KeyCode.LEFT)) {
 			pageIndex = 0;
 			if (helpX > 0) {
-				helpX = helpX - 1;
+				helpX --;
 			} else {
 				helpX = 0;
 			}
-		}
-		if (keyState.containsAndRemove(KeyCode.RIGHT)) {
+		}else if (keyState.containsAndRemove(KeyCode.RIGHT)) {
 			pageIndex = 1;
-			if (helpX < 1) {
-				helpX = helpX + 1;
+			if (helpX < 2) {
+				helpX ++;
 			} else {
-				helpX = 1;
+				helpX = 2;
 			}
 		}
 	}
