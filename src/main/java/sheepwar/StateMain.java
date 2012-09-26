@@ -41,16 +41,15 @@ public class StateMain implements Common{
 		Image main_bg = Resource.loadImage(Resource.id_main_bg);
 		Image main_menu = Resource.loadImage(Resource.id_main_menu);
 		g.drawImage(main_bg, 0, 0, 0);
+		int sw = main_menu.getWidth() / 2, sh = main_menu.getHeight() / 6;
 		for (int i = 0; i < menuAxis.length; ++i) {
-			g.drawRegion(main_menu,
-					(mainIndex != i) ? main_menu.getWidth() / 2 : 0,
-					i * main_menu.getHeight() / 6, main_menu.getWidth() / 2,
-					main_menu.getHeight() / 6, 0, menuAxis[i][0], 
-					menuAxis[i][1], 0);
+			g.drawRegion(main_menu,(mainIndex != i) ? sw : 0, i * sh, sw,sh, 0, menuAxis[i][0], menuAxis[i][1], 0);
 		}
 	}
 	
 	public void execute(){
+		
+		/*mainIndex为0是开始游戏*/
 		if(mainIndex == 0){
 			stateGame.weapon = new Weapon();
 			stateGame.createRole = new CreateRole();

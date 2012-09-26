@@ -44,9 +44,9 @@ public class Batches implements Common{
 	
 	/*创建一批狼*/
  	public void createBatches(int level, int batch, int position2){
-		int count = BatchesInfo[level-1][batch][0];	//该批狼的数量
+		int count = BatchesInfo[level-1][batch][0];				//该批狼的数量
 		int spreed_mode = BatchesInfo[level-1][batch][2];
-		int ran = RandomValue.getRandInt(regular.length-1);  //折线方式
+		int ran = RandomValue.getRandInt(regular.length-1);  	//折线方式
 		for(int i=0;i<count;i++){
 			Role wolf = new Role();
 			wolf.status = ROLE_ALIVE;

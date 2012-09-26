@@ -175,6 +175,6 @@ public class PropManager implements Common{
 		}
 		ServiceWrapper sw = engine.getServiceWrapper();
 		sw.synProps(ids, counts);
-		System.out.println("同步道具:"+sw.getServiceMessage());
+		System.out.println("同步道具:"+sw.isServiceSuccessful());
 	}
 }

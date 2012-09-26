@@ -38,6 +38,7 @@ public class Weapon implements Common {
 	public Vector glares = new Vector();
 	public Vector harps = new Vector();			
 	public Vector fruits = new Vector();
+	public Vector gloves = new Vector();
 	
 	/*捕狼网持续时间*/
 	public static long netTimeS, netTimeE;
@@ -51,11 +52,11 @@ public class Weapon implements Common {
 	public void createBomb(Role own, int direction) {
 		Weapon w = new Weapon();
 		w.direction = direction;
-		w.mapx = own.mapx-20;  
-		w.mapy = own.mapy+45;  
+		w.mapx = own.mapx;  
+		w.mapy = own.mapy+30;  
 		w.width = 18;
 		w.height = 19;
-		w.speedX = 20;
+		w.speedX = 30;
 		bombs.addElement(w);
 	}
 	
@@ -326,6 +327,44 @@ public class Weapon implements Common {
 		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
+	/*创建无敌拳套*/
+	public void createGloves(Role own, int direction) {
+		Weapon w = new Weapon();
+		w.direction = direction;
+		w.isUse =  false;
+		w.mapx = own.mapx;
+		w.mapy = own.mapy+20;					//轮子的高度+轮子的纵坐标
+		w.height = 32;
+		w.width = 129;
+		w.speedX = 10;
+		w.speedY = 8;
+		gloves.addElement(w);
+	}
+	
+	
+	/*显示拳套生成*/
+	public void showGloveCreate(SGraphics g){
+		Image glove = Resource.loadImage(Resource.id_prop_fist);
+		int w = glove.getWidth() / 2, h = glove.getHeight();
+		g.drawRegion(glove, 0 * w, 0, w, h, 0, 374, 163, 20);
+	}
+	
+	/*显示无敌拳套运用效果*/
+	public void showGloves(SGraphics g,Role player) {			//每隔一段时间就会显示拳套于原始位置
+		g.setClip(0, 0, gameW, ScrH);
+		Image gloveEffect = Resource.loadImage(Resource.id_prop_fist_effect);
+		Weapon w = null;
+		int gloveW = gloveEffect.getWidth() / 3, gloveH = gloveEffect.getHeight();
+		for (int i = gloves.size() - 1; i >= 0; i--) {
+			w = (Weapon) gloves.elementAt(i);
+			w.mapx -= w.speedX;
+			w.mapy += w.speedY;
+			w.frame = (w.frame + 1) % 3;
+			g.drawRegion(gloveEffect, w.frame * gloveW,	0, gloveW, gloveH, 0, w.mapx, w.mapy, 20);
+		}
+		g.setClip(0, 0, ScrW, ScrH);
+	}
+	
 	/*清除内存中的对象*/
 	public void clearObjects() {
       bombs.removeAllElements();
@@ -335,6 +374,7 @@ public class Weapon implements Common {
       glares.removeAllElements();
       harps.removeAllElements();
       fruits.removeAllElements();
+      gloves.removeAllElements();
 	}
 	
 	public void printSize(){
@@ -345,5 +385,6 @@ public class Weapon implements Common {
 		System.out.println("glares.size:"+glares.size());
 		System.out.println("harps.size:"+harps.size());
 		System.out.println("fruits.size:"+fruits.size());
+		System.out.println("gloves.size:"+gloves.size());
 	}
 }

@@ -86,7 +86,6 @@ public class StateShop implements Common{
 					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 140, 162, 220);
 					engine.setDefaultFont();
 				}else{
-					System.out.println("index:"+getPropIndex(i, j));
 					g.drawImage(shop_small, x+(spaceX+smallW)*j, y+(spaceY+smallH)*i, 20);
 					g.drawImage(price_quantity, x+(spaceX+smallW)*j+65, y+(spaceY+smallH)*i+12, 20);
 					g.drawRegion(playing_prop, getPropIndex(i, j)*p_propW, 0, p_propW, p_propH, 0,x+(spaceX+smallW)*j+8, y+(spaceY+smallH)*i+9, 20);
@@ -126,9 +125,12 @@ public class StateShop implements Common{
 	private void handleShop(KeyState keyState) {
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
-			shopX = 0;shopY = 0;
-		}else
-		if (keyState.contains(KeyCode.UP)) {
+			shopX = 0;
+			shopY = 0;
+			
+			/*同步道具*/
+			engine.pm.sysProps();
+		}else if (keyState.contains(KeyCode.UP)) {
 			keyState.remove(KeyCode.UP);
 			if(shopY>0){
 				if(shopX==2){
@@ -137,8 +139,7 @@ public class StateShop implements Common{
 					shopY=(shopY-1)%4;
 				}
 			}
-		}else
-		if (keyState.contains(KeyCode.DOWN)) {
+		}else if (keyState.contains(KeyCode.DOWN)) {
 			keyState.remove(KeyCode.DOWN);
 			if(shopY<4){
 				if(shopX<2){
@@ -147,14 +148,12 @@ public class StateShop implements Common{
 					shopY = (shopY+1)%2;
 				}
 			}
-		}else
-		if (keyState.contains(KeyCode.LEFT)) {
+		}else if (keyState.contains(KeyCode.LEFT)) {
 			keyState.remove(KeyCode.LEFT);
 			if(shopX>0){
 				shopX = shopX-1;
 			}
-		}else
-		if (keyState.contains(KeyCode.RIGHT)) {
+		}else if (keyState.contains(KeyCode.RIGHT)) {
 			keyState.remove(KeyCode.RIGHT);
 			if(shopX<2){
 				shopX = (shopX+1)%3;
@@ -162,8 +161,7 @@ public class StateShop implements Common{
 			if(shopX==2){//当控制由左到右时，shopY置零
 				shopY=0;
 			}
-		}else
-		if (keyState.contains(KeyCode.OK)) {
+		}else if (keyState.contains(KeyCode.OK)) {
 			keyState.remove(KeyCode.OK);
 			if(shopX==2 && shopY==0){//进入充值
 				StateRecharge sr = new StateRecharge(engine);

@@ -17,10 +17,16 @@ public class Role {
 	int coorY;			//狼发射子弹的纵坐标
 	int height;         //角色自身高度
 	int width;          //角色自身宽度
-	int eatNum;			//单关击中的狼数
+	int hitNum;			//单关击中的狼数
+	int hitTotalNum;	//击中狼的总数
+	int hitBuble;		//击中的气球数
+	int useProps;		//使用的道具数
+	int hitFruits;		//击中的水果数
 	int bombNum;		//发射子弹数量
+	int hitRatio;		//击中目标数
 	int colorId;		//气球ID
 	int attackTime;		//被击中次数
+	int attainment;		//成就点数
 	
 	Role role;		   //子对象
 }

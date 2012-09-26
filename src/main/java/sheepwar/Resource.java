@@ -114,6 +114,10 @@ public class Resource implements Common {
 	public static short id_red_wolf = NUMS++;    
 	public static short id_game_result = NUMS++;    
 	public static short id_game_return = NUMS++;    
+	public static short id_sub_menu_bg = NUMS++;    
+	public static short id_sub_menu = NUMS++;    
+	public static short id_prop_fist = NUMS++;    
+	public static short id_prop_fist_effect = NUMS++;    
 	
 	
 	public static String[] imagesrcs = {
@@ -216,6 +220,10 @@ public class Resource implements Common {
 		"/red_wolf.png",             
 		"/game_result.png",             
 		"/game_return.png",             
+		"/submenu_bg.png",             
+		"/submenu.png",             
+		"/prop_fist.png",             
+		"/prop_fist_effect.png",             
 		
 	};
 	

@@ -66,84 +66,68 @@ public class StateAttainment implements Common{
 		g.drawImage(achievement_out1, 55, 451, 20);
 		g.drawImage(shop_big, 235, 102, 20);
 		g.drawImage(achievement_points, 250, 448, 20);
-		g.drawImage(slash, 517, 450, 20);					//»­³öÐ±¸Ü
-//		g.drawImage(achievement_left_right,458,441, 20);
+		g.drawImage(slash, 517, 450, 20);					
 		
 		int leftX = 52,leftY = 122,leftSpace = 15,shadowX = 4,shadowY = 4, mapx, mapy;   
 		
 		//³É¾Í×ó²àÌõÄ¿
 		int left1H = achievement_left1.getHeight(), left1W = achievement_left1.getWidth();
 		int leftW = achievement_left.getWidth(), leftH = achievement_left.getHeight();
+		int achW = achievement_word.getWidth(), achH = achievement_word.getHeight() / 6;
 		for(int i=0;i<6;i++){       
-			g.drawRegion(achievement_left1, 0, 0, left1W, left1H, 
-					0, leftX, leftY+(leftSpace+left1H)*i, 20);
+			g.drawRegion(achievement_left1, 0, 0, left1W, left1H, 0, leftX, leftY+(leftSpace+left1H)*i, 20);
 			if(!isRight && archY==i){
 				mapx = leftX-shadowX+8;
 				mapy = leftY-shadowY+8+(leftH+leftSpace)*i;
-				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0,
-						leftX-shadowX, leftY-shadowY+(leftH+leftSpace)*i, 20);
+				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0, leftX-shadowX, leftY-shadowY+(leftH+leftSpace)*i, 20);
 			}else{
 				mapx = leftX+8;
 				mapy = leftY+8+(leftH+leftSpace)*i;
-				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0,
-						leftX, leftY+(leftH+leftSpace)*i, 20);
+				g.drawRegion(achievement_left, 0, 0, leftW, leftH, 0, leftX, leftY+(leftH+leftSpace)*i, 20);
 			}
-			g.drawRegion(achievement_word,0,
-					i*achievement_word.getHeight() / 6, achievement_word.getWidth(),
-					achievement_word.getHeight() / 6, 0, mapx,	mapy, 20);
+			g.drawRegion(achievement_word,0, i*achH, achW, achH, 0, mapx,	mapy, 20);
 		}
 		
 		int x=247,y=116,spaceY=4;
+		int achLongW = achievement_long.getWidth(), achLongH = achievement_long.getHeight();
+		int achLong1W = achievement_long1.getWidth(), achLong1H = achievement_long1.getHeight();
+		int achHoofW = archivement_hoof.getWidth(), achHoofH = archivement_hoof.getHeight(); 
+		int achHoof1W = archivement_hoof1.getWidth(), achHoof1H = archivement_hoof1.getHeight(); 
 		for(int i=0;i<4;i++){				
 			if(isRight && rightY==i){   
-				g.drawRegion(achievement_long, 0, 0, achievement_long.getWidth(), achievement_long.getHeight(), 0,
-						x, y+(spaceY+achievement_long.getHeight())*i, 20);
-				g.drawRegion(archivement_hoof, 0, 0, archivement_hoof.getWidth(), archivement_hoof.getHeight(), 0,
-						x+289, y+12+(spaceY+achievement_long.getHeight())*i, 20);
-				drawNum(g, 10, 546, y+(achievement_long.getHeight()+spaceY)*i+26);
+				g.drawRegion(achievement_long, 0, 0, achLongW, achLongH, 0,	x, y+(spaceY+achLongH)*i, 20);
+				g.drawRegion(archivement_hoof, 0, 0, achHoofW, achHoofH, 0,	x+289, y+12+(spaceY+achLongH)*i, 20);
+				drawNum(g, 10, 546, y+(achLongH+spaceY)*i+26);
 			}else{
-				g.drawRegion(achievement_long1, 0, 0, achievement_long1.getWidth(), achievement_long1.getHeight(), 0,
-						x, y+(spaceY+achievement_long1.getHeight())*i, 20);
-				g.drawRegion(archivement_hoof1, 0, 0, archivement_hoof1.getWidth(), archivement_hoof1.getHeight(), 0,
-						x+289, y+12+(spaceY+31+archivement_hoof1.getHeight())*i, 20);
-				drawNum(g, 30, 546, y+(achievement_long.getHeight()+spaceY)*i+26);
+				g.drawRegion(achievement_long1, 0, 0, achLong1W, achLong1H, 0, x, y+(spaceY+achLong1H)*i, 20);
+				g.drawRegion(archivement_hoof1, 0, 0, achHoof1W, achHoof1H, 0, x+289, y+12+(spaceY+31+achHoof1H)*i, 20);
+				drawNum(g, 30, 546, y+(achLongH+spaceY)*i+26);
 			}
 		}
 		
-		//shadowX = 4,shadowY = 4£ºÒõÓ°Ð§¹ûµÄ¼ä¸ôÖµ
-		int leftRightX = 459,leftRightY = 441,distanceLAR = 60;				//distanceLAR: leftRightXºÍleftRightYµÄ¼ä¾à
-		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2,			//·­Ò³×ó°´Å¥µ×²¿
-				achievement_left_right1.getHeight(), 0, leftRightX, leftRightY, 20);
-		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//·­Ò³ÓÒ°´Å¥µ×²¿
-				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-				0, leftRightX+distanceLAR+achievement_left_right1.getWidth()/2, leftRightY, 20);
-		if(isBotton && rightY == 4){		//×óÓÒ°´Å¥Ð§¹û
+		int leftRightX = 459,leftRightY = 441,distanceLAR = 60;									//distanceLAR: leftRightXºÍleftRightYµÄ¼ä¾à
+		int achRight1W = achievement_left_right1.getWidth()/2, achRight1H = achievement_left_right1.getHeight();
+		int achRightW = achievement_left_right.getWidth()/2, achRightH = achievement_left_right.getHeight();
+		int achRightX = leftRightX+distanceLAR+achRight1W;
+		g.drawRegion(achievement_left_right1, 0, 0, achRight1W,	achRight1H, 0, leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥µ×²¿
+		g.drawRegion(achievement_left_right1, achRight1W, 0, achRight1W, achRight1H, 0, achRightX, leftRightY, 20);//·­Ò³ÓÒ°´Å¥µ×²¿
+		
+		int achX = leftRightX+distanceLAR+achRightW, numX = leftRightX+distanceLAR+18;
+		if(isBotton && rightY == 4){	
 			if(bX == 0){				
-				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//·­Ò³×ó°´Å¥
-						achievement_left_right.getHeight(), 0,
-						leftRightX-shadowX, leftRightY-shadowY, 20);
-				drawNum(g,archIndex+1,leftRightX+distanceLAR+18,leftRightY+8);
-				g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,			//·­Ò³ÓÒ°´Å¥
-						achievement_left_right.getHeight(), 0,
-						leftRightX+distanceLAR+achievement_left_right.getWidth()/2, leftRightY, 20);
+				g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0,leftRightX-shadowX, leftRightY-shadowY, 20); //·­Ò³×ó°´Å¥
+				drawNum(g,archIndex+1,numX,leftRightY+8);
+				g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0,achX, leftRightY, 20);	//·­Ò³ÓÒ°´Å¥
 			}else if(bX == 1){
-				g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//·­Ò³×ó°´Å¥
-						achievement_left_right.getHeight(), 0,
-						leftRightX, leftRightY, 20);
-				drawNum(g,archIndex+1,leftRightX+distanceLAR+18,leftRightY+8); 		//Ò³ÃæÂë
-				g.drawRegion(achievement_left_right,  1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,			//·­Ò³ÓÒ°´Å¥
-						achievement_left_right.getHeight(), 0,
-						leftRightX+distanceLAR+achievement_left_right.getWidth()/2-shadowX, leftRightY-shadowY, 20);
+				g.drawRegion(achievement_left_right, 0, 0, achRightW,achRightH, 0,leftRightX, leftRightY, 20);		//·­Ò³×ó°´Å¥
+				drawNum(g,archIndex+1,numX,leftRightY+8); //Ò³ÃæÂë
+				g.drawRegion(achievement_left_right,  1*achRightW, 0, achRightW,achRightH, 0,achX-shadowX, leftRightY-shadowY, 20);	//·­Ò³ÓÒ°´Å¥
 			}
 			
 		}else{
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2,			//·­Ò³×ó°´Å¥
-					achievement_left_right.getHeight(), 0,
-					leftRightX, leftRightY, 20);
-			drawNum(g,archIndex+1,leftRightX+distanceLAR+18,leftRightY+8); 		//Ò³ÃæÂë
-			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,			//·­Ò³ÓÒ°´Å¥
-					achievement_left_right.getHeight(), 0,
-					leftRightX+distanceLAR+achievement_left_right.getWidth()/2, leftRightY, 20);
+			g.drawRegion(achievement_left_right, 0, 0, achRightW, achRightH, 0, leftRightX, leftRightY, 20);						//·­Ò³×ó°´Å¥
+			drawNum(g,archIndex+1,numX,leftRightY+8); 	//Ò³ÃæÂë
+			g.drawRegion(achievement_left_right, 1*achRightW, 0, achRightW,	achRightH, 0, achX, leftRightY, 20);	//·­Ò³ÓÒ°´Å¥
 		}
 		
 	}

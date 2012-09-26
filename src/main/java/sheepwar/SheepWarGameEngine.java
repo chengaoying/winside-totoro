@@ -1,8 +1,15 @@
 package sheepwar;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import javax.microedition.midlet.MIDlet;
-
+import cn.ohyeah.itvgame.model.GameAttainment;
 import cn.ohyeah.stb.game.GameCanvasEngine;
+import cn.ohyeah.stb.game.ServiceWrapper;
+import cn.ohyeah.stb.util.DateUtil;
 
 /**
  * 游戏引擎
@@ -37,6 +44,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	public int state;
 	public int mainIndex, playingIndex;
+	private long gameStartTime;
+	public int attainmentId;
 	
 	protected void loop() {
 		
@@ -84,8 +93,19 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	private void init() {
+		gameStartTime = engineService.getCurrentTime().getTime();
+		java.util.Date gst = new java.util.Date(gameStartTime);
+		int year = DateUtil.getYear(gst);
+		int month = DateUtil.getMonth(gst);
+		attainmentId = year*100+(month);
+		
+		/*查询道具*/
 		pm.queryAllOwnProps();
-		state = STATUS_MAIN_MENU;                           
+		
+		/*读取成就*/
+		readAttainment();
+		
+		state = STATUS_MAIN_MENU;  
 	}
 	private void exit(){
 		if(stateMain.exit){
@@ -108,4 +128,102 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		return false;
 	}
 	
+	/*保存游戏成就*/
+	public void saveAttainment(Role own){
+		byte record[];
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bout);
+		ServiceWrapper sw = getServiceWrapper();
+		try {
+			dout.writeByte(own.hitBuble);
+			dout.writeByte(own.hitFruits);
+			dout.writeByte(own.hitNum);
+			dout.writeByte(own.hitTotalNum);
+			dout.writeByte(own.useProps);
+			dout.writeByte(own.attainment);
+
+			printSaveAttainment(own);
+			record = bout.toByteArray();
+			GameAttainment attainment = new GameAttainment();
+			attainment.setAttainmentId(attainmentId);
+			attainment.setScores(own.scores);
+			attainment.setData(record);
+			sw.saveAttainment(attainment);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				dout.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					bout.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	}
+	
+	/*读取成就*/
+	public void readAttainment(){
+		ServiceWrapper sw = getServiceWrapper();
+		GameAttainment ga = sw.readAttainment(attainmentId);
+		if(!sw.isServiceSuccessful() || ga==null){
+			return;
+		}
+		ByteArrayInputStream bin = new ByteArrayInputStream(ga.getData());
+		DataInputStream din = new DataInputStream(bin);
+		try{
+			StateGame.hitBuble = din.readByte();
+			StateGame.hitFruits = din.readByte();
+			StateGame.hitNum = din.readByte();
+			StateGame.hitTotalNum = din.readByte();
+			StateGame.useProps = din.readByte();
+			StateGame.attainment = din.readByte();
+			StateGame.scores = ga.getScores();
+			
+			printReadAttainment();
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			try {
+				din.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					bin.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		System.out.println("读取成就状态："+sw.getServiceResult());
+	}
+	
+	private void printSaveAttainment(Role own){
+		System.out.println("own.hitBuble="+own.hitBuble);
+		System.out.println("own.hitFruits="+own.hitFruits);
+		System.out.println("own.hitNum="+own.hitNum);
+		System.out.println("own.hitTotalNum="+own.hitTotalNum);
+		System.out.println("own.useProps="+own.useProps);
+		System.out.println("own.attainment="+own.attainment);
+		System.out.println("own.scores="+own.scores);
+	}
+	
+	private void printReadAttainment(){
+		System.out.println("StateGame.hitBuble="+StateGame.hitBuble);
+		System.out.println("StateGame.hitFruits="+StateGame.hitFruits);
+		System.out.println("StateGame.hitNum="+StateGame.hitNum);
+		System.out.println("StateGame.hitTotalNum="+StateGame.hitTotalNum);
+		System.out.println("StateGame.useProps="+StateGame.useProps);
+		System.out.println("StateGame.attainment="+StateGame.attainment);
+		System.out.println("StateGame.scores="+StateGame.scores);
+	}
 }
