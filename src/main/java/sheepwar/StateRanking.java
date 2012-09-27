@@ -118,32 +118,6 @@ public class StateRanking implements Common{
 		g.drawImage(ranking, 232,18, 20);
 		g.drawImage(achievement_out1, 447,447, 20);
 		
-		
-		
-		/*int rankLeftRightX = 457,rankLeftRightY = 440,rankLeftRightSpace = 60;  	//°´Å¥µÄºá×Ý×ø±êºÍ°´Å¥Ö®¼äµÄ¼äÏ¶
-		int right1W = achievement_left_right1.getWidth()/2, right1H = achievement_left_right1.getHeight();
-		int rightW = achievement_left_right.getWidth()/2, rightH = achievement_left_right.getHeight();
-		
-		g.drawRegion(achievement_left_right1, 0, 0, right1W, right1H, 0, rankLeftRightX, rankLeftRightY, 20);		//·­Ò³×ó°´Å¥
-		g.drawRegion(achievement_left_right1, right1W, 0,			//·­Ò³ÓÒ°´Å¥
-				right1W, right1H, 0, rankLeftRightX+rankLeftRightSpace+right1W, rankLeftRightY, 20);
-		if(rankX == 1){
-			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
-					rightH, 0, rankLeftRightX-rankShadowX, rankLeftRightY-rankShadowY, 20);
-			g.drawRegion(achievement_left_right, rightW, 0, rightW,
-					rightH, 0, rankLeftRightX+rankLeftRightSpace+rightW,rankLeftRightY, 20);
-		}else if(rankX == 2){
-			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
-					rightH, 0, rankLeftRightX, rankLeftRightY, 20);
-			g.drawRegion(achievement_left_right, rightW, 0, rightW,
-					rightH, 0, rankLeftRightX-rankShadowX+rankLeftRightSpace+rightW,rankLeftRightY-rankShadowY, 20);
-		}else{
-			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
-					rightH, 0, rankLeftRightX, rankLeftRightY, 20);
-			g.drawRegion(achievement_left_right, rightW, 0,			//·­Ò³ÓÒ°´Å¥
-					right1W, right1H,0, rankLeftRightX+rankLeftRightSpace+rightW, rankLeftRightY, 20);
-		}
-	*/
 	}
 	
 	private void handleRanking(KeyState keyState) {
