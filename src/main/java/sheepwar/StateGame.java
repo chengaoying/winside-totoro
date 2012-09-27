@@ -113,6 +113,7 @@ public class StateGame implements Common{
 	/*玩家存档数据*/
 	public static int lifeNum;		//生命数
 	public static int scores;		//积分
+	public static int scores2;		//单关积分
 	public static int hitNum;		//单关击中狼的数
 	public static int hitTotalNum;	//击中狼的总数
 	public static int hitBuble;		//击中的气球数
@@ -504,6 +505,7 @@ public class StateGame implements Common{
  		System.out.println("hitNum:"+own.hitNum);
  		System.out.println("hitTotalNum:"+own.hitTotalNum);
  		System.out.println("scores:"+own.scores);
+ 		System.out.println("scores2:"+own.scores2);
  		System.out.println("hitRatio:"+own.hitRatio);
  		System.out.println("lifeNum:"+own.lifeNum);
  		System.out.println("useProps:"+own.useProps);
@@ -901,9 +903,11 @@ public class StateGame implements Common{
 	/*击中水果要更改的数据*/
 	private void hitFruit(Weapon fruit){
 		own.scores += fruit.scores;
+		own.scores2 += fruit.scores;
 		own.hitFruits++;
 		own.hitRatio++;
 		scores = own.scores;
+		scores2 = own.scores2;
 		hitFruits = own.hitFruits;
 		hitRatio = own.hitRatio;
 		fruit.status = FRUIT_HIT;
@@ -923,7 +927,9 @@ public class StateGame implements Common{
 		hitRatio = own.hitRatio;
 		if(wolf.role != null){
 			own.scores += wolf.role.scores;
+			own.scores2 += wolf.role.scores2;
 			scores = own.scores;
+			scores2 = own.scores2;
 		}
 	}
 	
@@ -943,6 +949,7 @@ public class StateGame implements Common{
 		hitNum = own.hitNum = 0;
 		lifeNum = own.lifeNum = 0;
 		scores = own.scores = 0;
+		scores2 = own.scores2 = 0;
 		hitBuble = own.hitBuble = 0;
 		hitFruits = own.hitFruits = 0;
 		hitTotalNum = own.hitTotalNum = 0;

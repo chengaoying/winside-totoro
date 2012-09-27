@@ -337,16 +337,23 @@ public class Weapon implements Common {
 		w.height = 32;
 		w.width = 129;
 		w.speedX = 10;
-		w.speedY = 8;
+		w.speedY = 5;
 		gloves.addElement(w);
 	}
 	
-	
+	private int gloveIndex, gloveFlag;
 	/*显示拳套生成*/
 	public void showGloveCreate(SGraphics g){
 		Image glove = Resource.loadImage(Resource.id_prop_fist);
 		int w = glove.getWidth() / 2, h = glove.getHeight();
-		g.drawRegion(glove, 0 * w, 0, w, h, 0, 374, 163, 20);
+		if(gloveFlag<3){
+			gloveIndex=1;
+			gloveFlag++;
+		}else{
+			gloveFlag=0;
+			gloveIndex=0;
+		}
+		g.drawRegion(glove, gloveIndex * w, 0, w, h, 0, 374, 163, 20);
 	}
 	
 	/*显示无敌拳套运用效果*/

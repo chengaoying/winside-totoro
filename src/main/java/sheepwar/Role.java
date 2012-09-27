@@ -13,6 +13,7 @@ public class Role {
 	int lifeNum; 		//生命数
 	int speed;			//移动速度
 	int scores; 		//积分
+	int scores2;		//单关所得积分
 	int coorX;			//下落点
 	int coorY;			//狼发射子弹的纵坐标
 	int height;         //角色自身高度

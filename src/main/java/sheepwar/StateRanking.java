@@ -1,22 +1,29 @@
 package sheepwar;
 
+import java.util.Date;
+
 import javax.microedition.lcdui.Image;
 
+import cn.ohyeah.itvgame.model.GameRanking;
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.util.DateUtil;
 
 public class StateRanking implements Common{
 	
 	private SheepWarGameEngine engine = SheepWarGameEngine.instance;
 	private boolean running;
 	private int rankingIndex, rankX, rankY;
+	private GameRanking[] rankingList, ranking_month;
 	
 	public void processRanking(){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
+			queryRanking();  //²éÑ¯ÅÅÐÐ
 			while (running) {
 				handleRanking(keyState);
 				if (running) {
@@ -41,14 +48,29 @@ public class StateRanking implements Common{
 		}
 		
 	}
+	
+	private void queryRanking(){
+		Date date = new Date(engine.getEngineService().getCurrentTime().getTime());
+		System.out.println(date);
+		int year = DateUtil.getYear(date);
+		int month = DateUtil.getMonth(date);
+		//int day = DateUtil.getDay(date);
+		Date start = DateUtil.createTime(year, month, 1);
+		Date end = DateUtil.createTime(year, month+1, 1);
+		System.out.println("start:"+start);
+		System.out.println("end:"+end);
+		ServiceWrapper sw = engine.getServiceWrapper();
+		rankingList = sw.queryRankingList(0, 10);
+		ranking_month = sw.queryRankingList(start, end, 0, 10);
+	}
 
 	private void showRanking(SGraphics g) {
 
 		Image game_bg = Resource.loadImage(Resource.id_game_bg);
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{61,462}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{233,101}
-		Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{457,440}
-		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);//{457,440}
+		//Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{457,440}
+		//Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);//{457,440}
 		Image current_ranking=Resource.loadImage(Resource.id_current_ranking);//{253,448}
 		Image ranking_option=Resource.loadImage(Resource.id_ranking_option);//{39,112} YÏà²î54 
 		Image ranking_option1=Resource.loadImage(Resource.id_ranking_option1);
@@ -56,76 +78,78 @@ public class StateRanking implements Common{
 		Image ranking=Resource.loadImage(Resource.id_ranking);//{232,18}
 		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
 		Image ranking_word=Resource.loadImage(Resource.id_ranking_word);    
-		Image slash = Resource.loadImage(Resource.id_slash);
+		//Image slash = Resource.loadImage(Resource.id_slash);
 		g.drawImage(game_bg, 0, 0, 20);
-		g.drawImage(achievement_out1, 61,462, 20);
 		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX ×ó²àx×ø±ê£¬rankLeftYSpace ÉÏÏÂ¼ä¾à
 		int rankShadowX = 4,rankShadowY = 4;								//ÅÅÐÐÒõÓ°Ð§¹û×ø±ê²î
 		
+		int workH = ranking_word.getHeight() / 3, workW = ranking_word.getWidth();
+		int option1W = ranking_option1.getWidth(), option1H = ranking_option1.getHeight();
+		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
 		for(int i=0;i<3;i++){//ÅÅÐÐ×ó²àÌõÄ¿
-//			g.drawImage(ranking_option1, rankLeftX, rankLeftY+i*54, 20);
-			g.drawRegion(ranking_option1, 0, 0, ranking_option1.getWidth(), ranking_option1.getHeight(), 0,
-					rankLeftX, rankLeftY+(ranking_option1.getHeight()+rankLeftYSpace)*i, 20);
+			g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
+					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);
 			if(rankY ==i){     		
-				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
-						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,0,
-						i*ranking_word.getHeight() / 3, ranking_word.getWidth(),
-						ranking_word.getHeight() / 3, 0, rankLeftX-rankShadowX+8,
-						rankLeftY-rankShadowY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
+						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(optionH+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
+						rankLeftY-rankShadowY+8+(optionH+rankLeftYSpace)*i, 20);
 			}else{
-				g.drawRegion(ranking_option, 0, 0, ranking_option.getWidth(), ranking_option.getHeight(), 0,
-						rankLeftX, rankLeftY+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,0,
-						i*ranking_word.getHeight() / 3, ranking_word.getWidth(),
-						ranking_word.getHeight() / 3, 0, rankLeftX+8,
+				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
+						rankLeftX, rankLeftY+(optionH+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
 						rankLeftY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
 			}
 		}
+		
+		/*ÅÅÐÐÊý¾Ý*/
+		if(rankY==0 && rankingList!=null){
+			for(int k=0;k<rankingList.length;k++){
+				
+			}
+		}
 		g.drawImage(shop_big, 233,101, 20);
-//		drawNum(g, rankingIndex+1, rankLeftX+achievement_left_right1.getWidth()/2, rankLeftY+8);
-		g.drawImage(slash, 523-slash.getWidth()/2, 447, 20);								//»­³öÐ±¸Ü
-		g.drawImage(ranking_show,241,108, 20);
+		//g.drawImage(slash, 523-slash.getWidth()/2, 447, 20);								//»­³öÐ±¸Ü
+		g.drawImage(ranking_show,260,116, 20);
 		for(int i=0;i<5;i++){
 			g.drawImage(ranking_stripe,241,151+i*57, 20);
 		}
 		g.drawImage(current_ranking, 253,448, 20);
 		g.drawImage(ranking, 232,18, 20);
+		g.drawImage(achievement_out1, 447,447, 20);
 		
-		int rankLeftRightX = 457,rankLeftRightY = 440,rankLeftRightSpace = 60;  	//°´Å¥µÄºá×Ý×ø±êºÍ°´Å¥Ö®¼äµÄ¼äÏ¶
-		g.drawRegion(achievement_left_right1, 0, 0, achievement_left_right1.getWidth()/2, 		//·­Ò³×ó°´Å¥
-				achievement_left_right1.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
-		g.drawRegion(achievement_left_right1, achievement_left_right1.getWidth()/2, 0,			//·­Ò³ÓÒ°´Å¥
-				achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-				0, rankLeftRightX+rankLeftRightSpace+achievement_left_right1.getWidth()/2, rankLeftRightY, 20);
+		
+		
+		/*int rankLeftRightX = 457,rankLeftRightY = 440,rankLeftRightSpace = 60;  	//°´Å¥µÄºá×Ý×ø±êºÍ°´Å¥Ö®¼äµÄ¼äÏ¶
+		int right1W = achievement_left_right1.getWidth()/2, right1H = achievement_left_right1.getHeight();
+		int rightW = achievement_left_right.getWidth()/2, rightH = achievement_left_right.getHeight();
+		
+		g.drawRegion(achievement_left_right1, 0, 0, right1W, right1H, 0, rankLeftRightX, rankLeftRightY, 20);		//·­Ò³×ó°´Å¥
+		g.drawRegion(achievement_left_right1, right1W, 0,			//·­Ò³ÓÒ°´Å¥
+				right1W, right1H, 0, rankLeftRightX+rankLeftRightSpace+right1W, rankLeftRightY, 20);
 		if(rankX == 1){
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
-					achievement_left_right.getHeight(), 0, rankLeftRightX-rankShadowX, rankLeftRightY-rankShadowY, 20);
-			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
-					achievement_left_right.getHeight(), 0, rankLeftRightX+rankLeftRightSpace+achievement_left_right.getWidth()/2,
-					rankLeftRightY, 20);
+			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
+					rightH, 0, rankLeftRightX-rankShadowX, rankLeftRightY-rankShadowY, 20);
+			g.drawRegion(achievement_left_right, rightW, 0, rightW,
+					rightH, 0, rankLeftRightX+rankLeftRightSpace+rightW,rankLeftRightY, 20);
 		}else if(rankX == 2){
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
-					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
-			g.drawRegion(achievement_left_right, 1*achievement_left_right.getWidth()/2, 0, achievement_left_right.getWidth()/2,
-					achievement_left_right.getHeight(), 0, rankLeftRightX-rankShadowX+rankLeftRightSpace+achievement_left_right.getWidth()/2,
-					rankLeftRightY-rankShadowY, 20);
+			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
+					rightH, 0, rankLeftRightX, rankLeftRightY, 20);
+			g.drawRegion(achievement_left_right, rightW, 0, rightW,
+					rightH, 0, rankLeftRightX-rankShadowX+rankLeftRightSpace+rightW,rankLeftRightY-rankShadowY, 20);
 		}else{
-			g.drawRegion(achievement_left_right, 0, 0, achievement_left_right.getWidth()/2, 		//·­Ò³×ó°´Å¥
-					achievement_left_right.getHeight(), 0, rankLeftRightX, rankLeftRightY, 20);
-			g.drawRegion(achievement_left_right, achievement_left_right.getWidth()/2, 0,			//·­Ò³ÓÒ°´Å¥
-					achievement_left_right1.getWidth()/2, achievement_left_right1.getHeight(),
-					0, rankLeftRightX+rankLeftRightSpace+achievement_left_right.getWidth()/2, rankLeftRightY, 20);
+			g.drawRegion(achievement_left_right, 0, 0, rightW, 		//·­Ò³×ó°´Å¥
+					rightH, 0, rankLeftRightX, rankLeftRightY, 20);
+			g.drawRegion(achievement_left_right, rightW, 0,			//·­Ò³ÓÒ°´Å¥
+					right1W, right1H,0, rankLeftRightX+rankLeftRightSpace+rightW, rankLeftRightY, 20);
 		}
-	
+	*/
 	}
 	
 	private void handleRanking(KeyState keyState) {
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
-		}
-
-		if(keyState.contains(KeyCode.OK)){
+		}else if(keyState.contains(KeyCode.OK)){
 			keyState.remove(KeyCode.OK);
 			if(rankingIndex==0){
 				if(rankingIndex>0){
@@ -137,20 +161,18 @@ public class StateRanking implements Common{
 					rankingIndex++;
 				}
 			}
-		}
-		if(keyState.contains(KeyCode.UP)){
+		}else if(keyState.contains(KeyCode.UP)){
 			keyState.remove(KeyCode.UP);
 			if(rankX == 0 && rankY > 0){
 				rankY = rankY - 1;
 			}
-		}
-		if(keyState.contains(KeyCode.DOWN)){
+		}else if(keyState.contains(KeyCode.DOWN)){
 			keyState.remove(KeyCode.DOWN);
 			if(rankX == 0 && rankY <3){
 				rankY = (rankY + 1)%3;
 			}
 		}
-		if(keyState.contains(KeyCode.LEFT)){
+		/*if(keyState.contains(KeyCode.LEFT)){
 			keyState.remove(KeyCode.LEFT);
 			if(rankX > 0){
 				rankX = rankX - 1;
@@ -165,7 +187,7 @@ public class StateRanking implements Common{
 			}else{
 				rankX = 2;
 			}
-		}
+		}*/
 	
 	}
 
