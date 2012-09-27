@@ -60,6 +60,9 @@ public interface Common {
 	public static short FRUIT_NOT_HIT = 0;			//水果被击中
 	public static short FRUIT_HIT = 1;				//水果未被击中
 	
+	public static short BOOM_NOT_HIT = 0;				//水果未被击中
+	public static short BOOM_HIT = 1;					//水果未被击中
+	
 	/*随即选中水果*/
 	public final static short selectFruit[] = {apple,lemon,pear,watermelon};
 	

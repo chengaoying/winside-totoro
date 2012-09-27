@@ -120,6 +120,7 @@ public class StateGame implements Common{
 	public static int useProps;		//使用的道具数
 	public static int hitFruits;	//击中的水果数
 	public static int hitRatio;		//击中目标数
+	public static int hitBooms;		//击中子弹数
 	public static int attainment;	//成就数
 	
 	private int tempx=ScrW, tempy=20, tempx2=ScrW, tempy2=30, sWidth, sTempy;
@@ -240,6 +241,7 @@ public class StateGame implements Common{
 			engine.props[propId].setNums(engine.props[propId].getNums()-1);
 			own.useProps++;
 			useProps = own.useProps;
+			own.scores += 1000;  //使用道具加1000分
 		}
 	}
 	
@@ -661,6 +663,16 @@ public class StateGame implements Common{
 				}
 			}
 			
+			/*击中狼发射的子弹*/
+			for(int k=weapon.booms.size()-1;k>=0;k--){
+				Weapon boom = (Weapon) weapon.booms.elementAt(k);
+				if(Collision.checkCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height,boom.mapx, boom.mapy, boom.width, boom.height)){
+					hitBoom(boom);
+					print();
+					weapon.bombs.removeElement(bomb);
+				}
+			}
+			
 			/*子弹出界时移除*/
 			if((bomb.mapx+bomb.width <=0) || bomb.mapy >= 466){
 				weapon.bombs.removeElement(bomb);
@@ -696,6 +708,7 @@ public class StateGame implements Common{
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		Image passShadowCloud = Resource.loadImage(Resource.id_cloud1);
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
+		Image pumpkin = Resource.loadImage(Resource.id_pumpkin);
 		
 		g.drawImage(game_bg, 0, 0, 20);
 		if((isRewardLevel && !isNextLevel) || isReward){		//画出奖励关卡界面
@@ -773,6 +786,7 @@ public class StateGame implements Common{
 			g.drawImage(playing_level, 491+32, 25, 20);								//游戏中 左侧的关卡图片		
 			drawNum(g, rewardLevel, 491+32+playing_level.getWidth()+10, 25);
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//奖励关卡羊的生命数
+			drawNum(g, REWARD_LEVEL_INFO[rewardLevel-1][1]-own.hitNum, 45+multiply.getWidth()+10, 12);
 			
 		}else {
 			if(tempx+playing_cloudbig.getWidth()>0){
@@ -803,6 +817,10 @@ public class StateGame implements Common{
 			g.drawImage(playing_level, 491+32, 25, 20);						//游戏中 左侧的关卡图片		
 			drawNum(g, level, 491+32+playing_level.getWidth()+10, 25);
 			drawNum(g, own.lifeNum, 491+66+multiply.getWidth()+10, 147);			//羊的生命数
+			
+			if(level % 2 == 0){														//偶数关卡出现南瓜(出现四只狼推南瓜则南瓜砸下，玩家失败)
+				g.drawRegion(pumpkin, 0, 0, pumpkin.getWidth(), pumpkin.getHeight(), 0, 256, 15, 20);			
+			}
 		}
 		
 		if(own.status == ROLE_ALIVE){
@@ -824,7 +842,7 @@ public class StateGame implements Common{
 		g.drawImage(wolf_head, 12, 10, 20);								//游戏中 左侧 的狼的头像		
 		g.drawImage(multiply, 491+66, 147, 20);	
 		g.drawImage(multiply, 45, 12, 20);	
-		drawNum(g, own.hitNum, 45+multiply.getWidth()+10, 12);
+		drawNum(g, LEVEL_INFO[level-1][1]-own.hitNum, 45+multiply.getWidth()+10, 12);
 
 		int propLeftMenuX = 497+1,propRightMenuX= 564+1,propMenuY = 185-7,distanceMenuY = 4;
 		int numLeftX = 547,numRight = 612;
@@ -911,6 +929,17 @@ public class StateGame implements Common{
 		hitFruits = own.hitFruits;
 		hitRatio = own.hitRatio;
 		fruit.status = FRUIT_HIT;
+	}
+	
+	/*击中子弹要改变的数据 */
+	private void hitBoom(Weapon boom) {
+		own.scores += boom.scores;
+		own.hitBooms ++;
+		hitNum = own.hitNum;
+		hitBuble = own.hitBuble;
+		hitRatio = own.hitRatio;
+		hitBooms = own.hitBooms;
+		boom.status = BOOM_HIT;
 	}
 	
 	/*击中狼所要该变的数据*/

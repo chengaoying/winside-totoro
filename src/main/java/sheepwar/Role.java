@@ -25,6 +25,7 @@ public class Role {
 	int hitFruits;		//击中的水果数
 	int bombNum;		//发射子弹数量
 	int hitRatio;		//击中目标数
+	int hitBooms;		//击中子弹数
 	int colorId;		//气球ID
 	int attackTime;		//被击中次数
 	int attainment;		//成就点数

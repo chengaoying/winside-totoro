@@ -142,14 +142,26 @@ public class Weapon implements Common {
 	public void showBoom(SGraphics g,Role player){ 
 		g.setClip(0, 0, gameW, ScrH);
 		Image boom = Resource.loadImage(Resource.id_boom);
+		Image boomEffect = Resource.loadImage(Resource.id_boom1);
 		Weapon w = null;
 		int tempx = 0,tempy = 0;
 		for(int i = booms.size() - 1;i>=0;i --){
 			w = (Weapon)booms.elementAt(i);
-			w.mapx += w.speedX;
-			tempy = w.mapy;
-			tempx = w.mapx;
-			g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
+			if(w.status == BOOM_NOT_HIT){
+				w.mapx += w.speedX;
+				tempy = w.mapy;
+				tempx = w.mapx;
+				g.drawRegion(boom, 0, 0, boom.getWidth(), boom.getHeight(), 0, tempx, tempy, 20);
+			}else if(w.status == BOOM_HIT){				//子弹被飞镖击中的时候
+				tempy = w.mapy;
+				tempx = w.mapx;
+				if(w.frame<3){					//画出子弹被击中后粉碎的效果
+					w.frame = w.frame + 1;
+					g.drawRegion(boomEffect, w.frame*boomEffect.getWidth()/4, 0, boomEffect.getWidth()/4, boomEffect.getHeight(), 0,
+							tempx, tempy, 20);
+				}
+			}
+
 		}
 		g.setClip(0, 0, ScrW, ScrH);
 	}
