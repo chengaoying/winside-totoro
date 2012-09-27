@@ -261,9 +261,9 @@ public class Weapon implements Common {
 					StateGame.HASWOLF_FOUR = false;
 					batches.npcs.removeElement(npc);
 				}
+				g.drawRegion(harpEffect, w.frame*harpEffect.getWidth()/5, 0, harpEffect.getWidth()/5, harpEffect.getHeight(), 
+						0, 444, 156, 20);
 			}
-			g.drawRegion(harpEffect, w.frame*harpEffect.getWidth()/5, 0, harpEffect.getWidth()/5, harpEffect.getHeight(), 
-					0, 444, 156, 20);
 		}
 	}
 	
