@@ -4,8 +4,9 @@ public class Role {
 	int mapx; 			//在地图上的横坐标
 	int mapy; 			//在地图上的纵坐标
 	int frame;			//角色当前帧数
+	int index;			//控制帧切换
 	int direction; 		//移动方向 0 向上，1向下
-	int status;  		//状态(0活动状态, -1死状态, 1成功逃脱状态)
+	int status;  		//状态(0活动状态, -1死状态, 1成功逃脱状态, 2攻击状态)
 	int status2;		//第二状态（0在地面， 1离开地面）
 	int position;		//狼在梯子上的位置( 1在第一个梯子上，2在第二个梯子上，3在第三个梯子上，4在第四个梯子上)
 	int position2;		//狼出现的初始位置(0-上面, -1-下面)
@@ -29,6 +30,8 @@ public class Role {
 	int colorId;		//气球ID
 	int attackTime;		//被击中次数
 	int attainment;		//成就点数
+	int dizzyIndex;		//控制眩晕
+	int dizzyFlag;
 	
 	Role role;		   //子对象
 }

@@ -81,6 +81,7 @@ public class Resource implements Common {
 	public static short id_ranking_word = NUMS++;			//排行文字
 	
 	public static short id_playing_level= NUMS++;			
+	public static short id_playing_level2= NUMS++;			
 	public static short id_playing_point = NUMS++;			
 	public static short id_sheep_head = NUMS++;			
 	public static short id_wolf_head = NUMS++;			
@@ -89,7 +90,6 @@ public class Resource implements Common {
 	public static short id_game_help = NUMS++;     //游戏帮助
 	
 	public static short id_logo = NUMS++;    
-	public static short id_pass_bg = NUMS++;    
 	public static short id_pass_cloud = NUMS++;    
 	public static short id_pass_cloud1 = NUMS++;    
 	public static short id_pass_cloud2 = NUMS++;    
@@ -120,6 +120,24 @@ public class Resource implements Common {
 	public static short id_prop_fist = NUMS++;    
 	public static short id_prop_fist_effect = NUMS++;    
 	public static short id_pumpkin = NUMS++;    
+	public static short id_burn = NUMS++;    				
+	public static short id_gloveLeft = NUMS++;    				
+	public static short id_gloveRight = NUMS++;    				
+	public static short id_main_select_right_base = NUMS++;    				
+	public static short id_main_select_left_base = NUMS++;     				
+	public static short id_shop_bottom = NUMS++;     				
+	public static short id_achievement_bottom = NUMS++;     				
+	public static short id_rank_bottom = NUMS++;     				
+	public static short id_control = NUMS++;     				
+	public static short id_wolf_die = NUMS++;     				
+	public static short id_wolf_shove = NUMS++;     				
+	public static short id_shop_selected = NUMS++;     				
+	public static short id_return_selected = NUMS++;     				
+	public static short id_prop_2_eff = NUMS++;     				
+	public static short id_prop = NUMS++;     				
+	public static short id_game_stop = NUMS++;     				
+	public static short id_teach_level = NUMS++;     				
+	public static short id_arrowhead = NUMS++;     				
 	
 	
 	public static String[] imagesrcs = {
@@ -135,7 +153,7 @@ public class Resource implements Common {
 		"/playing_stop.png",
 		"/game_bg.jpg",
 		"/playing_prop_memu.png",
-		"/playing_prop.png",
+		"/prop1.png",						//修改过的道具图片
 		"/playing_lunzi.png",
 		"/playing_shenzi.png",
 		"/playing_lift.png",    
@@ -180,15 +198,16 @@ public class Resource implements Common {
 		"/achievement_left.png",
 		"/slash.png",
 		
-		"/current_ranking.jpg",       //排行图片资源
+		"/current_ranking.png",       //排行图片资源
 		"/ranking_option.png",
 		"/ranking_option1.png",
 		"/ranking_stripe.jpg",       
 		"/ranking.png",
-		"/ranking_show.jpg",
+		"/show.png",								//替换了ranking_show.jpg
 		"/ranking_word.png",
 		
 		"/playing_level.png",
+		"/playing_level2.png",
 		"/playing_point.png",
 		"/sheep_head.png",
 		"/wolf_head.png",
@@ -197,7 +216,6 @@ public class Resource implements Common {
 		"/game_help.png",              //游戏帮助
 		
 		"/logo.png",             
-		"/pass_bg.jpg",             
 		"/pass_cloud.png",             
 		"/pass_cloud1.png",             
 		"/pass_cloud2.png",             
@@ -228,7 +246,24 @@ public class Resource implements Common {
 		"/prop_fist.png",             
 		"/prop_fist_effect.png",             
 		"/pumpkin.png",             
-		
+		"/burn.png",             
+		"/gloveLeft.png",             
+		"/gloveRight.png",             
+		"/main_select_right_base.png",             
+		"/main_select_left_base.png",             
+		"/shop_bottom.jpg",             
+		"/achievement_bottom.jpg",             
+		"/ranking_bottom.jpg",             
+		"/control.png",             
+		"/die.png",             
+		"/shove.png",             
+		"/shop_selected.png",             
+		"/return_selected.png",             
+		"/prop_2_effect.png",             
+		"/prop.png",             
+		"/stop.png",             
+		"/teach_level.png",             
+		"/arrowhead.png",             
 	};
 	
 	private static final Image[] images = new Image[NUMS];
@@ -256,7 +291,7 @@ public class Resource implements Common {
 		"【操作说明】#r上下方向键：控制玩家的移动。#r确定键：发射飞镖或无敌拳套。#r数字键1至8：使用道具。#r数字键0：退出游戏。#r" +
 		"数字键9:游戏帮助。",
 		
-		"【道具说明】#r光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r防狼套装：开启后得到5秒的无敌效果，抵御各种攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱散竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。#r速度提升液：使用后增加喜羊羊的移动速度，持续30秒。#r强力磁石：击落所有空中的灰太狼。",
+		"【道具说明】#r光闹钟：时间静止10秒。#r捕狼网：发射出的子弹碰到灰太狼就会张开一张网，大网内的灰太狼都会掉落。#r防狼套装：开启后有5秒的无敌效果，抵御各种攻击。#r驱狼光波:发出一道十万伏特的电流，电晕碰到的灰太狼,持续5秒。#r替身玩偶：增加一条命。#r驱狼竖琴：使用后清除所有的梯子或者正在推石头的灰太狼。#r连发:#r使用后连续发射四颗子弹，单关有效。#r价格：30游戏币。#r强力磁石：击落所有空中的灰太狼。",
 		
 		"【游戏简介】#r喜羊羊大战灰太狼是一款闯关类游戏，#r总共有15关。玩家控制喜羊羊击落一定数量的灰太狼即可过关。#r此外玩家还可以在道具商城内购买各种道具来获得更有趣的体验。#r除了闯关外，游戏中还推出了成就系统和排行榜，#r增加了玩家在游戏的过程中动力和目标。",
 		"",
@@ -264,8 +299,8 @@ public class Resource implements Common {
 	
 	/*商城商品介绍*/    	//二维数组创建注意
 	public static String propIntroduce [][]= {
-		{"时光钟:#r时间静止10秒。#r 价格：20游戏币","驱狼竖琴:#r使用后清除所有梯子上或者正在推石头的灰太狼。#r价格：30游戏币"},//shopY
-		{"捕狼网:#r发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r只击落碰到的灰太狼。#r价格：20游戏币","速度提升液:#r使用后增加喜羊羊的移动速度，持续30秒。#r价格：30游戏币"},
+		{"时光闹钟:#r时间静止10秒。#r 价格：20游戏币","驱狼竖琴:#r使用后清除所有梯子上或者正在推南瓜的灰太狼。#r价格：30游戏币"},//shopY
+		{"捕狼网:#r发射出的子弹碰到灰太狼就会张开一张网，#r大网内的灰太狼都会掉落。#r只击落碰到的灰太狼。#r价格：20游戏币","连发:#r使用后连续发射四颗子弹，单关有效。#r价格：30游戏币"},
 		{"防狼套装:#r开启后得到5秒的无敌效#r果，抵御各种攻击。#r价格：30游戏币","强力磁石:#r击落所有空中的灰太狼。#r价格：50游戏币"},
 		{"驱狼光波:#r发出一道十万伏特的电流，电晕碰到的灰太狼，持续5秒。#r价格：30游戏币","替身玩偶:#r增加一条命。#r价格：50游戏币"},
 	};

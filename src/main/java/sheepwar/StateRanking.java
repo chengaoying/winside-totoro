@@ -1,7 +1,5 @@
 package sheepwar;
 
-import java.util.Date;
-
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.itvgame.model.GameRanking;
@@ -9,14 +7,15 @@ import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
-import cn.ohyeah.stb.util.DateUtil;
 
 public class StateRanking implements Common{
 	
 	private SheepWarGameEngine engine = SheepWarGameEngine.instance;
 	private boolean running;
 	private int rankingIndex, rankX, rankY;
-	private GameRanking[] rankingList, ranking_month;
+	private  GameRanking[]  ranklist_month;
+	private  GameRanking[]  ranklist_week;
+	private GameRanking[] rankList;
 	
 	public void processRanking(){
 		running = true;
@@ -50,27 +49,36 @@ public class StateRanking implements Common{
 	}
 	
 	private void queryRanking(){
-		Date date = new Date(engine.getEngineService().getCurrentTime().getTime());
-		System.out.println(date);
-		int year = DateUtil.getYear(date);
-		int month = DateUtil.getMonth(date);
-		//int day = DateUtil.getDay(date);
-		Date start = DateUtil.createTime(year, month, 1);
-		Date end = DateUtil.createTime(year, month+1, 1);
-		System.out.println("start:"+start);
-		System.out.println("end:"+end);
-		ServiceWrapper sw = engine.getServiceWrapper();
-		rankingList = sw.queryRankingList(0, 10);
-		ranking_month = sw.queryRankingList(start, end, 0, 10);
+		try
+		{
+			ServiceWrapper sw = engine.getServiceWrapper();
+			ranklist_month = sw.queryRankingList(0, 10);
+			
+		    if (ranklist_month==null || ranklist_month.length<0)
+		        return;
+		    
+		    for (int i = 0; i <  ranklist_month.length; i++)
+		    {
+		        System.out.println(" <rankinfo>:"+Integer.toString(i+1));
+		        System.out.println("UserID  =" + engine.getEngineService().getUserId());
+		        System.out.println(" RankNo =" + Integer.toString(ranklist_month[i].getRanking()));
+		        System.out.println(" Score  =" + Integer.toString(ranklist_month[i].getScores()));
+		    }
+		} 
+		catch (Exception e)
+		{
+		    e.printStackTrace();
+		} 
 	}
 
+	/*private int cloudIndex, cloud2Index;
+	private int down_cloudIndex, down_cloud2Index;*/
+	int x1 = 20, x2 = 550, x3 = 424;
 	private void showRanking(SGraphics g) {
 
-		Image game_bg = Resource.loadImage(Resource.id_game_bg);
+		Image game_bg = Resource.loadImage(Resource.id_rank_bottom);
 		Image achievement_out1 = Resource.loadImage(Resource.id_achievement_out1);//{61,462}
 		Image shop_big = Resource.loadImage(Resource.id_shop_big);//{233,101}
-		//Image achievement_left_right = Resource.loadImage(Resource.id_achievement_left_right);//{457,440}
-		//Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);//{457,440}
 		Image current_ranking=Resource.loadImage(Resource.id_current_ranking);//{253,448}
 		Image ranking_option=Resource.loadImage(Resource.id_ranking_option);//{39,112} Y相差54 
 		Image ranking_option1=Resource.loadImage(Resource.id_ranking_option1);
@@ -78,46 +86,89 @@ public class StateRanking implements Common{
 		Image ranking=Resource.loadImage(Resource.id_ranking);//{232,18}
 		Image ranking_show=Resource.loadImage(Resource.id_ranking_show);//{241,108}
 		Image ranking_word=Resource.loadImage(Resource.id_ranking_word);    
-		//Image slash = Resource.loadImage(Resource.id_slash);
+		
+		/*新添加的云朵元素*/
+		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		g.drawImage(game_bg, 0, 0, 20);
+		
+		/*中间的云*/
+		int cloudW = pass_cloud.getWidth();
+		if(x1+cloudW<=0){
+			x1 = ScrW;
+		}else{
+			x1 -= 1;
+		}
+		if(x2+cloudW<=0){
+			x2 = ScrW;
+		}else{
+			x2 -= 1;
+		}
+		if(x3+cloudW<=0){
+			x3 = ScrW;
+		}else{
+			x3 -= 1;
+		}
+		g.drawImage(pass_cloud, x1, 152, 20);
+		g.drawImage(pass_cloud, x2, 180, 20);
+		g.drawImage(pass_cloud, x3, 265, 20);
+		
 		int  rankLeftX = 39,rankLeftY = 112,rankLeftYSpace = 16;			//rankLeftX 左侧x坐标，rankLeftYSpace 上下间距
 		int rankShadowX = 4,rankShadowY = 4;								//排行阴影效果坐标差
 		
-		int workH = ranking_word.getHeight() / 3, workW = ranking_word.getWidth();
 		int option1W = ranking_option1.getWidth(), option1H = ranking_option1.getHeight();
 		int optionW = ranking_option.getWidth(), optionH = ranking_option.getHeight();
-		for(int i=0;i<3;i++){//排行左侧条目
+		int workH = ranking_word.getHeight() / 2, workW = ranking_word.getWidth()/2;
+		for(int i=0;i<2;i++){//排行左侧条目
 			g.drawRegion(ranking_option1, 0, 0, option1W, option1H, 0,
 					rankLeftX, rankLeftY+(option1H+rankLeftYSpace)*i, 20);
 			if(rankY ==i){     		
 				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
-						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(optionH+rankLeftYSpace)*i, 20);
-				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
-						rankLeftY-rankShadowY+8+(optionH+rankLeftYSpace)*i, 20);
-			}else{
-				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
 						rankLeftX, rankLeftY+(optionH+rankLeftYSpace)*i, 20);
 				g.drawRegion(ranking_word,0,i*workH, workW,	workH, 0, rankLeftX+8,
-						rankLeftY+8+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
+						rankLeftY+7+(ranking_option.getHeight()+rankLeftYSpace)*i, 20);
+			}else{
+				g.drawRegion(ranking_option, 0, 0, optionW, optionH, 0,
+						rankLeftX-rankShadowX, rankLeftY-rankShadowY+(optionH+rankLeftYSpace)*i, 20);
+				g.drawRegion(ranking_word,workW,i*workH, workW,	workH, 0, rankLeftX-rankShadowX+8,
+						rankLeftY-rankShadowY+7+(optionH+rankLeftYSpace)*i, 20);
 			}
+
 		}
 		
 		/*排行数据*/
-		if(rankY==0 && rankingList!=null){
-			for(int k=0;k<rankingList.length;k++){
-				
-			}
-		}
 		g.drawImage(shop_big, 233,101, 20);
-		//g.drawImage(slash, 523-slash.getWidth()/2, 447, 20);								//画出斜杠
 		g.drawImage(ranking_show,260,116, 20);
 		for(int i=0;i<5;i++){
-			g.drawImage(ranking_stripe,241,151+i*57, 20);
+			g.drawImage(ranking_stripe,240,151+i*56, 20);
 		}
 		g.drawImage(current_ranking, 253,448, 20);
-		g.drawImage(ranking, 232,18, 20);
+		engine.setFont(25,true);
+		if(rankY==0){
+			rankList = ranklist_month;
+		}else{
+			rankList = ranklist_week;
+		}
+		GameRanking info = null;
+		int offY = 155;
+		String ownRank = "";
+		for(int m=0;m<rankList.length;m++){
+			info = rankList[m];
+			String id = info.getUserId();
+			int rank = info.getRanking();
+			int scores = info.getScores();
+			g.drawString(String.valueOf(rank), 270, offY, 20);
+			g.drawString(id, 380, offY, 20);
+			g.drawString(String.valueOf(scores), 505, offY, 20);
+			offY += 28;
+			if(id.equals(engine.getEngineService().getUserId())){
+				ownRank = String.valueOf(info.getRanking());
+			}
+		}
+		g.drawString(ownRank, 260+current_ranking.getWidth(), 448, 20);
+		g.setColor(red);
+		engine.setDefaultFont();
+		g.drawImage(ranking, 194,18, 20);
 		g.drawImage(achievement_out1, 447,447, 20);
-		
 	}
 	
 	private void handleRanking(KeyState keyState) {
@@ -142,31 +193,14 @@ public class StateRanking implements Common{
 			}
 		}else if(keyState.contains(KeyCode.DOWN)){
 			keyState.remove(KeyCode.DOWN);
-			if(rankX == 0 && rankY <3){
-				rankY = (rankY + 1)%3;
+			if(rankX == 0 && rankY <2){
+				rankY = (rankY + 1)%2;
 			}
 		}
-		/*if(keyState.contains(KeyCode.LEFT)){
-			keyState.remove(KeyCode.LEFT);
-			if(rankX > 0){
-				rankX = rankX - 1;
-			}else {
-				rankX = 0;
-			}
-		}
-		if(keyState.contains(KeyCode.RIGHT)){
-			keyState.remove(KeyCode.RIGHT);
-			if(rankX < 2){
-				rankX = rankX + 1;
-			}else{
-				rankX = 2;
-			}
-		}*/
-	
 	}
 
 	private void clear() {
-    	Resource.freeImage(Resource.id_game_bg);
+    	Resource.freeImage(Resource.id_rank_bottom);
     	Resource.freeImage(Resource.id_achievement_out1);
     	Resource.freeImage(Resource.id_shop_big);
     	Resource.freeImage(Resource.id_achievement_left_right);
@@ -179,5 +213,8 @@ public class StateRanking implements Common{
     	Resource.freeImage(Resource.id_ranking_show);
     	Resource.freeImage(Resource.id_slash);
     	Resource.freeImage(Resource.id_shop_figure);
+    	Resource.freeImage(Resource.id_pass_cloud);       
+		Resource.freeImage(Resource.id_pass_cloud1);       
+		Resource.freeImage(Resource.id_pass_cloud1);     
 	}
 }

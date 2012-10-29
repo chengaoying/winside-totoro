@@ -7,6 +7,7 @@ import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 
+
 public class PropManager implements Common{
 	
 	public SheepWarGameEngine engine;
@@ -15,45 +16,21 @@ public class PropManager implements Common{
 	public int[] propIds = {53,54,55,56,57,58,59,60};		//道具id 
 	public int[] propPrice = {20,20,30,30,30,30,50,50};		//道具价格
 	
-	public PropManager(SheepWarGameEngine e){
-		this.engine = e;
+	public PropManager(SheepWarGameEngine engine){
+		this.engine = engine;
 		props = engine.props;
 	}
 	
 	/*查询玩家道具*/
-	public void queryAllOwnProps(){
-		
-		initProps(props);
+	public void updateProps(){
+		//initProps(props);
 		ServiceWrapper sw = engine.getServiceWrapper();
-		OwnProp[] propList = sw.queryOwnPropList();
-		if(propList==null){
+		OwnProp[] pps = sw.queryOwnPropList();
+		if(pps==null){
 			return;
 		}
-		for(int i=0;i<propList.length;i++){
-			if(propList[i].getPropId()==propIds[0]){
-				props[0].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[1]){
-				props[1].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[2]){
-				props[2].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[3]){
-				props[3].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[4]){
-				props[4].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[5]){
-				props[5].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[6]){
-				props[6].setNums(propList[i].getCount());
-			}
-			if(propList[i].getPropId()==propIds[7]){
-				props[7].setNums(propList[i].getCount());
-			}
+		for(int i=0;i<pps.length;i++){
+			props[i].setNums(pps[i].getCount());
 		}
 		
 		for(int i=0;i<props.length;i++){
@@ -64,7 +41,7 @@ public class PropManager implements Common{
 	
 	/*初始道具设为0*/
 	public void initProps(Prop[] p){
-		System.out.println("初始化道具");
+		System.out.println("创建道具数据并初始化道具信息");
 		for(int i=0;i<p.length;i++){
 			Prop prop = new Prop();
 			p[i] = prop;
@@ -87,6 +64,7 @@ public class PropManager implements Common{
 	}
 	
 	private boolean buyProp(int propId, int propCount, int price, String propName){
+	
 		if (engine.getEngineService().getBalance() >= price) {
 			ServiceWrapper sw = engine.getServiceWrapper();
 			sw.purchaseProp(propId, propCount, "购买"+propName);
@@ -100,17 +78,18 @@ public class PropManager implements Common{
 			}
 			pt.popup();
 			return sw.isServiceSuccessful();
-		}
-		else {
-			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-			pc.setText("游戏币不足,是否充值");
-			if (pc.popup() == 0) {
-				StateRecharge recharge = new StateRecharge(engine);
-				recharge.recharge();
-			}
-			return false;
+		}else {
+				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+				pc.setText("游戏币不足,是否充值");
+				if (pc.popup() == 0) {
+					StateRecharge recharge = new StateRecharge(engine);
+					recharge.recharge();
+				}
+				return false;
 		}
 	}
+	
+	
 	
 	/*购买道具*/
 	public void purchaseProp(int shopX, int shopY) {
@@ -135,19 +114,19 @@ public class PropManager implements Common{
 		}
 		if (shopX == 0 && shopY == 3) {
 			int propId = propIds[3];
-			if (buyProp(propId, 1, propPrice[3], "激光枪")) {
+			if (buyProp(propId, 1, propPrice[3], "驱狼光波")) {
 				props[3].setNums(props[3].getNums()+1);
 			}
 		}
 		if (shopX == 1 && shopY == 0) {
 			int propId = propIds[4];
-			if (buyProp(propId, 1, propPrice[4], "驱散竖琴")) {
+			if (buyProp(propId, 1, propPrice[4], "驱狼竖琴")) {
 				props[4].setNums(props[4].getNums()+1);
 			}
 		}
 		if (shopX == 1 && shopY == 1) {
 			int propId = propIds[5];
-			if (buyProp(propId, 1, propPrice[5], "速度提升液")) {
+			if (buyProp(propId, 1, propPrice[5], "连发")) {
 				props[5].setNums(props[5].getNums()+1);
 			}
 		}
@@ -162,7 +141,8 @@ public class PropManager implements Common{
 			if (buyProp(propId, 1, propPrice[7], "替身玩偶")) {
 				props[7].setNums(props[7].getNums()+1);
 			}
-		}}
+		}
+	}
 	
 
 	/*同步道具*/

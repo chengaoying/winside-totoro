@@ -19,6 +19,7 @@ public class StateGameSuccessOrFail implements Common{
 		try {
 			KeyState keyState = engine.getKeyState();
 			SGraphics g = engine.getSGraphics();
+			
 			while (running) {
 				handleGameSuccessOrFail(keyState);
 				if (running) {
@@ -43,11 +44,12 @@ public class StateGameSuccessOrFail implements Common{
 		}
 		
 	}
+	
 
 	int x1 = 20, x2 = 550, x3 = 424;
 	int ballonY = 114, ballon2Y = 336, ballon3Y = 59, ballon4Y = 420, ballon5Y = 560;
 	private void showGameSuccessOrFail(SGraphics g, boolean isSuccess, Role own) {
-		Image pass_bg = Resource.loadImage(Resource.id_pass_bg);
+		Image pass_bg = Resource.loadImage(Resource.id_game_bg);
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
 		Image pass_cloud1 = Resource.loadImage(Resource.id_pass_cloud1);
 		Image pass_cloud2 = Resource.loadImage(Resource.id_pass_cloud2);
@@ -63,6 +65,7 @@ public class StateGameSuccessOrFail implements Common{
 		Image green = Resource.loadImage(Resource.id_balloon_green);
 		Image game_result = Resource.loadImage(Resource.id_game_result);
 		Image game_return = Resource.loadImage(Resource.id_game_return);
+		Image return_bg = Resource.loadImage(Resource.id_achievement_left);
 		g.drawImage(pass_bg, 0, 0, 20);
 		
 		/*上面第二层云*/
@@ -118,11 +121,20 @@ public class StateGameSuccessOrFail implements Common{
 		for(int i=0;i<3;i++){
 			g.drawImage(pass_star2, 125+(i*space), 130, 20);
 		}
+		
 		/*亮星星（根据积分确定星星个数）*/
-		g.drawImage(pass_star, 125, 130, 20);
+		if(isSuccess){
+			for(int i=0;i<3;i++){
+				g.drawImage(pass_star, 125+(i*space), 130, 20);			
+			}
+		}
+		
 		/*积分*/
-		g.drawImage(pass_score, 242, 286, 20);
-		drawNum(g, own.scores, 242, 332);
+		//g.drawImage(pass_score, 155, 286, 20);
+		int scoreH = pass_score.getHeight()/2, scoreW = pass_score.getWidth();
+		g.drawRegion(pass_score, 0, scoreH, scoreW, scoreH, 0, 155, 300, 20);
+		//drawNum(g, StateGame.scores2, 180+pass_score.getWidth(), 288);
+		drawNum(g, StateGame.scores, 180+pass_score.getWidth(), 303);
 		
 		/*彩虹*/
 		g.drawImage(pass_rainbow, 395, 258, 20);
@@ -185,7 +197,11 @@ public class StateGameSuccessOrFail implements Common{
 		g.drawImage(logo, 6, 2, 20);
 		
 		/*return*/
-		g.drawRegion(game_return, game_return.getWidth()/2, 0, game_return.getWidth()/2, game_return.getHeight(), 0, 570, 460, 20);
+		int bgX = SheepWarGameEngine.ScrW/2-return_bg.getWidth()/2, bgY = 390;
+		int gameW = game_return.getWidth(), gameH = game_return.getHeight()/2;
+		int gameX = SheepWarGameEngine.ScrW/2-gameW/2;
+		g.drawImage(return_bg, bgX, bgY, 20);
+		g.drawRegion(game_return, 0, gameH, gameW, gameH, 0, gameX, 398, 20);
 	}
 	
 	private void drawNum(SGraphics g, int num, int x, int y){
@@ -205,7 +221,7 @@ public class StateGameSuccessOrFail implements Common{
 
 	private void clear() {
 		Resource.freeImage(Resource.id_logo);
-		Resource.freeImage(Resource.id_pass_bg);
+		Resource.freeImage(Resource.id_game_bg);
 		Resource.freeImage(Resource.id_pass_cloud);
 		Resource.freeImage(Resource.id_pass_cloud1);
 		Resource.freeImage(Resource.id_pass_cloud2);

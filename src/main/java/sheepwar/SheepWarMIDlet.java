@@ -4,8 +4,6 @@ import javax.microedition.lcdui.Display;
 import javax.microedition.midlet.MIDlet;
 import javax.microedition.midlet.MIDletStateChangeException;
 
-
-
 public class SheepWarMIDlet extends MIDlet {
 	
 	private static SheepWarMIDlet instance;
