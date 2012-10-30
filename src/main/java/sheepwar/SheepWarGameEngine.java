@@ -54,7 +54,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 
 	private SheepWarGameEngine(MIDlet midlet) {
 		super(midlet);
-		setRelease(false);
+		setRelease(true);
 		ScrW = screenWidth;
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
