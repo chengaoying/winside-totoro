@@ -272,8 +272,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	private void setRecordData(DataOutputStream dout) throws IOException{
-		dout.write(StateGame.scores);
-		dout.write(StateGame.scores2);
+		//dout.write(StateGame.scores);
+		//dout.write(StateGame.scores2);
 		dout.write(StateGame.hitTotalNum);
 		dout.write(StateGame.hitBooms);
 		dout.write(StateGame.useProps);
@@ -323,8 +323,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	private void initRecordInfo(DataInputStream dis) throws IOException{
-			StateGame.scores = dis.read();
-			StateGame.scores2 = dis.read();
+			//StateGame.scores = dis.read();
+			//StateGame.scores2 = dis.read();
 			StateGame.hitTotalNum = dis.read();
 			StateGame.hitBooms = dis.read();
 			StateGame.useProps = dis.read();
@@ -378,6 +378,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			GameRecord gameRecord = new GameRecord();
 			gameRecord.setData(record);
 			gameRecord.setScores(StateGame.scores);
+			gameRecord.setPlayDuration(StateGame.scores2);
 			gameRecord.setRecordId(recordId);
 			sw.saveRecord(gameRecord);
 		} catch (IOException e) {
@@ -411,6 +412,8 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		DataInputStream din = new DataInputStream(bin);
 		try {
 			initRecordInfo(din);
+			StateGame.scores = gameRecord.getScores();
+			StateGame.scores2 = gameRecord.getPlayDuration();
 			printGameInfo();
 			isFirstGame = false;  //玩家不是第一次玩
 			return result = true;

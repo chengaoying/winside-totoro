@@ -78,6 +78,7 @@ public class StateMain implements Common{
 			stateGame.weapon = new Weapon(stateGame);
 			stateGame.createRole = new CreateRole();
 			stateGame.batches = new Batches();
+			stateGame.initDataGameOver();
 			StateGame.own = stateGame.createRole.createSheep();
 			engine.state = STATUS_GAME_PLAYING;
 		} else if(mainIndex == 1){

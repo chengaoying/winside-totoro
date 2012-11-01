@@ -449,7 +449,7 @@ public class StateGame implements Common{
 				bStartTime = System.currentTimeMillis()/1000;
 			}
 			if(b){
-				pt.setText("#R按上下键#W移动喜羊羊，按确认键#W发射飞镖，击中灰太狼身上的气球阻止灰太狼降落");
+				pt.setText("按上下键#W移动喜羊羊，按确认键#W发射飞镖，击中灰太狼身上的气球阻止灰太狼降落");
 				pt.popup();
 				b = false;
 				b2 = false;
@@ -1918,7 +1918,7 @@ public class StateGame implements Common{
 	}
 	
 	/*游戏结束要清楚的数据*/
-	private void initDataGameOver(){
+	public void initDataGameOver(){
 		hitNum = 0;
 		lifeNum = 0;
 		scores = 0;
