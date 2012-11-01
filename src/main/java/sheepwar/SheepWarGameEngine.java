@@ -314,7 +314,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	    StateGame.hitFruits2 = StateGame.hitFruits2>StateGame.hitFruits?StateGame.hitFruits2:StateGame.hitFruits;
 	    StateGame.level2 = StateGame.level2>StateGame.level?StateGame.level2:StateGame.level;
 	    
-	    dout.write(StateGame.scores3);
+	    //dout.write(StateGame.scores3);
 	    dout.write(StateGame.hitTotalNum2);
 	    dout.write(StateGame.hitBooms2);
 	    dout.write(StateGame.useProps2);
@@ -357,7 +357,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			StateGame.HASWOLF_FOUR = dis.readBoolean();
 			StateGame.IS_FOUR_WOLF = dis.readBoolean();
 			
-			StateGame.scores3 = dis.read();
+			//StateGame.scores3 = dis.read();
 		    StateGame.hitTotalNum2 = dis.read();
 		    StateGame.hitBooms2 = dis.read();
 		    StateGame.useProps2 = dis.read();
@@ -379,6 +379,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			gameRecord.setData(record);
 			gameRecord.setScores(StateGame.scores);
 			gameRecord.setPlayDuration(StateGame.scores2);
+			gameRecord.setRemark(String.valueOf(StateGame.scores3));
 			gameRecord.setRecordId(recordId);
 			sw.saveRecord(gameRecord);
 		} catch (IOException e) {
@@ -414,6 +415,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			initRecordInfo(din);
 			StateGame.scores = gameRecord.getScores();
 			StateGame.scores2 = gameRecord.getPlayDuration();
+			StateGame.scores3 = Integer.parseInt(gameRecord.getRemark()==null?"0":gameRecord.getRemark());
 			printGameInfo();
 			isFirstGame = false;  //玩家不是第一次玩
 			return result = true;
@@ -471,5 +473,12 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
  		System.out.println("record_HASWOLF_THREE:"+StateGame.HASWOLF_THREE );
  		System.out.println("record_HASWOLF_FOUR:"+StateGame.HASWOLF_FOUR );
  		System.out.println("record_IS_FOUR_WOLF:"+StateGame.IS_FOUR_WOLF );
+ 		
+ 		System.out.println("StateGame.scores3 "+StateGame.scores3 );
+ 		System.out.println("StateGame.hitTotalNum2 "+StateGame.hitTotalNum2 );
+ 		System.out.println("StateGame.hitBooms2 "+StateGame.hitBooms2 );
+ 		System.out.println("StateGame.useProps2 "+StateGame.useProps2 );
+ 		System.out.println("StateGame.hitFruits2 "+StateGame.hitFruits2 );
+ 		System.out.println("StateGame.level2 "+StateGame.level2 );
 	}
 }
