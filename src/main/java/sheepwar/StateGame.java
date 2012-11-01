@@ -442,14 +442,14 @@ public class StateGame implements Common{
 			eEndTime = System.currentTimeMillis()/1000;
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			if(a){	//教学关卡第一个提示
-				pt.setText("欢迎进入教学关卡，#R按确认键#W继续教学，#R按0键#W退出教学关卡。");
+				pt.setText("欢迎进入教学关卡，按确认键#W继续教学，按0键#W退出教学关卡。");
 				pt.popup();
 				a = false;
 				b2 = true;
 				bStartTime = System.currentTimeMillis()/1000;
 			}
 			if(b){
-				pt.setText("#R按上下键#W移动喜羊羊，#R按确认键#W发射飞镖，击中灰太狼身上的气球阻止灰太狼降落");
+				pt.setText("#R按上下键#W移动喜羊羊，按确认键#W发射飞镖，击中灰太狼身上的气球阻止灰太狼降落");
 				pt.popup();
 				b = false;
 				b2 = false;
@@ -457,7 +457,7 @@ public class StateGame implements Common{
 				cStartTime = System.currentTimeMillis()/1000;
 			}
 			if(c){
-				pt.setText("想让飞镖的威力更大吗？#R按数字键4#W使用道具连发。");
+				pt.setText("想让飞镖的威力更大吗？按数字键4#W使用道具连发。");
 				pt.popup();
 				c = false;
 				c2 = false;
@@ -466,7 +466,7 @@ public class StateGame implements Common{
 				dStartTime = System.currentTimeMillis()/1000;
 			}
 			if(d){
-				pt.setText("梯子上爬满灰太狼会威胁到喜羊羊的安全。#R按数字键2#W使用道具驱狼竖琴清除掉成功降落的灰太狼。");
+				pt.setText("梯子上爬满灰太狼会威胁到喜羊羊的安全。按数字键2#W使用道具驱狼竖琴清除掉成功降落的灰太狼。");
 				pt.popup();
 				d = false;
 				d2 = false;
@@ -475,7 +475,7 @@ public class StateGame implements Common{
 				eStartTime = System.currentTimeMillis()/1000;
 			}
 			if(e){
-				pt.setText("恭喜你，你已经可以独自面对接下来的挑战了。#R按数字键#W使用它们。记住，道具没有了可以去商城去购买。");
+				pt.setText("恭喜你，你已经可以独自面对接下来的挑战了。按数字键#W使用它们。记住，道具在商城购买。");
 				pt.popup();
 				e = false;
 				e2 = false;

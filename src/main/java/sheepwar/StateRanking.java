@@ -151,17 +151,19 @@ public class StateRanking implements Common{
 		GameRanking info = null;
 		int offY = 155;
 		String ownRank = "";
-		for(int m=0;m<rankList.length;m++){
-			info = rankList[m];
-			String id = info.getUserId();
-			int rank = info.getRanking();
-			int scores = info.getScores();
-			g.drawString(String.valueOf(rank), 270, offY, 20);
-			g.drawString(id, 380, offY, 20);
-			g.drawString(String.valueOf(scores), 505, offY, 20);
-			offY += 28;
-			if(id.equals(engine.getEngineService().getUserId())){
-				ownRank = String.valueOf(info.getRanking());
+		if(rankList!=null){
+			for(int m=0;m<rankList.length;m++){
+				info = rankList[m];
+				String id = info.getUserId();
+				int rank = info.getRanking();
+				int scores = info.getScores();
+				g.drawString(String.valueOf(rank), 270, offY, 20);
+				g.drawString(id, 380, offY, 20);
+				g.drawString(String.valueOf(scores), 505, offY, 20);
+				offY += 28;
+				if(id.equals(engine.getEngineService().getUserId())){
+					ownRank = String.valueOf(info.getRanking());
+				}
 			}
 		}
 		g.drawString(ownRank, 260+current_ranking.getWidth(), 448, 20);

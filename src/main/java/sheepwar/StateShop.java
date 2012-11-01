@@ -105,10 +105,10 @@ public class StateShop implements Common{
 							x+(spaceX+smallW)*j+124, y+(spaceY+smallH)*i+38, 20);
 					g.setColor(0x000000);
 					engine.setFont(25, true);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 444, 120, 162, 220);
+					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX]+engine.getEngineService().getExpendAmountUnit(), 5, 444, 120, 162, 220);
 					int textColor = g.getColor();
 					g.setColor(0xffffff);
-					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX], 5, 443, 119, 162, 220);
+					TextView.showMultiLineText(g, Resource.propIntroduce[shopY][shopX]+engine.getEngineService().getExpendAmountUnit(), 5, 443, 119, 162, 220);
 					engine.setDefaultFont();
 					g.setColor(textColor);
 				}else{
@@ -150,9 +150,9 @@ public class StateShop implements Common{
 		engine.setFont(30, true);
 		g.setColor(0x000000);
 		int colorBalance = g.getColor();
-		g.drawString(String.valueOf(engine.getEngineService().getBalance())+engine.amountUnit,110,449+7, 20);//用户余额
+		g.drawString(String.valueOf(engine.getEngineService().getBalance())+engine.getEngineService().getExpendAmountUnit(),110,449+7, 20);//用户余额
 		g.setColor(0xffff00);
-		g.drawString(String.valueOf(engine.getEngineService().getBalance())+engine.amountUnit,109,448+7, 20);
+		g.drawString(String.valueOf(engine.getEngineService().getBalance())+engine.getEngineService().getExpendAmountUnit(),109,448+7, 20);
 		g.setColor(colorBalance);
 		engine.setDefaultFont();
 	}

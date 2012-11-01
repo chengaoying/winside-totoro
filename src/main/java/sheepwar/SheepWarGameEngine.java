@@ -38,7 +38,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 	public StateGame stateGame;
 	public PropManager pm;
 	public Prop[] props;
-	public String amountUnit = "сно╥╠р";
+	//public String amountUnit;
 	
 	private int recordId;
 	private int attainmentId;
