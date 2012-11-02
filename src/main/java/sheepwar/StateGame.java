@@ -442,7 +442,7 @@ public class StateGame implements Common{
 			eEndTime = System.currentTimeMillis()/1000;
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			if(a){	//教学关卡第一个提示
-				pt.setText("欢迎进入教学关卡，按确认键#W继续教学，按0键#W退出教学关卡。");
+				pt.setText("欢迎进入教学关卡，按确认键#W继续。");
 				pt.popup();
 				a = false;
 				b2 = true;
@@ -466,7 +466,7 @@ public class StateGame implements Common{
 				dStartTime = System.currentTimeMillis()/1000;
 			}
 			if(d){
-				pt.setText("梯子上爬满灰太狼会威胁到喜羊羊的安全。按数字键2#W使用道具驱狼竖琴清除掉成功降落的灰太狼。");
+				pt.setText("梯子上的灰太狼会威胁到喜羊羊的安全。按数字键2#W使用道具驱狼竖琴清除已降落的灰太狼。");
 				pt.popup();
 				d = false;
 				d2 = false;

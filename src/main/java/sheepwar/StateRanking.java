@@ -158,7 +158,13 @@ public class StateRanking implements Common{
 				int rank = info.getRanking();
 				int scores = info.getScores();
 				g.drawString(String.valueOf(rank), 270, offY, 20);
-				g.drawString(id, 380, offY, 20);
+				int offX = 380;
+				if(id.length()>7 && id.length()<=11){
+					offX -= 20;
+				}else if(id.length()>11){
+					offX -= 35;
+				}
+				g.drawString(id, offX, offY, 20);
 				g.drawString(String.valueOf(scores), 505, offY, 20);
 				offY += 28;
 				if(id.equals(engine.getEngineService().getUserId())){
