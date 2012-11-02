@@ -280,6 +280,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 		dout.write(StateGame.lifeNum);
 		dout.write(StateGame.hitFruits);
 		dout.writeShort(StateGame.level);
+		dout.writeShort(StateGame.rewardLevel);
 		dout.write(StateGame.hitNum);
 		dout.write(StateGame.hitRatio);
 		
@@ -331,6 +332,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			StateGame.lifeNum =dis.read();
 			StateGame.hitFruits = dis.read();
 			StateGame.level = dis.readShort();
+			StateGame.rewardLevel = dis.readShort();
 			StateGame.hitNum = dis.read();
 			StateGame.hitRatio = dis.read();
 			
@@ -421,6 +423,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
 			return result = true;
 		} catch (Exception e) {
 			System.out.println("读取游戏失败，原因："+e.getMessage());
+			state = STATUS_MAIN_MENU;
 			return result = false;
 		}finally{
 			try {
@@ -448,6 +451,7 @@ public class SheepWarGameEngine extends GameCanvasEngine implements Common {
  		System.out.println("record_lifeNum:"+StateGame.lifeNum );
  		System.out.println("record_hitFruits:"+StateGame.hitFruits );
  		System.out.println("record_level:"+StateGame.level );
+ 		System.out.println("record_rewardLevel:"+StateGame.rewardLevel );
  		System.out.println("record_hitNum:"+StateGame.hitNum  );
  		System.out.println("record_hitRatio:"+StateGame.hitRatio  );
 		
