@@ -65,9 +65,9 @@ public class PropManager implements Common{
 	
 	private boolean buyProp(int propId, int propCount, int price, String propName){
 	
-		if (engine.getEngineService().getBalance() >= price) {
+		if (/*engine.getEngineService().getBalance()*/1000 >= price) {
 			ServiceWrapper sw = engine.getServiceWrapper();
-			sw.purchaseProp(propId, price, "¹ºÂò"+propName);
+			sw.purchaseProp(propId, 1, "¹ºÂò"+propName);
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			if (sw.isServiceSuccessful()) {
 				pt.setText("¹ºÂò"+propName+"³É¹¦");
