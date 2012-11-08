@@ -182,8 +182,7 @@ public class StateRanking implements Common{
 	private void handleRanking(KeyState keyState) {
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
-		}else if(keyState.contains(KeyCode.OK)){
-			keyState.remove(KeyCode.OK);
+		}else if(keyState.containsAndRemove(KeyCode.OK)){
 			if(rankingIndex==0){
 				if(rankingIndex>0){
 					rankingIndex--;
@@ -194,14 +193,12 @@ public class StateRanking implements Common{
 					rankingIndex++;
 				}
 			}
-		}else if(keyState.contains(KeyCode.UP)){
-			/*keyState.remove(KeyCode.UP);
-			if(rankX == 0 && rankY > 0){
+		}else if(keyState.containsAndRemove(KeyCode.UP)){
+			/*if(rankX == 0 && rankY > 0){
 				rankY = rankY - 1;
 			}*/
-		}else if(keyState.contains(KeyCode.DOWN)){
-			/*keyState.remove(KeyCode.DOWN);
-			if(rankX == 0 && rankY <2){
+		}else if(keyState.containsAndRemove(KeyCode.DOWN)){
+			/*if(rankX == 0 && rankY <2){
 				rankY = (rankY + 1)%2;
 			}
 */		}
