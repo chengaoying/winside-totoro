@@ -29,10 +29,18 @@ public class PropManager implements Common{
 		if(pps==null){
 			return;
 		}
-		for(int i=0;i<pps.length;i++){
-			props[i].setNums(pps[i].getCount());
+		for(int i=0;i<props.length;i++){
+			for(int j=0;j<pps.length;j++){
+				if(pps[j].getPropId()==props[i].getPropId()){
+					props[i].setNums(pps[j].getCount());
+				}
+			}
 		}
 		
+		for(int i=0;i<pps.length;i++){
+			System.out.println("ID=="+pps[i].getPropId());
+			System.out.println("count=="+pps[i].getCount());
+		}
 		for(int i=0;i<props.length;i++){
 			System.out.println("道具ID=="+props[i].getPropId());
 			System.out.println("道具数量=="+props[i].getNums());
@@ -156,5 +164,9 @@ public class PropManager implements Common{
 		ServiceWrapper sw = engine.getServiceWrapper();
 		sw.synProps(ids, counts);
 		System.out.println("同步道具:"+sw.isServiceSuccessful());
+		for(int i=0;i<props.length;i++){
+			System.out.println("道具ID=="+props[i].getPropId());
+			System.out.println("道具数量=="+props[i].getNums());
+		}
 	}
 }
