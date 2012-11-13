@@ -98,7 +98,7 @@ public class StateHelp implements Common{
 					achievement_left_right.getHeight(), 0, helpLeftRightX+sapceLeftRight+achLeftW,
 					helpLeftRightY, 20);
 		}
-		g.drawImage(game_help, 220,18, 20);
+		g.drawImage(game_help, 235,18, 20);
 		g.drawImage(achievement_out1, 17,498, 20);
 		g.setColor(0x000000);
 		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 6,160, 135, 359, 333);	
