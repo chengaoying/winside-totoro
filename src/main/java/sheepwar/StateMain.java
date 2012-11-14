@@ -94,20 +94,26 @@ public class StateMain implements Common{
 				pt.popup();
 				mainIndex=0;
 			}
+			clear();
 		} else if (mainIndex == 2) {// 道具商城
+			clear();
 			StateShop ss =  new StateShop(engine);
 			ss.processShop();
 		} else if (mainIndex == 3){ //成就系统
+			clear();
 			engine.updateAttainmen();
 			StateAttainment sa = new StateAttainment();
 			sa.processAttainment();
 		} else if (mainIndex == 4) {// 排行榜
+			clear();
 			StateRanking sr = new StateRanking();
 			sr.processRanking();
 		} else if (mainIndex == 5) {// 游戏帮助
+			clear();
 			StateHelp sh = new StateHelp();
 			sh.processHelp();
 		}else if(mainIndex==6){//退出游戏
+			clear();
 			exit = true;
 			
 			//保存数据
