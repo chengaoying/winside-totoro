@@ -77,6 +77,7 @@ public class StateMain implements Common{
 			stateGame.initDataGameOver();
 			StateGame.own = stateGame.createRole.createSheep();
 			engine.state = STATUS_GAME_PLAYING;
+			clear();
 		} else if(mainIndex == 1){
 			engine.readRecord();
 			if(SheepWarGameEngine.result){
