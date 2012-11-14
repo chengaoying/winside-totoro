@@ -414,6 +414,21 @@ public class Weapon implements Common {
 		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
+	public void clear(){
+		Resource.freeImage(Resource.id_gloveLeft);
+		Resource.freeImage(Resource.id_gloveRight);
+		Resource.freeImage(Resource.id_prop_fist);
+		Resource.freeImage(Resource.id_prop_5_effect);
+		Resource.freeImage(Resource.id_prop_4);
+		Resource.freeImage(Resource.id_prop_4_effect);
+		Resource.freeImage(Resource.id_prop_3);
+		Resource.freeImage(Resource.id_boom);
+		Resource.freeImage(Resource.id_boom1);
+		Resource.freeImage(Resource.id_net);
+		Resource.freeImage(Resource.id_net2);
+		Resource.freeImage(Resource.id_bomb);
+	}
+	
 	/*清除内存中的对象*/
 	public void clearObjects() {
       bombs.removeAllElements();

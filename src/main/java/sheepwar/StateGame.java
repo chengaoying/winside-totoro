@@ -314,9 +314,11 @@ public class StateGame implements Common{
 				if(index == 0){		//∑µªÿ”Œœ∑
 					
 				}else if(index == 1){
+					clear();
 					StateShop ss =  new StateShop(engine);
 					ss.processShop();
 				}else if(index == 2){
+					clear();
 					StateHelp sh = new StateHelp();
 					sh.processHelp();
 				}else if(index == 3){
@@ -1967,6 +1969,7 @@ public class StateGame implements Common{
 	}
 	
 	private void clear() {
+		weapon.clear();
 		Resource.freeImage(Resource.id_playing_menu);
 		Resource.freeImage(Resource.id_control);
 		Resource.freeImage(Resource.id_pumpkin);
