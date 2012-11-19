@@ -139,7 +139,12 @@ public class Resource implements Common {
 	public static short id_main_select_base = NUMS++;     				
 	public static short id_main_select = NUMS++;   
 	public static short id_achievement_left1 = NUMS++;    
-	
+	public static short id_main_menu1 = NUMS++;     				
+	public static short id_achievement_word1 = NUMS++;     				
+	public static short id_ranking_word1 = NUMS++;     				
+	public static short id_help_cloth = NUMS++;     				
+	public static short id_shop_cloth = NUMS++;     				
+	public static short id_stroke = NUMS++; 
 	
 	public static String[] imagesrcs = {
 		"/main_bg.jpg",
@@ -266,6 +271,12 @@ public class Resource implements Common {
 		"/main_select_base.png",             
 		"/main_select.png",
 		"/achievement_left1.png",    
+		"/main_menu1.png",             
+		"/achievement_word1.png",             
+		"/ranking_word1.png",             
+		"/help_cloth.png",             
+		"/shop_cloth.png",             
+		"/stroke.png",         
 	};
 	
 	private static final Image[] images = new Image[NUMS];
@@ -291,8 +302,7 @@ public class Resource implements Common {
 	 * 游戏帮助文字介绍
 	 */
 	public static String gameInfo[] = {   
-		"【操作说明】#r上下方向键：控制玩家的移动#r确定键：发射飞镖或无敌拳套#r数字键1至8：使用道具#r数字键0：退出游戏#r" +
-		"数字键9:游戏帮助",
+		"【操作说明】#r上下方向键：控制玩家的移动#r确定键：发射飞镖或无敌拳套#r数字键1至8：使用道具#r数字键0：退出游戏#r",
 		
 		"【道具说明】#r时光闹钟：时间静止10秒#r捕狼网：发射一张大网网住灰太狼#r防狼套装：使用后抵抗各种的攻击#r替身玩偶：增加一条命#r驱狼竖琴：可以清除成功降落的灰太狼#r连发:装备后一次可以发射4个飞镖#r强力磁石：击落所有空中的灰太狼#r驱狼光波：发射一道光波击落灰太狼",
 		
