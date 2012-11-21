@@ -483,8 +483,11 @@ public class StateGame implements Common{
 				e2 = false;
 				SheepWarGameEngine.isFirstGame = false;
 				initDataGameOver();
-				engine.state = STATUS_MAIN_MENU;
-				clear();
+				weapon = new Weapon(this);
+				createRole = new CreateRole();
+				batches = new Batches();
+				own = createRole.createSheep();
+				engine.state = STATUS_GAME_PLAYING;
 			}
 			if(e2 && (eEndTime-eStartTime)>10){
 				e = true;
