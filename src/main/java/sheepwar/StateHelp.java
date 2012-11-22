@@ -55,7 +55,6 @@ public class StateHelp implements Common{
 		Image achievement_left_right1 = Resource.loadImage(Resource.id_achievement_left_right1);   //{380,452}
 		Image slash = Resource.loadImage(Resource.id_slash);
 		Image pass_cloud = Resource.loadImage(Resource.id_pass_cloud);
-		engine.setFont(20,true);					//设置字体大小
 		g.drawImage(help_bg, 0, 0, 20);
 
 		/*中间的云*/
@@ -103,6 +102,7 @@ public class StateHelp implements Common{
 		g.drawImage(game_help, 220,18, 20);
 		g.drawImage(achievement_out1, 17,498, 20);
 		g.setColor(0x000000);
+		engine.setFont(10,true);
 		TextView.showMultiLineText(g, Resource.gameInfo[helpX], 5,177, 150, 315, 248);	
 		engine.setDefaultFont();
 	}
