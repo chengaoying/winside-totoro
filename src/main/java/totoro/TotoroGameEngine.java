@@ -1,8 +1,11 @@
 package totoro;
 
+import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
+import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.key.KeyState;
 
 /**
  * 游戏引擎
@@ -28,7 +31,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 
 	private TotoroGameEngine(MIDlet midlet) {
 		super(midlet);
-		setRelease(true);
+		setRelease(false);
 		ScrW = screenWidth;
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
@@ -37,39 +40,28 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 
 	public int state;
 	public int mainIndex, playingIndex;
+	private int cursorFrame;
 	
 	protected void loop() {
 		
-		/*处理键值*/
-		switch (state) {   	
-		case STATUS_INIT:
-			init();
-			break;
-		case STATUS_MAIN_MENU: 
-			stateMain.handleKey(keyState);
-			break;
-		case STATUS_GAME_PLAYING:
-			stateGame.handleKey(keyState);
-			break;
-		}
-
 		/*显示界面*/
 		switch (state) {
 		case STATUS_INIT:
-			//showInit(g);
+			showInit(g);
 			break;
 		case STATUS_MAIN_MENU:
 			stateMain.show(g);
 			break;
 		case STATUS_GAME_PLAYING:
-			//stateGame.show(g);
+			stateGame.show(g);
 			break;
 		}
 		
 		/*执行逻辑*/
 		switch (state) {
 		case STATUS_INIT:
-			//showInit(g);
+			cursorFrame = (cursorFrame+1)%12;
+			init();
 			break;
 		case STATUS_MAIN_MENU:
 			stateMain.execute();
@@ -79,11 +71,48 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 			break;
 		}
 		
+		/*处理键值*/
+		switch (state) {   	
+		case STATUS_INIT:
+			handleInit(keyState);
+			break;
+		case STATUS_MAIN_MENU: 
+			stateMain.handleKey(keyState);
+			break;
+		case STATUS_GAME_PLAYING:
+			stateGame.handleKey(keyState);
+			break;
+		}
+		
 		/*退出游戏*/
 		exit();
 	}
 	
+	private void init() {
+		//state = STATUS_MAIN_MENU;  
+	}
 	
+	private void handleInit(KeyState key) {
+		if(key.containsAnyKey()){
+			key.clear();
+			Resource.freeImage(Resource.id_bg);
+			Resource.freeImage(Resource.id_text);
+			state = STATUS_MAIN_MENU;
+		}
+	}
+
+
+	private void showInit(SGraphics g) {
+		Image bg = Resource.loadImage(Resource.id_bg);
+		Image text = Resource.loadImage(Resource.id_text);
+		g.drawImage(bg, 0, 0, 20);
+		if(cursorFrame>4){
+			int x = screenWidth/2 - text.getWidth()/2;
+			g.drawImage(text, x, 450, 20);
+		}
+	}
+
+
 	private void exit(){
 		if(stateMain.exit){
 			exit = true;
@@ -104,10 +133,5 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		}
 		return false;
 	}
-	
-	private void init() {
-		state = STATUS_MAIN_MENU;  
-	}
-	
 	
 }
