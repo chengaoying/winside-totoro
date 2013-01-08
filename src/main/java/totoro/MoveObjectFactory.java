@@ -25,9 +25,12 @@ public class MoveObjectFactory implements Common{
 	
 	/*敌方普通攻击*/
 	public Vector spiritBombs = new Vector();
-	
+
 	/*精灵*/
 	public Vector spirits = new Vector();
+	
+	/*地面上的怪(炮台)*/
+	public Vector battery = new Vector();
 	
 	/*boss*/
 	public Vector boss = new Vector();
@@ -41,7 +44,8 @@ public class MoveObjectFactory implements Common{
 		int value = RandomValue.getRandInt(10);
 		for(int i=0;i<count;i++){
 			MoveObject mo = new MoveObject();
-			mo.status = ROLE_ALIVE;
+			mo.status = ROLE_STATUS_ALIVE;
+			mo.status2 = ROLE_STATUS2_MOVE;
 			mo.id = spiritId;
 			mo.directionValue = value;
 			mo.position = batchInfo[level-1][ran][2];
@@ -59,7 +63,6 @@ public class MoveObjectFactory implements Common{
 			mo.frameNum = spiritParam[mo.id-spirit_id][14];
 			mo.damage = spiritParam[mo.id-spirit_id][15];
 			mo.bombInterval = spiritParam[mo.id-spirit_id][16];
-			mo.status2 = spiritParam[mo.id-spirit_id][17];
 			mo.startTime = System.currentTimeMillis();
 			spiritPosition(mo, i, count);
 			spirits.addElement(mo);
@@ -138,15 +141,15 @@ public class MoveObjectFactory implements Common{
 	public void createSpiritBomb(MoveObject object){
 		MoveObject mo = new MoveObject();
 		int index = searchObjectIdIndex(object.id);
-		mo.status = ROLE_ALIVE;
-		mo.status2 = ROLE_MOVE;
+		mo.status = ROLE_STATUS_ALIVE;
+		mo.status2 = ROLE_STATUS2_MOVE;
 		mo.objectId = spiritBombParam[index][0];
 		mo.id = spiritBombParam[index][1];
 		mo.width = spiritBombParam[index][2];
 		mo.height = spiritBombParam[index][3];
 		mo.damage = spiritBombParam[index][4];
-		mo.speedX = spiritBombParam[index][5];
-		mo.speedY = spiritBombParam[index][6];
+		mo.speedX = -spiritBombParam[index][5];
+		mo.speedY = 0/*spiritBombParam[index][6]*/;
 		mo.picId = spiritBombParam[index][7];
 		mo.mapx = object.mapx+3;
 		mo.mapy = object.mapy+object.height/2 - mo.height/2;
@@ -155,6 +158,77 @@ public class MoveObjectFactory implements Common{
 		System.out.println("spiritBombs.size:"+spiritBombs.size());
 	}
 	
+	/*创建炮台*/
+	public void createBattery(int level){
+		MoveObject mo = new MoveObject();
+		mo.status = ROLE_STATUS_ALIVE;
+		mo.status2 = ROLE_STATUS2_MOVE;
+		mo.id = batteryParam[level-1][0];
+		mo.width = batteryParam[level-1][1];
+		mo.height = batteryParam[level-1][2];
+		mo.blood = batteryParam[level-1][3];
+		mo.scores = batteryParam[level-1][4];
+		mo.speedX = batteryParam[level-1][5];
+		mo.speedY = batteryParam[level-1][6];
+		mo.mapx = batteryParam[level-1][7];
+		mo.mapy = batteryParam[level-1][8];
+		mo.position = batteryParam[level-1][9];
+		mo.attackPermission = batteryParam[level-1][10];
+		mo.picId = batteryParam[level-1][11];
+		mo.frameNum = batteryParam[level-1][12];
+		mo.damage = batteryParam[level-1][13];
+		mo.bombInterval = batteryParam[level-1][14];
+		mo.bombSTime = System.currentTimeMillis();
+		battery.addElement(mo);
+		System.out.println("battery.size:"+battery.size());
+	}
+	
+	/*炮台普通攻击*/
+	public void createBatteryBombs(MoveObject object, MoveObject player){
+		MoveObject mo = new MoveObject();
+		int index = searchObjectIdIndex(object.id);
+		mo.status = ROLE_STATUS_ALIVE;
+		mo.status2 = ROLE_STATUS2_MOVE;
+		mo.objectId = spiritBombParam[index][0];
+		mo.id = spiritBombParam[index][1];
+		mo.width = spiritBombParam[index][2];
+		mo.height = spiritBombParam[index][3];
+		mo.damage = spiritBombParam[index][4];
+		//mo.speedX = batteryBombParam[index][5];
+		//mo.speedY = batteryBombParam[index][6];
+		mo.picId = spiritBombParam[index][7];
+		//mo.mapx = object.mapx+3;
+		//mo.mapy = object.mapy+object.height/2 - mo.height/2;
+		mo.bombSTime = System.currentTimeMillis();
+		batteryBombOtherInfo(index, mo, object, player);
+		spiritBombs.addElement(mo);
+		System.out.println("spiritBombs:"+spiritBombs.size());
+	}
+	
+	private void batteryBombOtherInfo(int index, MoveObject mo,MoveObject object, MoveObject player) {
+		if(object.id == 300){
+			if(object.mapx > (player.mapx+player.width)){
+				mo.frame = 0;
+				mo.mapx = object.mapx+10;
+				mo.mapy = object.mapy+20;
+				mo.speedX = -spiritBombParam[index][5];
+				mo.speedY = -spiritBombParam[index][6];
+			}else if(object.mapx >= player.mapx && object.mapx <= (player.mapx+player.width)){
+				mo.frame = 1;
+				mo.mapx = object.mapx+object.width/2-mo.width/2;
+				mo.mapy = object.mapy+10;
+				mo.speedX = 0/*batteryBombParam[index][5]*/;
+				mo.speedY = -(spiritBombParam[index][6]*2);
+			}else {
+				mo.frame = 2;
+				mo.mapx = object.mapx+45;
+				mo.mapy = object.mapy+20;
+				mo.speedX = spiritBombParam[index][5];
+				mo.speedY = -spiritBombParam[index][6];
+			}
+		}
+	}
+
 	private int searchObjectIdIndex(int id){
 		for(int i=0;i<spiritBombParam.length;i++){
 			if(id == spiritBombParam[i][0]){
@@ -167,7 +241,8 @@ public class MoveObjectFactory implements Common{
 	/*创建boss*/
 	public void createBoss(int level){
 		MoveObject mo = new MoveObject();
-		mo.status = ROLE_ALIVE;
+		mo.status = ROLE_STATUS_ALIVE;
+		mo.status2 = ROLE_STATUS2_MOVE;
 		mo.id = bossParam[level-1][0];
 		mo.width = bossParam[level-1][1];
 		mo.height = bossParam[level-1][2];
@@ -182,7 +257,6 @@ public class MoveObjectFactory implements Common{
 		mo.bombInterval = bossParam[level-1][13];
 		mo.direction = bossParam[level-1][14];
 		mo.position = bossParam[level-1][15];
-		mo.status2 = bossParam[level-1][16];
 		mo.bombSTime = System.currentTimeMillis()/1000;
 		mo.startTime = System.currentTimeMillis()/1000;
 		mo.mapx = ScrW;
@@ -194,7 +268,7 @@ public class MoveObjectFactory implements Common{
 	/*创建玩家普通攻击*/
 	public void createBomb(MoveObject player){
 		MoveObject object = new MoveObject();
-		object.status = ROLE_ALIVE;
+		object.status = ROLE_STATUS_ALIVE;
 		object.id = bombParam[player.grade-1][player.bombGrade-1][0];
 		object.width = bombParam[player.grade-1][player.bombGrade-1][1];
 		object.height = bombParam[player.grade-1][player.bombGrade-1][2];
@@ -214,7 +288,7 @@ public class MoveObjectFactory implements Common{
 	 */
 	public MoveObject createNewPlayer(){
 		MoveObject object = new MoveObject();
-		object.status = ROLE_ALIVE;
+		object.status = ROLE_STATUS_ALIVE;
 		object.id = playerParam[0][0];
 		object.mapx = playerParam[0][1];
 		object.mapy = playerParam[0][2];
@@ -235,6 +309,7 @@ public class MoveObjectFactory implements Common{
 		spirits.removeAllElements();
 		spiritBombs.removeAllElements();
 		boss.removeAllElements();
+		battery.removeAllElements();
 	}
 }
 

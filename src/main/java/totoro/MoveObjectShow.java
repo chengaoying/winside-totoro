@@ -37,7 +37,7 @@ public class MoveObjectShow implements Common{
 			g.drawRegion(bomb, 0, 0, bombW, bombH, 0, object.mapx, object.mapy, 20);
 			object.mapx += object.speedX;
 			if(object.mapx > ScrW){
-				object.status = ROLE_DEAD;
+				object.status = ROLE_STATUS_DEAD;
 			}
 		}
 	}
@@ -69,7 +69,7 @@ public class MoveObjectShow implements Common{
 					}
 				}
 				if(mo.mapy>=endP){
-					mo.status = ROLE_DEAD;
+					mo.status = ROLE_STATUS_DEAD;
 				}
 			}else if(mo.position == OBJECT_POSITION_DOWN){
 				if(mo.direction == OBJECT_DIRECTION_RIGHT_UP){
@@ -87,7 +87,7 @@ public class MoveObjectShow implements Common{
 					mo.mapy -= mo.speedY;
 				}
 				if(mo.mapy+mo.height<=startP){
-					mo.status = ROLE_DEAD;
+					mo.status = ROLE_STATUS_DEAD;
 				}
 			}else if(mo.position == OBJECT_POSITION_LEFT){
 				if(mo.direction == OBJECT_DIRECTION_RIGHT){
@@ -96,7 +96,7 @@ public class MoveObjectShow implements Common{
 					//mo.mapy -= mo.speedY;
 				}
 				if(mo.mapx >= ScrW){
-					mo.status = ROLE_DEAD;
+					mo.status = ROLE_STATUS_DEAD;
 				}
 			}else if(mo.position == OBJECT_POSITION_RIGHT){
 				if(mo.direction == OBJECT_DIRECTION_LEFT){
@@ -105,13 +105,13 @@ public class MoveObjectShow implements Common{
 					//mo.mapy -= mo.speedY;
 				}
 				if(mo.mapx+mo.width <= 0){
-					mo.status = ROLE_DEAD;
+					mo.status = ROLE_STATUS_DEAD;
 				}
 			}
 			
 			if(mo.bombETime - mo.bombSTime >= mo.bombInterval*1000){
-				if(mo.status == ROLE_ALIVE){
-					mo.status2 = ROLE_ATTACK;
+				if(mo.status == ROLE_STATUS_ALIVE){
+					mo.status2 = ROLE_STATUS2_ATTACK;
 					mo.bombSTime = System.currentTimeMillis();
 				}
 			}
@@ -119,14 +119,42 @@ public class MoveObjectShow implements Common{
 		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
+	public void showBattery(SGraphics g, Vector battery, MoveObject player){
+		for(int i=0;i<battery.size();i++){
+			MoveObject mo = (MoveObject) battery.elementAt(i);
+			mo.bombETime = System.currentTimeMillis();
+			Image moPic = Resource.loadImage(mo.picId);
+			if(mo.mapx > (player.mapx+player.width)){
+				g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else if(mo.mapx >= player.mapx && mo.mapx <= (player.mapx+player.width)){
+				g.drawRegion(moPic, mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else {
+				g.drawRegion(moPic, mo.width+mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}
+			mo.mapx -= mo.speedX;
+			
+			if(mo.bombETime - mo.bombSTime >= mo.bombInterval*1000){
+				if(mo.status == ROLE_STATUS_ALIVE){
+					mo.status2 = ROLE_STATUS2_ATTACK;
+					mo.bombSTime = System.currentTimeMillis();
+				}
+			}
+			
+			if(mo.mapx+mo.width <= 0){
+				mo.status = ROLE_STATUS_DEAD;
+			}
+		}
+	}
+	
 	public void showSpiritsBomb(SGraphics g, Vector bombs){
 		for(int i=bombs.size()-1;i>=0;i--){
 			MoveObject mo = (MoveObject) bombs.elementAt(i);
 			Image moImg = Resource.loadImage(mo.picId);
 			g.drawRegion(moImg, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			mo.mapx -= mo.speedX;
+			mo.mapx += mo.speedX;
+			mo.mapy += mo.speedY;
 			if(mo.mapx+mo.width <= 0){
-				mo.status = ROLE_DEAD;
+				mo.status = ROLE_STATUS_DEAD;
 			}
 		}
 	}
@@ -138,7 +166,7 @@ public class MoveObjectShow implements Common{
 			Image bossImg = Resource.loadImage(boss.picId);
 			boss.frame = (boss.frame+1)%boss.frameNum;
 			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
-			if(boss.status2 == ROLE_MOVE || boss.status2 == ROLE_ATTACK){
+			if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_ATTACK){
 				if(boss.direction == OBJECT_DIRECTION_LEFT){
 					boss.mapx -= boss.speedX;
 					if(boss.mapx < 500){
@@ -155,12 +183,12 @@ public class MoveObjectShow implements Common{
 						boss.direction = OBJECT_DIRECTION_UP;
 					}
 				}
-			}else if(boss.status2 == ROLE_SKILL_ATTACK){
+			}else if(boss.status2 == ROLE_STATUS2_SKILL_ATTACK){
 				
 			}
 			if(boss.bombETime - boss.bombSTime >= boss.bombInterval*1000){
-				if(boss.status == ROLE_ALIVE){
-					boss.status2 = ROLE_ATTACK;
+				if(boss.status == ROLE_STATUS_ALIVE){
+					boss.status2 = ROLE_STATUS2_ATTACK;
 					boss.bombSTime = System.currentTimeMillis();
 				}
 			}

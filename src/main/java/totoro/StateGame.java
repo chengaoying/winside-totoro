@@ -29,17 +29,18 @@ public class StateGame implements Common{
 	private int bombInterval = 400;
 	
 	private long spiritStart, spiritEnd;
+	private long batteryStart, batteryEnd;
 	
 	public void handleKey(KeyState keyState){
-		if(keyState.containsMoveEventAndRemove(KeyCode.UP) && player.status != ROLE_PASS){
+		if(keyState.containsMoveEventAndRemove(KeyCode.UP) && player.status != ROLE_STATUS_PASS){
 			move(0);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN) && player.status != ROLE_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN) && player.status != ROLE_STATUS_PASS){
 			move(1);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT) && player.status != ROLE_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT) && player.status != ROLE_STATUS_PASS){
 			move(2);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT) && player.status != ROLE_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT) && player.status != ROLE_STATUS_PASS){
 			move(3);
-		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_PASS){
+		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
 		}
 		
 	}
@@ -53,7 +54,7 @@ public class StateGame implements Common{
 		}
 		
 		bombEnd = getTime();
-		if(player != null && player.status != ROLE_DEAD && bombEnd - bombStart > bombInterval){
+		if(player != null && player.status != ROLE_STATUS_DEAD && bombEnd - bombStart > bombInterval){
 			factory.createBomb(player);
 			bombStart = getTime();
 		}
@@ -68,10 +69,10 @@ public class StateGame implements Common{
 		
 		judgeNextLevel();
 		
-		if(player.status == ROLE_PASS){
+		if(player.status == ROLE_STATUS_PASS){
 			player.mapx += player.speedX;
 			if(player.mapx > ScrW){
-				player.status = ROLE_ALIVE;
+				player.status = ROLE_STATUS_ALIVE;
 				player.mapx = 0;
 				isNextLevel = false;
 				level_over = false;
@@ -84,7 +85,7 @@ public class StateGame implements Common{
 	private void judgeNextLevel() {
 		if(level_over && factory.boss.size()<1){
 			isNextLevel = true;
-			player.status = ROLE_PASS;
+			player.status = ROLE_STATUS_PASS;
 			factory.removeAllObject();
 			if(level >= 8){
 				//Í¨¹Ø
@@ -95,17 +96,25 @@ public class StateGame implements Common{
 	private void createSpiritsBombs() {
 		for(int j=0;j<factory.spirits.size();j++){
 			MoveObject object = (MoveObject) factory.spirits.elementAt(j);
-			if(object.status2 == ROLE_ATTACK && object.attackPermission == ATTACK_PERMISSION_YES){
+			if(object.status2 == ROLE_STATUS2_ATTACK && object.attackPermission == ATTACK_PERMISSION_YES){
 				factory.createSpiritBomb(object);
-				object.status2 = ROLE_MOVE;
+				object.status2 = ROLE_STATUS2_MOVE;
 			}
 		}
 		
 		for(int j=0;j<factory.boss.size();j++){
 			MoveObject object = (MoveObject) factory.boss.elementAt(j);
-			if(object.status2 == ROLE_ATTACK){
+			if(object.status2 == ROLE_STATUS2_ATTACK){
 				factory.createSpiritBomb(object);
-				object.status2 = ROLE_MOVE;
+				object.status2 = ROLE_STATUS2_MOVE;
+			}
+		}
+		
+		for(int j=0;j<factory.battery.size();j++){
+			MoveObject object = (MoveObject) factory.battery.elementAt(j);
+			if(object.status2 == ROLE_STATUS2_ATTACK && object.attackPermission == ATTACK_PERMISSION_YES){
+				factory.createBatteryBombs(object, player);
+				object.status2 = ROLE_STATUS2_MOVE;
 			}
 		}
 	}
@@ -118,21 +127,21 @@ public class StateGame implements Common{
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
-					bomb.status = ROLE_DEAD;
+					bomb.status = ROLE_STATUS_DEAD;
 					mo.blood -= bomb.damage;
 				}
 				if(mo.blood<=0){
-					mo.status = ROLE_DEAD;
+					mo.status = ROLE_STATUS_DEAD;
 				}
 			}
 			for(int k=0;k<factory.boss.size();k++){
 				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx, boss.mapy, boss.width, boss.height)){
-					bomb.status = ROLE_DEAD;
+					bomb.status = ROLE_STATUS_DEAD;
 					boss.blood -= bomb.damage;
 				}
 				if(boss.blood<=0){
-					boss.status = ROLE_DEAD;
+					boss.status = ROLE_STATUS_DEAD;
 				}
 				//System.out.println("boss.blood:"+boss.blood);
 			}
@@ -146,10 +155,10 @@ public class StateGame implements Common{
 				mo.blood -= player.damage;
 			}
 			if(mo.blood <= 0){
-				mo.status = ROLE_DEAD;
+				mo.status = ROLE_STATUS_DEAD;
 			}
 			if(player.blood <= 0){
-				player.status = ROLE_DEAD;
+				player.status = ROLE_STATUS_DEAD;
 			}
 		}
 		
@@ -157,11 +166,11 @@ public class StateGame implements Common{
 		for(int k=0;k<factory.spiritBombs.size();k++){
 			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
 			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)){
-				mo.status = ROLE_DEAD;
+				mo.status = ROLE_STATUS_DEAD;
 				player.blood -= mo.damage;
 			}
 			if(player.blood <= 0){
-				player.status = ROLE_DEAD;
+				player.status = ROLE_STATUS_DEAD;
 			}
 		}
 	}
@@ -169,10 +178,15 @@ public class StateGame implements Common{
 	private void createSpirits(){
 		if(!isNextLevel){
 			spiritEnd = System.currentTimeMillis();
+			batteryEnd = System.currentTimeMillis();
 			if(!level_over){
 				if(spiritEnd - spiritStart >= levelInfo[level-1][2]){
 					factory.cteateBatchSpirits(level);
 					spiritStart = System.currentTimeMillis();
+				}
+				if(batteryEnd - batteryStart >= levelInfo[level-1][3]){
+					factory.createBattery(level);
+					batteryStart = System.currentTimeMillis();
 				}
 			}else{
 				if(factory.boss.size()<1){
@@ -185,14 +199,14 @@ public class StateGame implements Common{
 	private void removeOutsideObject() {
 		for(int i=0;i<factory.bombs.size();i++){
 			MoveObject mo = (MoveObject) factory.bombs.elementAt(i);
-			if(mo.status == ROLE_DEAD){
+			if(mo.status == ROLE_STATUS_DEAD){
 				factory.bombs.removeElement(mo);
 			}
 		}
 		
 		for(int j=0;j<factory.spirits.size();j++){
 			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-			if(mo.status == ROLE_DEAD){
+			if(mo.status == ROLE_STATUS_DEAD){
 				//System.out.println("------remove------");
 				factory.spirits.removeElement(mo);
 			}
@@ -200,32 +214,41 @@ public class StateGame implements Common{
 		
 		for(int i=0;i<factory.spiritBombs.size();i++){
 			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(i);
-			if(mo.status == ROLE_DEAD){
+			if(mo.status == ROLE_STATUS_DEAD){
 				factory.spiritBombs.removeElement(mo);
 			}
 		}
 		
 		for(int i=0;i<factory.boss.size();i++){
-			MoveObject boss = (MoveObject) factory.boss.elementAt(i);
-			if(boss.status == ROLE_DEAD){
-				factory.boss.removeElement(boss);
+			MoveObject mo = (MoveObject) factory.boss.elementAt(i);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.boss.removeElement(mo);
+			}
+		}
+		
+		for(int i=0;i<factory.battery.size();i++){
+			MoveObject mo = (MoveObject) factory.battery.elementAt(i);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.battery.removeElement(mo);
 			}
 		}
 		
 		//System.out.println("spirit.size:"+factory.spirits.size());
 		//System.out.println("bomb num:"+factory.bombs.size());
 		//System.out.println("spiritBombs num:"+factory.spiritBombs.size());
-		System.out.println("boss num:"+factory.boss.size());
+		//System.out.println("boss num:"+factory.boss.size());
+		System.out.println("battery num:"+factory.battery.size());
 	}
 
 	public void show(SGraphics g){
 		drawGameBg(g);
-		drawInfo(g);
 		objectShow.showPlayer(g, player);
 		objectShow.showBombs(g, factory.bombs);
-		objectShow.showSpirits(g, factory.spirits);
 		objectShow.showSpiritsBomb(g, factory.spiritBombs);
+		objectShow.showSpirits(g, factory.spirits);
+		objectShow.showBattery(g, factory.battery, player);
 		objectShow.showBoss(g, factory.boss);
+		drawInfo(g);
 	}
 	
 	private int bgIndex, hillIndex, wayIndex;

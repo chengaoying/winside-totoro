@@ -39,6 +39,7 @@ public class Resource implements Common {
 	public static short id_sky_spirits_1 = NUMS++;
 	public static short id_sky_spirits_2 = NUMS++;
 	public static short id_sky_spirits_3 = NUMS++;
+	public static short id_sky_battery = NUMS++;
 	public static short id_sky_boss_1 = NUMS++;
 	public static short id_sky_boss_2 = NUMS++;
 	
@@ -73,6 +74,7 @@ public class Resource implements Common {
 		"/spirit/sky/spirit_1.png",
 		"/spirit/sky/spirit_2.png",
 		"/spirit/sky/spirit_3.png",
+		"/spirit/sky/battery.png",
 		"/spirit/sky/boss_1.png",
 		"/spirit/sky/boss_2.png",
 
