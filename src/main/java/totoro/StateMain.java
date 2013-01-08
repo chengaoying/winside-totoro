@@ -24,7 +24,7 @@ public class StateMain implements Common{
 	public void handleKey(KeyState keyState){
 		if (keyState.containsAndRemove(KeyCode.BACK)) {
 			exit = true;
-			clear();
+			Resource.clearMain();
 		}else if (keyState.containsAndRemove(KeyCode.UP)) {
 			if(!isRight){
 				if(mainIndex>0){
@@ -59,7 +59,6 @@ public class StateMain implements Common{
 			}
 		} else if (keyState.containsAndRemove(KeyCode.OK)) {
 			processSubMenu();
-			clear();
 		}
 	}
 
@@ -105,7 +104,7 @@ public class StateMain implements Common{
 		drawNum(g, 100, 450, 452);
 	}
 	
-	private void drawNum(SGraphics g, int n, int x, int y) {
+	public static void drawNum(SGraphics g, int n, int x, int y) {
 		Image num = Resource.loadImage(Resource.id_main_num);
 		String number = String.valueOf(n);
 		int numW = num.getWidth()/10, numH = num.getHeight();
@@ -123,29 +122,18 @@ public class StateMain implements Common{
 			stateGame.objectShow = MoveObjectShow.getInstance();
 			stateGame.player = stateGame.factory.createNewPlayer();
 			engine.state = STATUS_GAME_PLAYING;
-			clear();
+			StateGame.level_start_time = System.currentTimeMillis()/1000;
+			Resource.clearMain();
 		} else if(mainIndex == 1){		//继续游戏
 			
 		} else if (mainIndex == 2) {	//充值
 			
 		} else if (mainIndex == 3){ 	//退出游戏
-			clear();
+			Resource.clearMain();
 			exit = true;
 		} else if (mainIndex == 4) {	//龙猫升级
 			
 		} else if (mainIndex == 5) {	//购买
 		}
-	}
-
-	private void clear() {
-		Resource.freeImage(Resource.id_main_bg);
-		Resource.freeImage(Resource.id_main_button);
-		Resource.freeImage(Resource.id_main_button2);
-		Resource.freeImage(Resource.id_main_buy);
-		Resource.freeImage(Resource.id_main_coin);
-		Resource.freeImage(Resource.id_main_num);
-		Resource.freeImage(Resource.id_main_text);
-		Resource.freeImage(Resource.id_main_totoro);
-		Resource.freeImage(Resource.id_main_upgrade);
 	}
 }

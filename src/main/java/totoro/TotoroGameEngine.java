@@ -95,9 +95,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	private void handleInit(KeyState key) {
 		if(key.containsAnyKey()){
 			key.clear();
-			Resource.freeImage(Resource.id_bg);
-			Resource.freeImage(Resource.id_text);
 			state = STATUS_MAIN_MENU;
+			Resource.clearInit();
 		}
 	}
 

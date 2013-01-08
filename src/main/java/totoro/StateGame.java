@@ -4,6 +4,8 @@ import javax.microedition.lcdui.Image;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.ui.DrawUtil;
+import cn.ohyeah.stb.util.Collision;
 
 public class StateGame implements Common{
 	
@@ -12,54 +14,261 @@ public class StateGame implements Common{
 		this.engine = engine;
 	}
 	
+	public static long level_start_time;
+	public static long level_end_time;
+	public static boolean level_over;
+	
+	private int level = 1;
+	public boolean isNextLevel;
+	
 	public MoveObjectFactory factory;
 	public MoveObjectShow objectShow;
 	public MoveObject player;
 	
 	private long bombStart, bombEnd;
-	private int bombInterval = 200;
+	private int bombInterval = 400;
+	
+	private long spiritStart, spiritEnd;
 	
 	public void handleKey(KeyState keyState){
-		if(keyState.containsMoveEventAndRemove(KeyCode.UP)){
+		if(keyState.containsMoveEventAndRemove(KeyCode.UP) && player.status != ROLE_PASS){
 			move(0);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN)){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN) && player.status != ROLE_PASS){
 			move(1);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT)){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT) && player.status != ROLE_PASS){
 			move(2);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT)){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT) && player.status != ROLE_PASS){
 			move(3);
+		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_PASS){
 		}
 		
 	}
 	
 	public void execute(){
+		
+		level_end_time = getTime()/1000;
+		//System.out.println("time:"+(level_end_time - level_start_time));
+		if(level_end_time - level_start_time > levelInfo[level-1][1]){
+			level_over = true;
+		}
+		
 		bombEnd = getTime();
-		if(bombEnd - bombStart > bombInterval){
+		if(player != null && player.status != ROLE_DEAD && bombEnd - bombStart > bombInterval){
 			factory.createBomb(player);
 			bombStart = getTime();
 		}
+		
+		createSpirits();
+		
+		createSpiritsBombs();
+		
+		collisionDetection();
+		
 		removeOutsideObject();
+		
+		judgeNextLevel();
+		
+		if(player.status == ROLE_PASS){
+			player.mapx += player.speedX;
+			if(player.mapx > ScrW){
+				player.status = ROLE_ALIVE;
+				player.mapx = 0;
+				isNextLevel = false;
+				level_over = false;
+				level_start_time = getTime()/1000;
+				level++;
+			}
+		}
+	}
+	
+	private void judgeNextLevel() {
+		if(level_over && factory.boss.size()<1){
+			isNextLevel = true;
+			player.status = ROLE_PASS;
+			factory.removeAllObject();
+			if(level >= 8){
+				//Í¨¹Ø
+			}
+		}
+	}
+
+	private void createSpiritsBombs() {
+		for(int j=0;j<factory.spirits.size();j++){
+			MoveObject object = (MoveObject) factory.spirits.elementAt(j);
+			if(object.status2 == ROLE_ATTACK && object.attackPermission == ATTACK_PERMISSION_YES){
+				factory.createSpiritBomb(object);
+				object.status2 = ROLE_MOVE;
+			}
+		}
+		
+		for(int j=0;j<factory.boss.size();j++){
+			MoveObject object = (MoveObject) factory.boss.elementAt(j);
+			if(object.status2 == ROLE_ATTACK){
+				factory.createSpiritBomb(object);
+				object.status2 = ROLE_MOVE;
+			}
+		}
+	}
+
+	private void collisionDetection() {
+		
+		/*Íæ¼ÒÆÕÍ¨¹¥»÷Åö×²¼ì²â*/
+		for(int i=0;i<factory.bombs.size();i++){
+			MoveObject bomb = (MoveObject) factory.bombs.elementAt(i);
+			for(int j=0;j<factory.spirits.size();j++){
+				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					bomb.status = ROLE_DEAD;
+					mo.blood -= bomb.damage;
+				}
+				if(mo.blood<=0){
+					mo.status = ROLE_DEAD;
+				}
+			}
+			for(int k=0;k<factory.boss.size();k++){
+				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx, boss.mapy, boss.width, boss.height)){
+					bomb.status = ROLE_DEAD;
+					boss.blood -= bomb.damage;
+				}
+				if(boss.blood<=0){
+					boss.status = ROLE_DEAD;
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
+		}
+		
+		/*¹ÖÎïÅö×²¼ì²â*/
+		for(int j=0;j<factory.spirits.size();j++){
+			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				player.blood -= mo.damage;
+				mo.blood -= player.damage;
+			}
+			if(mo.blood <= 0){
+				mo.status = ROLE_DEAD;
+			}
+			if(player.blood <= 0){
+				player.status = ROLE_DEAD;
+			}
+		}
+		
+		/*µÐ·½ÆÕÍ¨¹¥»÷Åö×²¼ì²â*/
+		for(int k=0;k<factory.spiritBombs.size();k++){
+			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)){
+				mo.status = ROLE_DEAD;
+				player.blood -= mo.damage;
+			}
+			if(player.blood <= 0){
+				player.status = ROLE_DEAD;
+			}
+		}
+	}
+
+	private void createSpirits(){
+		if(!isNextLevel){
+			spiritEnd = System.currentTimeMillis();
+			if(!level_over){
+				if(spiritEnd - spiritStart >= levelInfo[level-1][2]){
+					factory.cteateBatchSpirits(level);
+					spiritStart = System.currentTimeMillis();
+				}
+			}else{
+				if(factory.boss.size()<1){
+					factory.createBoss(level);
+				}
+			}
+		}
 	}
 	
 	private void removeOutsideObject() {
 		for(int i=0;i<factory.bombs.size();i++){
 			MoveObject mo = (MoveObject) factory.bombs.elementAt(i);
-			if(mo.mapx + mo.width > ScrW){
+			if(mo.status == ROLE_DEAD){
 				factory.bombs.removeElement(mo);
 			}
 		}
-		System.out.println("bomb num:"+factory.bombs.size());
+		
+		for(int j=0;j<factory.spirits.size();j++){
+			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+			if(mo.status == ROLE_DEAD){
+				//System.out.println("------remove------");
+				factory.spirits.removeElement(mo);
+			}
+		}
+		
+		for(int i=0;i<factory.spiritBombs.size();i++){
+			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(i);
+			if(mo.status == ROLE_DEAD){
+				factory.spiritBombs.removeElement(mo);
+			}
+		}
+		
+		for(int i=0;i<factory.boss.size();i++){
+			MoveObject boss = (MoveObject) factory.boss.elementAt(i);
+			if(boss.status == ROLE_DEAD){
+				factory.boss.removeElement(boss);
+			}
+		}
+		
+		//System.out.println("spirit.size:"+factory.spirits.size());
+		//System.out.println("bomb num:"+factory.bombs.size());
+		//System.out.println("spiritBombs num:"+factory.spiritBombs.size());
+		System.out.println("boss num:"+factory.boss.size());
 	}
 
 	public void show(SGraphics g){
-		drawGameInterface(g);
+		drawGameBg(g);
+		drawInfo(g);
 		objectShow.showPlayer(g, player);
 		objectShow.showBombs(g, factory.bombs);
+		objectShow.showSpirits(g, factory.spirits);
+		objectShow.showSpiritsBomb(g, factory.spiritBombs);
+		objectShow.showBoss(g, factory.boss);
 	}
 	
-	public void drawGameInterface(SGraphics g){
+	private int bgIndex, hillIndex, wayIndex;
+	public void drawGameBg(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_game_bg_1);
-		g.drawImage(game_bg, 0, 0, 20);
+		Image hill= Resource.loadImage(Resource.id_game_bg_1_hill);
+		Image way = Resource.loadImage(Resource.id_game_bg_1_way);
+		
+		int bgW =  game_bg.getWidth(), bgH = game_bg.getHeight();
+		int hillW = hill.getWidth(), hillH = hill.getHeight();
+		int wayW = way.getWidth(), wayH = way.getHeight();
+		bgIndex = (bgIndex+1)%bgW;
+		hillIndex = (hillIndex+2)%hillW;
+		wayIndex = (wayIndex+2)%wayW;
+		g.drawRegion(game_bg, bgIndex, 0, bgW-bgIndex, bgH, 0, 0, 0, 20);
+		g.drawRegion(game_bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex, 0, 20);
+		g.drawRegion(hill, hillIndex, 0, hillW-hillIndex, hillH, 0, 0, 283, 20);
+		g.drawRegion(hill, 0, 0, hillIndex, hillH, 0, hillW-hillIndex, 283, 20);
+		g.drawRegion(way, wayIndex, 0, wayW-wayIndex, wayH, 0, 0, ScrH-wayH, 20);
+		g.drawRegion(way, 0, 0, wayIndex, wayH, 0, wayW-wayIndex, ScrH-wayH, 20);
+	}
+	
+	private void drawInfo(SGraphics g){
+		Image infoBg = Resource.loadImage(Resource.id_game_info_bg);
+		Image infoHead = Resource.loadImage(Resource.id_game_info_head);
+		Image bloodBg = Resource.loadImage(Resource.id_game_blood_bg);
+		
+		int infoBgW = infoBg.getWidth(), infoBgH = infoBg.getHeight();
+		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
+		int bloodBgW = bloodBg.getWidth(), bloodBgH = bloodBg.getHeight();
+		
+		int offX = ScrW/2 - infoBgW/2, offY = 0;
+		
+		g.drawImage(infoBg, offX, offY, 20);
+		g.drawImage(infoHead, offX, offY, 20);
+		StateMain.drawNum(g, level, offX+56, offY+15);
+		StateMain.drawNum(g, player.lifeNum, offX+80, offY+15);
+		offX += infoBgW - bloodBgW - 5;
+		offY = infoBgH/2 - bloodBgH/2;
+		g.drawImage(bloodBg, offX, offY, 20);
+		g.setColor(0xffff00);
+		DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);
+		g.setColor(0xffffff);
 	}
 	
 	private long getTime(){
@@ -69,8 +278,8 @@ public class StateGame implements Common{
 	private void move(int towards) {
 		switch (towards) {
 		case 0: // ÍùÉÏ--Ö÷½Ç
-			if(player.mapy < player.speedY){
-				player.mapy = 0;
+			if(player.mapy-46 <= player.speedY){
+				player.mapy = 46;
 			}else{
 				player.mapy -= player.speedY;
 			}
