@@ -119,19 +119,13 @@ public class MoveObjectShow implements Common{
 		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
+	/*地面上的怪物*/
 	public void showBattery(SGraphics g, Vector battery, MoveObject player){
 		for(int i=0;i<battery.size();i++){
 			MoveObject mo = (MoveObject) battery.elementAt(i);
 			mo.bombETime = System.currentTimeMillis();
+			mo.endTime = System.currentTimeMillis();
 			Image moPic = Resource.loadImage(mo.picId);
-			if(mo.mapx > (player.mapx+player.width)){
-				g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			}else if(mo.mapx >= player.mapx && mo.mapx <= (player.mapx+player.width)){
-				g.drawRegion(moPic, mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			}else {
-				g.drawRegion(moPic, mo.width+mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			}
-			mo.mapx -= mo.speedX;
 			
 			if(mo.bombETime - mo.bombSTime >= mo.bombInterval*1000){
 				if(mo.status == ROLE_STATUS_ALIVE){
@@ -139,6 +133,30 @@ public class MoveObjectShow implements Common{
 					mo.bombSTime = System.currentTimeMillis();
 				}
 			}
+			
+			if(mo.id == 300){
+				if(mo.mapx > (player.mapx+player.width)){
+					g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				}else if(mo.mapx >= player.mapx && mo.mapx <= (player.mapx+player.width)){
+					g.drawRegion(moPic, mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				}else {
+					g.drawRegion(moPic, mo.width+mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				}
+			}else if(mo.id == 301){
+				if(mo.status2 == ROLE_STATUS2_ATTACK){
+					mo.frame = 2/*(mo.frame+1)%2 + 2*/;
+					g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				}else if(mo.status2 == ROLE_STATUS2_MOVE){
+					if(mo.endTime - mo.startTime > mo.timeInterval){
+						mo.frame = (mo.frame+1)%2;
+						mo.startTime = System.currentTimeMillis();
+					}
+					g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				}
+			}else if(mo.id == 302){
+				g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}
+			mo.mapx -= mo.speedX;
 			
 			if(mo.mapx+mo.width <= 0){
 				mo.status = ROLE_STATUS_DEAD;
@@ -169,7 +187,7 @@ public class MoveObjectShow implements Common{
 			if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_ATTACK){
 				if(boss.direction == OBJECT_DIRECTION_LEFT){
 					boss.mapx -= boss.speedX;
-					if(boss.mapx < 500){
+					if(boss.mapx < (ScrW-boss.width+20)){
 						boss.direction = OBJECT_DIRECTION_UP;
 					}
 				}else if(boss.direction == OBJECT_DIRECTION_UP){

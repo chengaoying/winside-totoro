@@ -171,18 +171,40 @@ public class MoveObjectFactory implements Common{
 		mo.speedX = batteryParam[level-1][5];
 		mo.speedY = batteryParam[level-1][6];
 		mo.mapx = batteryParam[level-1][7];
-		mo.mapy = batteryParam[level-1][8];
+		mo.mapy = gameH-mo.width;
 		mo.position = batteryParam[level-1][9];
 		mo.attackPermission = batteryParam[level-1][10];
 		mo.picId = batteryParam[level-1][11];
 		mo.frameNum = batteryParam[level-1][12];
 		mo.damage = batteryParam[level-1][13];
 		mo.bombInterval = batteryParam[level-1][14];
+		mo.timeInterval = batteryParam[level-1][15];
+		//batteryOtherInfo(mo, level);
 		mo.bombSTime = System.currentTimeMillis();
+		mo.startTime = System.currentTimeMillis();
+		
 		battery.addElement(mo);
 		System.out.println("battery.size:"+battery.size());
 	}
 	
+	private void batteryOtherInfo(MoveObject mo, int level) {
+		switch (mo.id){
+		case 300:
+			mo.mapx = batteryParam[level-1][7];
+			mo.mapy = gameH-mo.width/*batteryParam[level-1][8]*/;
+			break;
+		case 301:
+			break;
+		case 302:
+			break;
+		case 303:
+			break;
+		default:
+			break;
+				
+		}
+	}
+
 	/*ÅÚÌ¨ÆÕÍ¨¹¥»÷*/
 	public void createBatteryBombs(MoveObject object, MoveObject player){
 		MoveObject mo = new MoveObject();
@@ -226,6 +248,18 @@ public class MoveObjectFactory implements Common{
 				mo.speedX = spiritBombParam[index][5];
 				mo.speedY = -spiritBombParam[index][6];
 			}
+		}else if(object.id == 301){
+			mo.frame = 0;
+			mo.mapx = object.mapx+45;
+			mo.mapy = object.mapy;
+			mo.speedX = -spiritBombParam[index][5];
+			mo.speedY = -spiritBombParam[index][6];
+		}else if(object.id == 302){
+			mo.frame = 0;
+			mo.mapx = object.mapx+45;
+			mo.mapy = object.mapy;
+			mo.speedX = -spiritBombParam[index][5];
+			mo.speedY = -spiritBombParam[index][6];
 		}
 	}
 

@@ -18,7 +18,7 @@ public class StateGame implements Common{
 	public static long level_end_time;
 	public static boolean level_over;
 	
-	private int level = 1;
+	private int level = 7;
 	public boolean isNextLevel;
 	
 	public MoveObjectFactory factory;
@@ -41,6 +41,9 @@ public class StateGame implements Common{
 		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT) && player.status != ROLE_STATUS_PASS){
 			move(3);
 		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
+			if(player.status == ROLE_STATUS_ALIVE){
+				player.status = ROLE_STATUS_PROTECTED;
+			}
 		}
 		
 	}
@@ -145,13 +148,26 @@ public class StateGame implements Common{
 				}
 				//System.out.println("boss.blood:"+boss.blood);
 			}
+			for(int k=0;k<factory.battery.size();k++){
+				MoveObject battery = (MoveObject) factory.battery.elementAt(k);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, battery.mapx, battery.mapy, battery.width, battery.height)){
+					bomb.status = ROLE_STATUS_DEAD;
+					battery.blood -= bomb.damage;
+				}
+				if(battery.blood<=0){
+					battery.status = ROLE_STATUS_DEAD;
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
 		}
 		
 		/*¹ÖÎïÅö×²¼ì²â*/
 		for(int j=0;j<factory.spirits.size();j++){
 			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
 			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)){
-				player.blood -= mo.damage;
+				if(player.status != ROLE_STATUS_PROTECTED){
+					player.blood -= mo.damage;
+				}
 				mo.blood -= player.damage;
 			}
 			if(mo.blood <= 0){
@@ -167,7 +183,9 @@ public class StateGame implements Common{
 			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
 			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)){
 				mo.status = ROLE_STATUS_DEAD;
-				player.blood -= mo.damage;
+				if(player.status != ROLE_STATUS_PROTECTED){
+					player.blood -= mo.damage;
+				}
 			}
 			if(player.blood <= 0){
 				player.status = ROLE_STATUS_DEAD;
@@ -237,7 +255,7 @@ public class StateGame implements Common{
 		//System.out.println("bomb num:"+factory.bombs.size());
 		//System.out.println("spiritBombs num:"+factory.spiritBombs.size());
 		//System.out.println("boss num:"+factory.boss.size());
-		System.out.println("battery num:"+factory.battery.size());
+		//System.out.println("battery num:"+factory.battery.size());
 	}
 
 	public void show(SGraphics g){
@@ -251,18 +269,22 @@ public class StateGame implements Common{
 		drawInfo(g);
 	}
 	
+	private void drawGameBg(SGraphics g) {
+		drawGameBg_ice(g);
+	}
+
 	private int bgIndex, hillIndex, wayIndex;
-	public void drawGameBg(SGraphics g){
-		Image game_bg = Resource.loadImage(Resource.id_game_bg_1);
-		Image hill= Resource.loadImage(Resource.id_game_bg_1_hill);
-		Image way = Resource.loadImage(Resource.id_game_bg_1_way);
+	public void drawGameBg_ice(SGraphics g){
+		Image game_bg = Resource.loadImage(Resource.id_ice_game_bg);
+		Image hill= Resource.loadImage(Resource.id_ice_game_bg_hill);
+		Image way = Resource.loadImage(Resource.id_ice_game_bg_way);
 		
 		int bgW =  game_bg.getWidth(), bgH = game_bg.getHeight();
 		int hillW = hill.getWidth(), hillH = hill.getHeight();
 		int wayW = way.getWidth(), wayH = way.getHeight();
 		bgIndex = (bgIndex+1)%bgW;
 		hillIndex = (hillIndex+2)%hillW;
-		wayIndex = (wayIndex+2)%wayW;
+		wayIndex = (wayIndex+3)%wayW;
 		g.drawRegion(game_bg, bgIndex, 0, bgW-bgIndex, bgH, 0, 0, 0, 20);
 		g.drawRegion(game_bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex, 0, 20);
 		g.drawRegion(hill, hillIndex, 0, hillW-hillIndex, hillH, 0, 0, 283, 20);
@@ -275,19 +297,23 @@ public class StateGame implements Common{
 		Image infoBg = Resource.loadImage(Resource.id_game_info_bg);
 		Image infoHead = Resource.loadImage(Resource.id_game_info_head);
 		Image bloodBg = Resource.loadImage(Resource.id_game_blood_bg);
+		Image headShadow = Resource.loadImage(Resource.id_game_head_shadow);
+		Image bgUp = Resource.loadImage(Resource.id_game_bg_up);
 		
 		int infoBgW = infoBg.getWidth(), infoBgH = infoBg.getHeight();
 		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
 		int bloodBgW = bloodBg.getWidth(), bloodBgH = bloodBg.getHeight();
+		int bgUpW = bgUp.getWidth(), bgUpH = bgUp.getHeight();
+		int offX = 120, offY = bgUpH/2-infoBgH/2;
 		
-		int offX = ScrW/2 - infoBgW/2, offY = 0;
-		
+		g.drawImage(bgUp, 0, 0, 20);
 		g.drawImage(infoBg, offX, offY, 20);
+		g.drawImage(headShadow, offX+3, offY, 20);
 		g.drawImage(infoHead, offX, offY, 20);
 		StateMain.drawNum(g, level, offX+56, offY+15);
 		StateMain.drawNum(g, player.lifeNum, offX+80, offY+15);
-		offX += infoBgW - bloodBgW - 5;
-		offY = infoBgH/2 - bloodBgH/2;
+		offX += infoBgW - bloodBgW - 25;
+		offY += infoBgH/2 - bloodBgH/2;
 		g.drawImage(bloodBg, offX, offY, 20);
 		g.setColor(0xffff00);
 		DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);

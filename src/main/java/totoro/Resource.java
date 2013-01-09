@@ -29,12 +29,15 @@ public class Resource implements Common {
 	public static short id_own_totoro1 = NUMS++;
 	public static short id_own_totoro1_bomb = NUMS++;
 	
-	public static short id_game_bg_1 = NUMS++;
-	public static short id_game_bg_1_hill = NUMS++;
-	public static short id_game_bg_1_way = NUMS++;
+	public static short id_ice_game_bg = NUMS++;
+	public static short id_ice_game_bg_hill = NUMS++;
+	public static short id_ice_game_bg_way = NUMS++;
+	
 	public static short id_game_info_bg = NUMS++;
 	public static short id_game_info_head = NUMS++;
 	public static short id_game_blood_bg = NUMS++;
+	public static short id_game_bg_up = NUMS++;
+	public static short id_game_head_shadow = NUMS++;
 	
 	public static short id_sky_spirits_1 = NUMS++;
 	public static short id_sky_spirits_2 = NUMS++;
@@ -42,10 +45,34 @@ public class Resource implements Common {
 	public static short id_sky_battery = NUMS++;
 	public static short id_sky_boss_1 = NUMS++;
 	public static short id_sky_boss_2 = NUMS++;
-	
 	public static short id_sky_spirit_bomb_1 = NUMS++;
 	public static short id_sky_boss_bomb_1 = NUMS++;
 	public static short id_sky_boss_bomb_2 = NUMS++;
+	
+	public static short id_burrow_spirit_1 = NUMS++;
+	public static short id_burrow_spirit_2 = NUMS++;
+	public static short id_burrow_spirit_3 = NUMS++;
+	public static short id_burrow_spirit_4 = NUMS++;
+	public static short id_burrow_boss_1 = NUMS++;
+	public static short id_burrow_boss_2 = NUMS++;
+	public static short id_burrow_spirit_bomb_2 = NUMS++;
+	
+	public static short id_ice_battery = NUMS++;
+	public static short id_ice_spirit_1 = NUMS++;
+	public static short id_ice_spirit_2 = NUMS++;
+	public static short id_ice_boss_1 = NUMS++;
+	public static short id_ice_boss_2 = NUMS++;
+	public static short id_ice_spirit_bomb_1 = NUMS++;
+	public static short id_ice_spirit_bomb_2 = NUMS++;
+	public static short id_ice_battery_bomb = NUMS++;
+	
+	public static short id_lava_boss_1 = NUMS++;
+	public static short id_lava_boss_2 = NUMS++;
+	public static short id_lava_spirit_1 = NUMS++;
+	public static short id_lava_spirit_2 = NUMS++;
+	public static short id_lava_spirit_bomb = NUMS++;
+	public static short id_lava_battery_bomb = NUMS++;
+	public static short id_lava_battery = NUMS++;
 	
 	public static String[] imagesrcs = {
 		"/init/bg.jpg",
@@ -64,12 +91,15 @@ public class Resource implements Common {
 		"/own/own_totoro1.png",
 		"/own/own_totoro1_bomb.png",
 		
-		"/game/sky/sky_bg.jpg",
-		"/game/sky/sky_bg_hill.png",
-		"/game/sky/sky_bg_way.png",
+		"/game/ice/ice_bg.jpg",
+		"/game/ice/ice_bg_hill.png",
+		"/game/ice/ice_bg_way.png",
+		
 		"/game/info_bg.png",
 		"/game/info_head.png",
 		"/game/blood_bg.png",
+		"/game/bg_up.jpg",
+		"/game/head_shadow.png",
 		
 		"/spirit/sky/spirit_1.png",
 		"/spirit/sky/spirit_2.png",
@@ -77,10 +107,34 @@ public class Resource implements Common {
 		"/spirit/sky/battery.png",
 		"/spirit/sky/boss_1.png",
 		"/spirit/sky/boss_2.png",
-
 		"/spirit/sky/spirit_bomb_1.png",
 		"/spirit/sky/boss_bomb_1.png",
 		"/spirit/sky/boss_bomb_2.png",
+		
+		"/spirit/burrow/spirit_1.png",
+		"/spirit/burrow/spirit_2.png",
+		"/spirit/burrow/spirit_3.png",
+		"/spirit/burrow/spirit_4.png",
+		"/spirit/burrow/boss_1.png",
+		"/spirit/burrow/boss_2.png",
+		"/spirit/burrow/spirit_bomb_2.png",
+		
+		"/spirit/ice/battery.png",
+		"/spirit/ice/spirit_1.png",
+		"/spirit/ice/spirit_2.png",
+		"/spirit/ice/boss_1.png",
+		"/spirit/ice/boss_2.png",
+		"/spirit/ice/spirit_bomb_1.png",
+		"/spirit/ice/spirit_bomb_2.png",
+		"/spirit/ice/battery_bomb.png",
+		
+		"/spirit/lava/boss_1.png",
+		"/spirit/lava/boss_2.png",
+		"/spirit/lava/spirit_1.png",
+		"/spirit/lava/spirit_2.png",
+		"/spirit/lava/spirit_head_bomb.png",
+		"/spirit/lava/battery_bomb.png",
+		"/spirit/lava/battery.png",
 	};
 	  
 	private static final Image[] images = new Image[NUMS];
@@ -124,12 +178,15 @@ public class Resource implements Common {
 		images[id_own_totoro1] = null;
 		images[id_own_totoro1_bomb] = null;
 		
-		images[id_game_bg_1] = null;
-		images[id_game_bg_1_hill] = null;
-		images[id_game_bg_1_way] = null;
+		images[id_ice_game_bg] = null;
+		images[id_ice_game_bg_hill] = null;
+		images[id_ice_game_bg_way] = null;
+		
 		images[id_game_info_bg] = null;
 		images[id_game_info_head] = null;
 		images[id_game_blood_bg] = null;
+		images[id_game_bg_up] = null;
+		images[id_game_head_shadow] = null;
 		
 		
 		images[id_sky_spirits_1] = null;

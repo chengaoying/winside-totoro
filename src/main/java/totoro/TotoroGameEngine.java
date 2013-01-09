@@ -5,6 +5,7 @@ import javax.microedition.midlet.MIDlet;
 
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 
 /**
@@ -93,8 +94,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	private void handleInit(KeyState key) {
-		if(key.containsAnyKey()){
-			key.clear();
+		if(key.containsAndRemove(KeyCode.OK)){
 			state = STATUS_MAIN_MENU;
 			Resource.clearInit();
 		}
@@ -107,7 +107,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		g.drawImage(bg, 0, 0, 20);
 		if(cursorFrame>4){
 			int x = screenWidth/2 - text.getWidth()/2;
-			g.drawImage(text, x, 450, 20);
+			g.drawImage(text, x, 495, 20);
 		}
 	}
 
