@@ -1,4 +1,5 @@
 package totoro;
+import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.game.Recharge;
@@ -48,13 +49,17 @@ public class StateGame implements Common{
 	public static boolean hasTotoro4;
 	
 	public void handleKey(KeyState keyState){
-		if(keyState.containsMoveEventAndRemove(KeyCode.UP) && player.status != ROLE_STATUS_PASS){
+		if(keyState.containsMoveEventAndRemove(KeyCode.UP) 
+				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(0);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN) && player.status != ROLE_STATUS_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.DOWN)
+				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(1);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT) && player.status != ROLE_STATUS_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.RIGHT)
+				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(2);
-		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT) && player.status != ROLE_STATUS_PASS){
+		}else if(keyState.containsMoveEventAndRemove(KeyCode.LEFT)
+				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(3);
 		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
 			if(player.status == ROLE_STATUS_ALIVE){
@@ -64,6 +69,11 @@ public class StateGame implements Common{
 			game_status = GAME_PAUSE;
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){
 			game_status = GAME_FAIL;
+		}else if(keyState.containsAndRemove(KeyCode.NUM3)){
+			for(int i=0;i<factory.boss.size();i++){
+				MoveObject mo = (MoveObject) factory.boss.elementAt(i);
+				mo.status = ROLE_STATUS_DEAD;
+			}
 		}
 		
 	}
@@ -126,7 +136,7 @@ public class StateGame implements Common{
 			game_status = GAME_PLAY;
 			break;
 		case GAME_SUCCESS: 	//通关
-			
+			drawPassInterface();
 			break;	
 		case GAME_FAIL:		//失败
 			System.out.println(2);
@@ -156,6 +166,10 @@ public class StateGame implements Common{
 		} 
 	}
 
+	private void drawPassInterface() {
+		
+	}
+
 	private void judgeNextLevel() {
 		
 		if(level_over && factory.boss.size()<1){
@@ -165,6 +179,7 @@ public class StateGame implements Common{
 			if(level >= 8){
 				//通关
 				game_status = GAME_SUCCESS;
+				factory.removeEnemy();
 			}
 		}
 		
@@ -174,6 +189,7 @@ public class StateGame implements Common{
 				changeDatePass();
 			}
 		}
+		
 	}
 
 	private void createSpiritsBombs() {
@@ -380,6 +396,9 @@ public class StateGame implements Common{
 		objectShow.showBattery(g, factory.battery, player);
 		objectShow.showBoss(g, factory.boss);
 		drawInfo(g);
+		if(isNextLevel){
+			drawNextPrompt(g);
+		}
 	}
 	
 	private void drawGameBg(SGraphics g) {
@@ -394,6 +413,22 @@ public class StateGame implements Common{
 		}
 	}
 
+	private void drawNextPrompt(SGraphics g){
+		String str = "恭喜你通过本关卡,下一关为第"+(level+1)+"关"; 
+		Font font = g.getFont();
+		int textW = font.stringWidth(str);
+		int w = textW+30;
+		int h = 30;
+		int x = ScrW/2-w/2;
+		int y = ScrH/2-h/2;
+		g.setColor(0x000000);
+		DrawUtil.drawRect(g, x, y, w, h);
+		x += w/2 - textW/2;
+		y += 4;
+		g.setColor(0xffffff);
+		g.drawString(str, x, y, 20);
+	}
+	
 	private int centerIndex, center2Index, donwIndex, lavaIndex, upIndex;
 	private void drawGameBg_lava(SGraphics g) {
 		Image center = Resource.loadImage(Resource.id_lava_game_center);
