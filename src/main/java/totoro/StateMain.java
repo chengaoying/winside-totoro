@@ -73,9 +73,9 @@ public class StateMain implements Common{
 		Image coin = Resource.loadImage(Resource.id_main_coin);
 		
 		g.drawImage(bg, 0, 0, 20);
-		int buttonW = button.getWidth(), buttonH = button.getHeight()/3;
+		int buttonW = button.getWidth(), buttonH = button.getHeight()/2;
 		int button2W = button2.getWidth(), button2H = button2.getHeight()/2;
-		int textW = text.getWidth(), textH = text.getHeight()/5;
+		int textW = text.getWidth(), textH = text.getHeight()/4;
 		for(int i=0;i<4;i++){
 			if (mainIndex == i){
 				g.drawRegion(button, 0, 0, buttonW, buttonH, 0, menuAxis[i][0], menuAxis[i][1], 20);
@@ -120,8 +120,14 @@ public class StateMain implements Common{
 		if (mainIndex == 0) { 			//新游戏
 			stateGame.factory = MoveObjectFactory.getInstance();
 			stateGame.objectShow = MoveObjectShow.getInstance();
-			stateGame.player = stateGame.factory.createNewPlayer();
+			StateGame.player = stateGame.factory.createNewPlayer();
+			StateGame.grade = StateGame.player.grade;
+			StateGame.bombGrade = StateGame.player.bombGrade;
+			StateGame.lifeNum = StateGame.player.lifeNum;
+			StateGame.blood = StateGame.player.blood;
+			//StateGame.scores = stateGame.player.scores;
 			engine.state = STATUS_GAME_PLAYING;
+			StateGame.game_status = GAME_PLAY;
 			StateGame.level_start_time = System.currentTimeMillis()/1000;
 			Resource.clearMain();
 		} else if(mainIndex == 1){		//继续游戏

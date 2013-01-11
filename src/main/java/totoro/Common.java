@@ -8,12 +8,17 @@ public interface Common {
 	public final static int STATUS_INIT = 0;			//初始
 	public final static int STATUS_MAIN_MENU = 1;		//游戏主菜单 
 	public final static int STATUS_GAME_PLAYING = 2;	//游戏中
+	
+	public final static int GAME_PLAY = 2;
+	public final static int GAME_FAIL = 3;
+	public final static int GAME_SUCCESS = 4;
+	public final static int GAME_PAUSE = 5;
 
 	public final static int ScrW = TotoroGameEngine.ScrW;
 	public final static int ScrH = TotoroGameEngine.ScrH;
-	public final static int gameH = 490/*444*/;
-	public final static int startP = 0/*46*/;
-	public final static int endP = 490;
+	public final static int gameH = 457;
+	public final static int startP = 73;
+	public final static int endP = 530;
 
 	public final static int spirit_id = 100;
 	public final static int boss_id = 200;
@@ -106,14 +111,14 @@ public interface Common {
 	/*关卡等级信息*/
 	public static final int levelInfo[][] = {
 		/*0-关卡, 1-关卡时间(秒), 2-出怪时间间隔, 3-battery interval*/
-		{1, 10, 3000, 10000},
-		{2, 10, 3000, 10000},
-		{3, 10, 3000, 10000},
-		{4, 10, 3000, 10000},
-		{5, 10, 3000, 10000},
-		{6, 10, 3000, 10000},
-		{7, 10, 3000, 10000},
-		{8, 10, 3000, 10000},
+		{1, 120, 5000, 10000},
+		{2, 120, 4000, 10000},
+		{3, 120, 3000, 10000},
+		{4, 120, 3000, 10000},
+		{5, 120, 3000, 10000},
+		{6, 120, 3000, 10000},
+		{7, 120, 3000, 60000},
+		{8, 120, 2000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -153,14 +158,14 @@ public interface Common {
 			/*0-id, 1-width, 2-height, 3-blood, 4-scores, 5-speedX, 6-speedY, 7-coorX, 8-coorY
 			 * 9-position, 10-attackpermission, 11-picId, 12-frameNum, 13-damage, 14-bombInterval, 15-picInterval*/
 			
-			{300, 70, 69, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500},
-			{300, 70, 69, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500},
-			{301, 131, 146, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
-			{301, 131, 146, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
-			{301, 131, 146, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
-			{301, 131, 146, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
-			{302, 92, 97, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500},
-			{302, 92, 97, 50, 30, 3, 0, ScrW, 423, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500},
+			{300, 70, 69, 50, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500},
+			{300, 70, 69, 50, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500},
+			{301, 131, 146, 50, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
+			{301, 131, 146, 50, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
+			{301, 131, 146, 50, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
+			{301, 131, 146, 50, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500},
+			{302, 92, 97, 50, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500},
+			{302, 92, 97, 50, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500},
 	};
 	
 	/*精灵普通攻击属性*/
@@ -190,20 +195,20 @@ public interface Common {
 	/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标, 9-初始位置, 
 	 * 10-是否会攻击, 11-图片id, 12-是否会掉落奖品, 13-帧数间隔, 14-图片总帧数 , 15-精灵伤害
 	 * 16-发射子弹间隔*/
-		{100, 47, 62, 1, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_1, SPIRITI_PRIZE_NO, 500, 5, 10, 5},
-		{101, 84, 76, 1, 100, 8, 8, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_2, SPIRITI_PRIZE_NO, 500, 3, 10, 0},
-		{102, 80, 62, 100, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{100, 47, 62, 1, 15, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_1, SPIRITI_PRIZE_NO, 500, 5, 10, 5},
+		{101, 84, 76, 1, 10, 8, 8, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_2, SPIRITI_PRIZE_NO, 500, 3, 10, 0},
+		{102, 80, 62, 100, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
 		
-		{103, 50, 69, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
-		{104, 63, 89, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
-		{105, 93, 114, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 3},
-		{106, 79, 104, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_7, SPIRITI_PRIZE_NO, 500, 2, 10, 3},
+		{103, 50, 69, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{104, 63, 89, 20, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{105, 93, 114, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 3},
+		{106, 79, 104, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_7, SPIRITI_PRIZE_NO, 500, 2, 10, 3},
 		
-		{107, 60, 75, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
-		{108, 75, 66, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{107, 60, 75, 20, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{108, 75, 66, 20, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
 		
-		{109, 105, 79, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_NO, 500, 5, 10, 3},
-		{110, 45, 97, 20, 100, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_NO, 500, 4, 10, 3},
+		{109, 105, 79, 20, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_NO, 500, 5, 10, 3},
+		{110, 45, 97, 20, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_NO, 500, 4, 10, 3},
 	};
 	
 	/*精灵批数信息*/

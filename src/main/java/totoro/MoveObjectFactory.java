@@ -171,7 +171,7 @@ public class MoveObjectFactory implements Common{
 		mo.speedX = batteryParam[level-1][5];
 		mo.speedY = batteryParam[level-1][6];
 		mo.mapx = batteryParam[level-1][7];
-		mo.mapy = gameH-mo.width;
+		mo.mapy = batteryParam[level-1][8];
 		mo.position = batteryParam[level-1][9];
 		mo.attackPermission = batteryParam[level-1][10];
 		mo.picId = batteryParam[level-1][11];
@@ -339,11 +339,44 @@ public class MoveObjectFactory implements Common{
 		return object;
 	}
 	
+	/**
+	 * Íæ¼Ò¸´»î
+	 * @return
+	 */
+	public MoveObject revivePlayer(){
+		MoveObject object = new MoveObject();
+		object.status = ROLE_STATUS_ALIVE;
+		object.id = playerParam[0][0];
+		object.mapx = playerParam[0][1];
+		object.mapy = playerParam[0][2];
+		object.width = playerParam[0][3];
+		object.height = playerParam[0][4];
+		object.lifeNum = StateGame.lifeNum;
+		object.blood = playerParam[0][6];
+		object.damage = playerParam[0][7];
+		object.grade = StateGame.grade;
+		object.speedX = playerParam[0][9];
+		object.speedY = playerParam[0][10];
+		object.bombGrade = StateGame.bombGrade;
+		object.picId = playerParam[0][12];
+		System.out.println("totoro revive");
+		return object;
+	}
+	
+	public void removeEnemy(){
+		spirits.removeAllElements();
+		spiritBombs.removeAllElements();
+		boss.removeAllElements();
+		battery.removeAllElements();
+	}
+	
 	public void removeAllObject(){
 		spirits.removeAllElements();
 		spiritBombs.removeAllElements();
 		boss.removeAllElements();
 		battery.removeAllElements();
+		bombs.removeAllElements();
+		StateGame.player = null;
 	}
 }
 

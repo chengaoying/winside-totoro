@@ -29,9 +29,22 @@ public class Resource implements Common {
 	public static short id_own_totoro1 = NUMS++;
 	public static short id_own_totoro1_bomb = NUMS++;
 	
+	public static short id_sky_game_bg = NUMS++;
+	public static short id_sky_game_hill = NUMS++;
+	public static short id_sky_game_way = NUMS++;
+	public static short id_burrow_game_center = NUMS++;
+	public static short id_burrow_game_down = NUMS++;
+	public static short id_burrow_game_up = NUMS++;
+	public static short id_burrow_game_net = NUMS++;
+	public static short id_burrow_game_bubble = NUMS++;
 	public static short id_ice_game_bg = NUMS++;
 	public static short id_ice_game_bg_hill = NUMS++;
 	public static short id_ice_game_bg_way = NUMS++;
+	public static short id_lava_game_center_2 = NUMS++;
+	public static short id_lava_game_center = NUMS++;
+	public static short id_lava_game_down = NUMS++;
+	public static short id_lava_game_lava = NUMS++;
+	public static short id_lava_game_up = NUMS++;
 	
 	public static short id_game_info_bg = NUMS++;
 	public static short id_game_info_head = NUMS++;
@@ -74,6 +87,14 @@ public class Resource implements Common {
 	public static short id_lava_battery_bomb = NUMS++;
 	public static short id_lava_battery = NUMS++;
 	
+	public static short id_pause_bg = NUMS++;
+	public static short id_pause_text = NUMS++;
+	
+	public static short id_fail_bg = NUMS++;
+	public static short id_fail_num = NUMS++;
+	public static short id_fail_text = NUMS++;
+	public static short id_fail = NUMS++;
+	
 	public static String[] imagesrcs = {
 		"/init/bg.jpg",
 		"/init/text.png",
@@ -91,9 +112,22 @@ public class Resource implements Common {
 		"/own/own_totoro1.png",
 		"/own/own_totoro1_bomb.png",
 		
+		"/game/sky/sky_bg.jpg",
+		"/game/sky/sky_hill.png",
+		"/game/sky/sky_way.png",
+		"/game/burrow/center.png",
+		"/game/burrow/down.png",
+		"/game/burrow/up.png",
+		"/game/burrow/net.png",
+		"/game/burrow/bubble.png",
 		"/game/ice/ice_bg.jpg",
 		"/game/ice/ice_bg_hill.png",
 		"/game/ice/ice_bg_way.png",
+		"/game/lava/center_2.png",
+		"/game/lava/center.png",
+		"/game/lava/down.png",
+		"/game/lava/lava.png",
+		"/game/lava/up.png",
 		
 		"/game/info_bg.png",
 		"/game/info_head.png",
@@ -135,6 +169,14 @@ public class Resource implements Common {
 		"/spirit/lava/spirit_head_bomb.png",
 		"/spirit/lava/battery_bomb.png",
 		"/spirit/lava/battery.png",
+		
+		"/pause/pause_bg.png",
+		"/pause/pause_text.png",
+		
+		"/fail/fail_bg.png",
+		"/fail/fail_num.png",
+		"/fail/fail_text.png",
+		"/fail/fail.png",
 	};
 	  
 	private static final Image[] images = new Image[NUMS];
@@ -178,9 +220,22 @@ public class Resource implements Common {
 		images[id_own_totoro1] = null;
 		images[id_own_totoro1_bomb] = null;
 		
+		images[id_sky_game_bg] = null;
+		images[id_sky_game_hill] = null;
+		images[id_sky_game_way] = null;
+		images[id_burrow_game_center] = null;
+		images[id_burrow_game_down] = null;
+		images[id_burrow_game_up] = null;
+		images[id_burrow_game_net] = null;
+		images[id_burrow_game_bubble] = null;
 		images[id_ice_game_bg] = null;
 		images[id_ice_game_bg_hill] = null;
 		images[id_ice_game_bg_way] = null;
+		images[id_lava_game_center_2] = null;
+		images[id_lava_game_center] = null;
+		images[id_lava_game_down] = null;
+		images[id_lava_game_lava] = null;
+		images[id_lava_game_up] = null;
 		
 		images[id_game_info_bg] = null;
 		images[id_game_info_head] = null;
@@ -198,5 +253,18 @@ public class Resource implements Common {
 		images[id_sky_boss_bomb_1] = null;
 	}
 	
+	public static void clearSubMenuPic(){
+		images[id_pause_bg] = null;
+		images[id_pause_text] = null;
+		images[id_main_button] = null;
+	}
+	
+	public static void clearGameFail(){
+		images[id_fail_bg] = null;
+		images[id_fail_num] = null;
+		images[id_fail_text] = null;
+		images[id_fail] = null;
+		images[id_main_button2] = null;
+	}
 	
 }

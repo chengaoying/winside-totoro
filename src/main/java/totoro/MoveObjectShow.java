@@ -23,10 +23,12 @@ public class MoveObjectShow implements Common{
 	}
 	
 	public void showPlayer(SGraphics g, MoveObject player){
-		Image playerImg = Resource.loadImage(player.picId);
-		int playerW = playerImg.getWidth()/3, playerH = playerImg.getHeight();
-		g.drawRegion(playerImg, player.frame*playerW, 0, playerW, playerH, 0, player.mapx, player.mapy, 20);
-		player.frame = (player.frame+1)%3;
+		if(player.status != ROLE_STATUS_DEAD){
+			Image playerImg = Resource.loadImage(player.picId);
+			int playerW = playerImg.getWidth()/3, playerH = playerImg.getHeight();
+			g.drawRegion(playerImg, player.frame*playerW, 0, playerW, playerH, 0, player.mapx, player.mapy, 20);
+			player.frame = (player.frame+1)%3;
+		}
 	}
 	
 	public void showBombs(SGraphics g, Vector bombs){
@@ -43,7 +45,7 @@ public class MoveObjectShow implements Common{
 	}
 	
 	public void showSpirits(SGraphics g, Vector spirits){
-		g.setClip(0, 0, ScrW, gameH);
+		g.setClip(0, 73, ScrW, gameH);
 		for(int i=spirits.size()-1;i>=0;i--){
 			MoveObject mo = (MoveObject) spirits.elementAt(i);
 			Image spiritImg = Resource.loadImage(mo.picId);
@@ -142,6 +144,7 @@ public class MoveObjectShow implements Common{
 				}else {
 					g.drawRegion(moPic, mo.width+mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
 				}
+				mo.mapx -= mo.speedX;
 			}else if(mo.id == 301){
 				if(mo.status2 == ROLE_STATUS2_ATTACK){
 					mo.frame = 2/*(mo.frame+1)%2 + 2*/;
@@ -153,10 +156,11 @@ public class MoveObjectShow implements Common{
 					}
 					g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
 				}
+				mo.mapx -= mo.speedX;
 			}else if(mo.id == 302){
 				g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				mo.mapx -= 1;
 			}
-			mo.mapx -= mo.speedX;
 			
 			if(mo.mapx+mo.width <= 0){
 				mo.status = ROLE_STATUS_DEAD;
@@ -192,7 +196,7 @@ public class MoveObjectShow implements Common{
 					}
 				}else if(boss.direction == OBJECT_DIRECTION_UP){
 					boss.mapy -= boss.speedY;
-					if(boss.mapy <= 0){
+					if(boss.mapy <= startP){
 						boss.direction = OBJECT_DIRECTION_DOWN;
 					}
 				}else if(boss.direction == OBJECT_DIRECTION_DOWN){
