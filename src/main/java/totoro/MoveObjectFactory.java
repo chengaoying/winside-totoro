@@ -301,21 +301,134 @@ public class MoveObjectFactory implements Common{
 	
 	/*创建玩家普通攻击*/
 	public void createBomb(MoveObject player){
-		MoveObject object = new MoveObject();
-		object.status = ROLE_STATUS_ALIVE;
-		object.id = bombParam[player.grade-1][player.bombGrade-1][0];
-		object.width = bombParam[player.grade-1][player.bombGrade-1][1];
-		object.height = bombParam[player.grade-1][player.bombGrade-1][2];
-		object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
-		object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
-		object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
-		object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
-		object.grade = player.grade;
-		object.mapx = player.mapx+player.width;
-		object.mapy = player.mapy+player.height/2-object.height/2;
-		bombs.addElement(object);
+		int count = player.bombGrade;
+		for(int i=0;i<count;i++){
+			MoveObject object = new MoveObject();
+			object.status = ROLE_STATUS_ALIVE;
+			object.id = bombParam[player.grade-1][player.bombGrade-1][0];
+			object.width = bombParam[player.grade-1][player.bombGrade-1][1];
+			object.height = bombParam[player.grade-1][player.bombGrade-1][2];
+			object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+			//object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			//object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
+			object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+			object.grade = player.bombGrade;
+			//object.mapx = player.mapx+player.width;
+			//object.mapy = player.mapy+player.height/2-object.height/2;
+			setBombINfo(player, object, i);
+			bombs.addElement(object);
+		}
 	}
-	 
+
+	private void setBombINfo(MoveObject player, MoveObject object, int i) {
+		switch(player.grade){
+		case 1:
+			setInfo0(player, object, i);
+			break;
+		case 2:
+			setInfo1(player, object, i);
+			break;
+		case 3:
+			setInfo2(player, object, i);
+			break;
+		case 4:
+			setInfo3(player, object, i);
+			break;
+		}
+	}
+	
+	
+
+	private void setInfo3(MoveObject player, MoveObject object, int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void setInfo2(MoveObject player, MoveObject object, int i) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void setInfo1(MoveObject player, MoveObject object, int i) {
+		switch(player.bombGrade){
+		case 1:
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			break;
+		case 2:
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+		}
+	}
+
+	private void setInfo0(MoveObject player, MoveObject object, int i) {
+		switch(player.bombGrade){
+		case 1:
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			break;
+		case 2:
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+i*(object.height+5)+10;
+			object.frameIndex = 0;
+			break;
+		case 3:
+			object.mapx = player.mapx+player.width;
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			if(i==0){
+				object.speedY = -bombParam[player.grade-1][player.bombGrade-1][5];
+				object.mapy = player.mapy;
+				object.frameIndex = 2;
+			}else if(i==1){
+				object.speedY = 0;
+				object.mapy = player.mapy+player.height/2-object.height/2;
+				object.frameIndex = 0;
+			}else{
+				object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
+				object.mapy = player.mapy+player.height-object.height-5;
+				object.frameIndex = 1;
+			}
+			break;
+		case 4:
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.mapx = player.mapx+player.width;
+			if(i==0){
+				object.speedY = 0;
+				object.mapy = player.mapy+10;
+				object.frameIndex = 0;
+			}else if(i==1){
+				object.speedY = 0;
+				object.mapy = player.mapy+(object.height+5)+10;
+				object.frameIndex = 0;
+			}else if(i==2){
+				object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
+				object.mapy = player.mapy+player.height-object.height-5;
+				object.frameIndex = 4;
+			}else{
+				object.speedY = -bombParam[player.grade-1][player.bombGrade-1][5];
+				object.mapy = player.mapy-5;
+				object.frameIndex = 3;
+			}
+			break;
+		}
+	}
+
 	/**
 	 * 创建新游戏玩家
 	 * @return

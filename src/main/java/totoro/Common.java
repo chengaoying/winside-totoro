@@ -59,10 +59,14 @@ public interface Common {
 	public static final int ROLE_STATUS2_SKILL_ATTACK = 3;	//技能攻击状态
 	
 	/*玩家图片id*/
-	public static final int player1PicId = Resource.id_own_totoro1;
+	public static final int pinkTotoroPicId = Resource.id_pink_totoro;
+	public static final int yellowTotoroPicId = Resource.id_yellow_totoro;
 	
 	/*子弹图片id*/
-	public static final int bomb1PicId = Resource.id_own_totoro1_bomb;
+	public static final int pinkBombPicId = Resource.id_pink_totoro_bomb;
+	public static final int yellowBomb1PicId = Resource.id_yellow_totoro_bomb1;
+	public static final int yellowBomb2PicId = Resource.id_yellow_totoro_bomb2;
+	public static final int yellowBomb3PicId = Resource.id_yellow_totoro_bomb3;
 
 	/*精灵子弹图片*/
 	public static final int spiritBomb1PicId = Resource.id_sky_spirit_bomb_1;
@@ -125,16 +129,27 @@ public interface Common {
 	public int playerParam[][] = {
 			/*0-id, 1-x坐标, 2-y坐标, 3-宽度, 4-高度, 5-生命数, 6-血量, 7-伤害, 8-等级, 9-x速度, 10-y速度
 			 * ,11-玩家子弹等级, 12-玩家图片id*/
-			{0, 20, 250, 37, 76, 3, 150, 50, 1, 10, 10, 1, player1PicId},
+			{0, 20, 250, 37, 76, 3, 150, 50, 1, 10, 10, 1, pinkTotoroPicId},
 	};
 	
-	/*玩家普通攻击属性*/
+	/*玩家普通攻击属性, 	数组中的数值为0表示不使用该值*/
 	public int bombParam[][][] = {
 			/*玩家等级*/
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
-				{10, 27, 21, 10, 20, 20, bomb1PicId},
+				{10, 27, 21, 10, 20, 6, pinkBombPicId},
+				{11, 27, 21, 20, 20, 6, pinkBombPicId},
+				{12, 27, 21, 30, 20, 6, pinkBombPicId},
+				{13, 27, 21, 40, 20, 6, pinkBombPicId},
+			},
+			{
+				/*子弹等级*/
+				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
+				{14, 32, 18, 20, 30, 6, yellowBomb1PicId},
+				{15, 46, 25, 30, 30, 6, yellowBomb2PicId},
+				{16, 100, 50, 50, 30, 6, yellowBomb3PicId},
+				{17, 0, 0, 40, 30, 6, 0},
 			},
 	};
 	

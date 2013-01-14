@@ -26,8 +26,12 @@ public class Resource implements Common {
 	public static short id_main_totoro = NUMS++;
 	public static short id_main_upgrade = NUMS++;
 	
-	public static short id_own_totoro1 = NUMS++;
-	public static short id_own_totoro1_bomb = NUMS++;
+	public static short id_pink_totoro = NUMS++;
+	public static short id_pink_totoro_bomb = NUMS++;
+	public static short id_yellow_totoro = NUMS++;
+	public static short id_yellow_totoro_bomb1 = NUMS++;
+	public static short id_yellow_totoro_bomb2 = NUMS++;
+	public static short id_yellow_totoro_bomb3 = NUMS++;
 	
 	public static short id_sky_game_bg = NUMS++;
 	public static short id_sky_game_hill = NUMS++;
@@ -109,8 +113,12 @@ public class Resource implements Common {
 		"/main/main_totoro.png",
 		"/main/main_upgrade.png",
 		
-		"/own/own_totoro1.png",
-		"/own/own_totoro1_bomb.png",
+		"/own/pink/totoro.png",
+		"/own/pink/bomb.png",
+		"/own/yellow/totoro.png",
+		"/own/yellow/bomb1.png",
+		"/own/yellow/bomb2.png",
+		"/own/yellow/bomb3.png",
 		
 		"/game/sky/sky_bg.jpg",
 		"/game/sky/sky_hill.png",
@@ -217,8 +225,12 @@ public class Resource implements Common {
 	
 	/*释放游戏中的图片*/
 	public static void clearGame(){
-		images[id_own_totoro1] = null;
-		images[id_own_totoro1_bomb] = null;
+		images[id_pink_totoro] = null;
+		images[id_pink_totoro_bomb] = null;
+		images[id_yellow_totoro] = null;
+		images[id_yellow_totoro_bomb1] = null;
+		images[id_yellow_totoro_bomb2] = null;
+		images[id_yellow_totoro_bomb3] = null;
 		
 		images[id_sky_game_bg] = null;
 		images[id_sky_game_hill] = null;

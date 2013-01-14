@@ -33,6 +33,7 @@ public class MoveObject {
 	long endTime;			//
 	int timeInterval;		//精灵帧数跳转间隔
 	int frameNum;			//图片总帧数
+	int frameIndex;			//当前所在的帧
 	int directionValue;		//方向值
 	long bombSTime;			//发射子弹的时间控制
 	long bombETime;

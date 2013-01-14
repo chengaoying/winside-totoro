@@ -36,8 +36,9 @@ public class MoveObjectShow implements Common{
 			MoveObject object = (MoveObject) bombs.elementAt(i);
 			Image bomb = Resource.loadImage(object.picId);
 			int bombW = bomb.getWidth()/5, bombH = bomb.getHeight();
-			g.drawRegion(bomb, 0, 0, bombW, bombH, 0, object.mapx, object.mapy, 20);
+			g.drawRegion(bomb, object.frameIndex*bombW, 0, bombW, bombH, 0, object.mapx, object.mapy, 20);
 			object.mapx += object.speedX;
+			object.mapy += object.speedY;
 			if(object.mapx > ScrW){
 				object.status = ROLE_STATUS_DEAD;
 			}

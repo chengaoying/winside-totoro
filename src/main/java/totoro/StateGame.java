@@ -74,6 +74,17 @@ public class StateGame implements Common{
 				MoveObject mo = (MoveObject) factory.boss.elementAt(i);
 				mo.status = ROLE_STATUS_DEAD;
 			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM4)){
+			player.bombGrade = (player.bombGrade+1)%5;
+			if(player.bombGrade==0)
+			{
+				player.bombGrade = 1;
+			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM5)){
+			player.grade ++;
+			if(player.grade > 5){
+				player.grade = 1;
+			}
 		}
 		
 	}
