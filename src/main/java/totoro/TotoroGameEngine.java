@@ -29,6 +29,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 
 	public StateMain stateMain;
 	public StateGame stateGame;
+	public StateSelectInterface stateSelect;
 
 	private TotoroGameEngine(MIDlet midlet) {
 		super(midlet);
@@ -37,6 +38,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
 		stateMain = new StateMain(this);
+		stateSelect = new StateSelectInterface(this);
 	}
 
 	public int state;
@@ -53,6 +55,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		case STATUS_MAIN_MENU:
 			stateMain.show(g);
 			break;
+		case STATUS_SELECT_TOTORO:
+			stateSelect.show(g);
+			break;
 		case STATUS_GAME_PLAYING:
 			stateGame.show(g);
 			break;
@@ -67,6 +72,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		case STATUS_MAIN_MENU:
 			stateMain.execute();
 			break;
+		case STATUS_SELECT_TOTORO:
+			stateSelect.execute();
+			break;
 		case STATUS_GAME_PLAYING:
 			stateGame.execute();
 			break;
@@ -79,6 +87,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 			break;
 		case STATUS_MAIN_MENU: 
 			stateMain.handleKey(keyState);
+			break;
+		case STATUS_SELECT_TOTORO:
+			stateSelect.handle(keyState);
 			break;
 		case STATUS_GAME_PLAYING:
 			stateGame.handleKey(keyState);

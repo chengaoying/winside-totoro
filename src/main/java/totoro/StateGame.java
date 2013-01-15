@@ -62,29 +62,36 @@ public class StateGame implements Common{
 				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(3);
 		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
-			if(player.status == ROLE_STATUS_ALIVE){
-				player.status = ROLE_STATUS_PROTECTED;
+			if(engine.isDebugMode()){
+				if(player.status == ROLE_STATUS_ALIVE){
+					player.status = ROLE_STATUS_PROTECTED;
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
 			game_status = GAME_PAUSE;
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){
-			game_status = GAME_FAIL;
+			//game_status = GAME_FAIL;
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)){
-			for(int i=0;i<factory.boss.size();i++){
-				MoveObject mo = (MoveObject) factory.boss.elementAt(i);
-				mo.status = ROLE_STATUS_DEAD;
+			if(engine.isDebugMode()){
+				level_over = true;
+				for(int i=0;i<factory.boss.size();i++){
+					MoveObject mo = (MoveObject) factory.boss.elementAt(i);
+					mo.status = ROLE_STATUS_DEAD;
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM4)){
-			player.bombGrade = (player.bombGrade+1)%5;
-			if(player.bombGrade==0)
-			{
-				player.bombGrade = 1;
+			if(engine.isDebugMode()){
+				player.bombGrade = (player.bombGrade+1)%5;
+				if(player.bombGrade==0)
+				{
+					player.bombGrade = 1;
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)){
-			player.grade ++;
+			/*player.grade ++;
 			if(player.grade > 5){
 				player.grade = 1;
-			}
+			}*/
 		}
 		
 	}
@@ -96,7 +103,7 @@ public class StateGame implements Common{
 			reviveEtime = getTime();
 			System.out.println("time:"+(reviveEtime-reviveStime));
 			if(reviveEtime-reviveStime > 1*1000){
-				player = factory.revivePlayer();
+				player = factory.revivePlayer(grade);
 			}
 		}else if(player.lifeNum <= 0){
 			System.out.println("game over");
@@ -214,8 +221,8 @@ public class StateGame implements Common{
 		
 		for(int j=0;j<factory.boss.size();j++){
 			MoveObject object = (MoveObject) factory.boss.elementAt(j);
-			if(object.status2 == ROLE_STATUS2_ATTACK){
-				factory.createSpiritBomb(object);
+			if(object.status2 == ROLE_STATUS2_SKILL2_ATTACK){
+				factory.createBossSkill(object);
 				object.status2 = ROLE_STATUS2_MOVE;
 			}
 		}
@@ -237,7 +244,9 @@ public class StateGame implements Common{
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
-					bomb.status = ROLE_STATUS_DEAD;
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
 					mo.blood -= bomb.damage;
 				}
 				if(mo.blood<=0){
@@ -249,7 +258,9 @@ public class StateGame implements Common{
 			for(int k=0;k<factory.boss.size();k++){
 				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx, boss.mapy, boss.width, boss.height)){
-					bomb.status = ROLE_STATUS_DEAD;
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
 					boss.blood -= bomb.damage;
 				}
 				if(boss.blood<=0){
@@ -262,7 +273,9 @@ public class StateGame implements Common{
 			for(int k=0;k<factory.battery.size();k++){
 				MoveObject battery = (MoveObject) factory.battery.elementAt(k);
 				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, battery.mapx, battery.mapy, battery.width, battery.height)){
-					bomb.status = ROLE_STATUS_DEAD;
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
 					battery.blood -= bomb.damage;
 				}
 				if(battery.blood<=0){
@@ -300,6 +313,39 @@ public class StateGame implements Common{
 			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
 					 && player.status == ROLE_STATUS_ALIVE){
 				mo.status = ROLE_STATUS_DEAD;
+				if(player.status != ROLE_STATUS_PROTECTED){
+					if(player.blood - mo.damage >0){
+						player.blood -= mo.damage;
+					}else{
+						player.blood = 0;
+					}
+					blood = player.blood;
+				}
+			}
+		}
+		
+		/*敌方技能攻击碰撞检测*/
+		for(int k=0;k<factory.bossSkill.size();k++){
+			MoveObject mo = (MoveObject) factory.bossSkill.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				//mo.status = ROLE_STATUS_DEAD;
+				if(player.status != ROLE_STATUS_PROTECTED){
+					if(player.blood - mo.damage >0){
+						player.blood -= mo.damage;
+					}else{
+						player.blood = 0;
+					}
+					blood = player.blood;
+				}
+			}
+		}
+		
+		/*boss冲撞撞检测*/
+		for(int j=0;j<factory.boss.size();j++){
+			MoveObject mo = (MoveObject) factory.boss.elementAt(j);
+			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)
+					 && player.status == ROLE_STATUS_ALIVE){
 				if(player.status != ROLE_STATUS_PROTECTED){
 					if(player.blood - mo.damage >0){
 						player.blood -= mo.damage;
@@ -376,11 +422,19 @@ public class StateGame implements Common{
 				factory.battery.removeElement(mo);
 			}
 		}
+		
+		for(int i=0;i<factory.bossSkill.size();i++){
+			MoveObject mo = (MoveObject) factory.bossSkill.elementAt(i);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.bossSkill.removeElement(mo);
+			}
+		}
 		//System.out.println("spirit.size:"+factory.spirits.size());
 		//System.out.println("bomb num:"+factory.bombs.size());
 		//System.out.println("spiritBombs num:"+factory.spiritBombs.size());
 		//System.out.println("boss num:"+factory.boss.size());
 		//System.out.println("battery num:"+factory.battery.size());
+		//System.out.println("bossSkill num:"+factory.bossSkill.size());
 	}
 	
 	/*过关之后改变数据*/
@@ -400,15 +454,20 @@ public class StateGame implements Common{
 
 	public void show(SGraphics g){
 		drawGameBg(g);
+		objectShow.showBombs(g, factory.bombs, player);
 		objectShow.showPlayer(g, player);
-		objectShow.showBombs(g, factory.bombs);
 		objectShow.showSpiritsBomb(g, factory.spiritBombs);
 		objectShow.showSpirits(g, factory.spirits);
 		objectShow.showBattery(g, factory.battery, player);
+		objectShow.showBossSkill(g, factory.bossSkill);
 		objectShow.showBoss(g, factory.boss);
 		drawInfo(g);
 		if(isNextLevel){
 			drawNextPrompt(g);
+		}
+		if(engine.isDebugMode()){
+			String str = "1键:无敌, 3键:过关, 4键:子弹升级";
+			engine.addDebugUserMessage(str);
 		}
 	}
 	

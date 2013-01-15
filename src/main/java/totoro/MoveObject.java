@@ -38,4 +38,12 @@ public class MoveObject {
 	long bombSTime;			//发射子弹的时间控制
 	long bombETime;
 	int bombInterval;		//发射子弹的间隔
+	long skill1STime;
+	long skill1ETime;
+	int skill1Interval;
+	int skill1Damage;
+	long skill2STime;
+	long skill2ETime;
+	int skill2Interval;
+	int skill2Damage;
 }

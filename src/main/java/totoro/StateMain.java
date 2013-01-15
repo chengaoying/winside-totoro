@@ -118,7 +118,7 @@ public class StateMain implements Common{
 	
 	private void processSubMenu() {
 		if (mainIndex == 0) { 			//新游戏
-			stateGame.factory = MoveObjectFactory.getInstance();
+			/*stateGame.factory = MoveObjectFactory.getInstance();
 			stateGame.objectShow = MoveObjectShow.getInstance();
 			StateGame.player = stateGame.factory.createNewPlayer();
 			StateGame.grade = StateGame.player.grade;
@@ -128,7 +128,8 @@ public class StateMain implements Common{
 			//StateGame.scores = stateGame.player.scores;
 			engine.state = STATUS_GAME_PLAYING;
 			StateGame.game_status = GAME_PLAY;
-			StateGame.level_start_time = System.currentTimeMillis()/1000;
+			StateGame.level_start_time = System.currentTimeMillis()/1000;*/
+			engine.state = STATUS_SELECT_TOTORO;
 			Resource.clearMain();
 		} else if(mainIndex == 1){		//继续游戏
 			

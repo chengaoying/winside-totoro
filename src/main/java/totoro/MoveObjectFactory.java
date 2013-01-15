@@ -35,6 +35,9 @@ public class MoveObjectFactory implements Common{
 	/*boss*/
 	public Vector boss = new Vector();
 	
+	/*boss skill*/
+	public Vector bossSkill = new Vector();
+	
 	
 	/*创建一批精灵*/
 	public void cteateBatchSpirits(int level){
@@ -64,10 +67,16 @@ public class MoveObjectFactory implements Common{
 			mo.damage = spiritParam[mo.id-spirit_id][15];
 			mo.bombInterval = spiritParam[mo.id-spirit_id][16];
 			mo.startTime = System.currentTimeMillis();
+			if(mo.pirze == SPIRITI_PRIZE_YES){
+				int r = RandomValue.getRandInt(100);
+				if(r>40){
+					mo.pirze = SPIRITI_PRIZE_NO;
+				}
+			}
 			spiritPosition(mo, i, count);
 			spirits.addElement(mo);
 		}
-		System.out.println("spirits.size:"+spirits.size());
+		//System.out.println("spirits.size:"+spirits.size());
 	}
 	
 	/*创建一个精灵*/
@@ -155,7 +164,7 @@ public class MoveObjectFactory implements Common{
 		mo.mapy = object.mapy+object.height/2 - mo.height/2;
 		mo.bombSTime = System.currentTimeMillis();
 		spiritBombs.addElement(mo);
-		System.out.println("spiritBombs.size:"+spiritBombs.size());
+		//System.out.println("spiritBombs.size:"+spiritBombs.size());
 	}
 	
 	/*创建炮台*/
@@ -179,12 +188,19 @@ public class MoveObjectFactory implements Common{
 		mo.damage = batteryParam[level-1][13];
 		mo.bombInterval = batteryParam[level-1][14];
 		mo.timeInterval = batteryParam[level-1][15];
+		mo.pirze = batteryParam[level-1][15];
+		if(mo.pirze == SPIRITI_PRIZE_YES){
+			int ran = RandomValue.getRandInt(100);
+			if(ran>10){
+				mo.pirze = SPIRITI_PRIZE_NO;
+			}
+		}
 		//batteryOtherInfo(mo, level);
 		mo.bombSTime = System.currentTimeMillis();
 		mo.startTime = System.currentTimeMillis();
 		
 		battery.addElement(mo);
-		System.out.println("battery.size:"+battery.size());
+		//System.out.println("battery.size:"+battery.size());
 	}
 	
 	private void batteryOtherInfo(MoveObject mo, int level) {
@@ -224,7 +240,7 @@ public class MoveObjectFactory implements Common{
 		mo.bombSTime = System.currentTimeMillis();
 		batteryBombOtherInfo(index, mo, object, player);
 		spiritBombs.addElement(mo);
-		System.out.println("spiritBombs:"+spiritBombs.size());
+		//System.out.println("spiritBombs:"+spiritBombs.size());
 	}
 	
 	private void batteryBombOtherInfo(int index, MoveObject mo,MoveObject object, MoveObject player) {
@@ -288,107 +304,328 @@ public class MoveObjectFactory implements Common{
 		mo.timeInterval = bossParam[level-1][10];
 		mo.frameNum = bossParam[level-1][11];
 		mo.damage = bossParam[level-1][12];
-		mo.bombInterval = bossParam[level-1][13];
-		mo.direction = bossParam[level-1][14];
-		mo.position = bossParam[level-1][15];
+		//mo.bombInterval = bossParam[level-1][13];
+		mo.skill1Interval = bossParam[level-1][13];
+		mo.skill2Interval = bossParam[level-1][14];
+		mo.direction = bossParam[level-1][15];
+		mo.position = bossParam[level-1][16];
+		mo.skill1Damage = bossParam[level-1][17];
+		mo.skill2Damage = bossParam[level-1][18];
 		mo.bombSTime = System.currentTimeMillis()/1000;
 		mo.startTime = System.currentTimeMillis()/1000;
+		mo.skill1STime = System.currentTimeMillis()/1000;
+		mo.skill2STime = System.currentTimeMillis()/1000;
 		mo.mapx = ScrW;
 		mo.mapy = ScrH/2 - mo.height/2;
-		System.out.println("---create boss---");
+		//System.out.println("---create boss---");
 		boss.addElement(mo);
+	}
+	
+	public void createBossSkill(MoveObject boss){
+		int index = searchBossSkillIndex(boss.id);
+		int num = bossSkillParam[index][10];
+		for(int i=0;i<num;i++){
+			MoveObject mo = new MoveObject();
+			mo.objectId = bossSkillParam[index][0];
+			mo.width = bossSkillParam[index][1];
+			mo.height = bossSkillParam[index][2];
+			mo.damage = bossSkillParam[index][3];
+			//mo.mapx = boss.mapx;
+			//mo.mapy = boss.mapy+boss.height/2-mo.width/2;
+			mo.picId = bossSkillParam[index][6];
+			//mo.speedX = bossSkillParam[index][7];
+			//mo.speedY = bossSkillParam[index][8];
+			mo.frameNum = bossSkillParam[index][9];
+			setBossSkillInfo(boss, mo, index, i, num);
+			bossSkill.addElement(mo);
+		}
+	}
+	
+	private void setBossSkillInfo(MoveObject boss, MoveObject mo, int index, int i, int num) {
+		if(num<1){
+			mo.mapx = boss.mapx;
+			mo.mapy = boss.mapy+boss.height/2-mo.width/2;
+			mo.speedX = bossSkillParam[index][7];
+			mo.speedY = bossSkillParam[index][8];
+		}else{
+			mo.mapx = boss.mapx+i*20;
+			mo.mapy = boss.mapy+boss.height/2-mo.width/2;
+			mo.speedX = bossSkillParam[index][7]-i*10;
+			mo.speedY = bossSkillParam[index][8];
+			mo.frameIndex = i;
+		}
+	}
+
+	private int searchBossSkillIndex(int id){
+		for(int i=0;i<bossSkillParam.length;i++){
+			if(id == bossSkillParam[i][0]){
+				return i;
+			}
+		}
+		return -1;
 	}
 	
 	/*创建玩家普通攻击*/
 	public void createBomb(MoveObject player){
-		int count = player.bombGrade;
-		for(int i=0;i<count;i++){
+		setBombINfo(player);
+	}
+
+	private void setBombINfo(MoveObject player) {
+		switch(player.grade){
+		case TOTORO_GRADE_ONE:
+			setInfo1(player);
+			break;
+		case TOTORO_GRADE_TWO:
+			int count = player.bombGrade;
+			for(int i=0;i<count;i++){
+				MoveObject object = new MoveObject();
+				object.status = ROLE_STATUS_ALIVE;
+				object.id = bombParam[player.grade-1][player.bombGrade-1][0];
+				object.width = bombParam[player.grade-1][player.bombGrade-1][1];
+				object.height = bombParam[player.grade-1][player.bombGrade-1][2];
+				object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+				object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+				object.grade = player.bombGrade;
+				setInfo2(player, object, i);
+				bombs.addElement(object);
+			}
+			break;
+		case TOTORO_GRADE_THREE:
 			MoveObject object = new MoveObject();
 			object.status = ROLE_STATUS_ALIVE;
 			object.id = bombParam[player.grade-1][player.bombGrade-1][0];
 			object.width = bombParam[player.grade-1][player.bombGrade-1][1];
 			object.height = bombParam[player.grade-1][player.bombGrade-1][2];
 			object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
-			//object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
-			//object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
 			object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
 			object.grade = player.bombGrade;
-			//object.mapx = player.mapx+player.width;
-			//object.mapy = player.mapy+player.height/2-object.height/2;
-			setBombINfo(player, object, i);
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			//setInfo3(player);
 			bombs.addElement(object);
-		}
-	}
-
-	private void setBombINfo(MoveObject player, MoveObject object, int i) {
-		switch(player.grade){
-		case 1:
-			setInfo0(player, object, i);
 			break;
-		case 2:
-			setInfo1(player, object, i);
-			break;
-		case 3:
-			setInfo2(player, object, i);
-			break;
-		case 4:
-			setInfo3(player, object, i);
+		case TOTORO_GRADE_FOUR:
+			setInfo4(player);
 			break;
 		}
 	}
 	
 	
 
-	private void setInfo3(MoveObject player, MoveObject object, int i) {
-		// TODO Auto-generated method stub
-		
+	private void setInfo4(MoveObject player) {
+		switch(player.bombGrade){
+		case TOTORO_BOMB_GRADE_ONE:
+			MoveObject object = new MoveObject();
+			object.status = ROLE_STATUS_ALIVE;
+			object.id = bombParam[player.grade-1][player.bombGrade-1][0];
+			object.width = bombParam[player.grade-1][player.bombGrade-1][1];
+			object.height = bombParam[player.grade-1][player.bombGrade-1][2];
+			object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+			object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+			object.grade = player.bombGrade;
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			bombs.addElement(object);
+			break;
+		case TOTORO_BOMB_GRADE_TWO:
+			for(int i=0;i<2;i++){
+				MoveObject object2 = new MoveObject();
+				object2.status = ROLE_STATUS_ALIVE;
+				object2.id = bombParam[player.grade-1][player.bombGrade-1][0];
+				object2.width = bombParam[player.grade-1][player.bombGrade-1][1];
+				object2.height = bombParam[player.grade-1][player.bombGrade-1][2];
+				object2.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+				object2.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+				object2.grade = player.bombGrade;
+				object2.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+				object2.speedY = 0;
+				object2.mapx = player.mapx+player.width;
+				object2.mapy = player.mapy+i*(object2.height+5);
+				object2.frameIndex = 0;
+				bombs.addElement(object2);
+			}
+			break;
+		case TOTORO_BOMB_GRADE_THREE:
+			for(int i=0;i<3;i++){
+				MoveObject object2 = new MoveObject();
+				object2.status = ROLE_STATUS_ALIVE;
+				object2.id = bombParam[player.grade-1][player.bombGrade-2][0];
+				object2.width = bombParam[player.grade-1][player.bombGrade-2][1];
+				object2.height = bombParam[player.grade-1][player.bombGrade-2][2];
+				object2.damage = bombParam[player.grade-1][player.bombGrade-2][3];
+				object2.picId = bombParam[player.grade-1][player.bombGrade-2][6];
+				object2.grade = player.bombGrade;
+				object2.speedX = bombParam[player.grade-1][player.bombGrade-2][4];
+				object2.speedY = 0;
+				if(i==1){
+					object2.mapx = player.mapx+player.width+30;
+				}else{
+					object2.mapx = player.mapx+player.width;
+				}
+				object2.mapy = player.mapy+i*(object2.height+5)-15;
+				object2.frameIndex = 0;
+				bombs.addElement(object2);
+			}
+			break;
+		case TOTORO_BOMB_GRADE_FOUR:
+			MoveObject object2 = new MoveObject();
+			object2.status = ROLE_STATUS_ALIVE;
+			object2.id = bombParam[player.grade-1][player.bombGrade-2][0];
+			object2.width = bombParam[player.grade-1][player.bombGrade-2][1];
+			object2.height = bombParam[player.grade-1][player.bombGrade-2][2];
+			object2.damage = bombParam[player.grade-1][player.bombGrade-2][3];
+			object2.picId = bombParam[player.grade-1][player.bombGrade-2][6];
+			object2.grade = player.bombGrade;
+			object2.speedX = bombParam[player.grade-1][player.bombGrade-2][4];
+			object2.speedY = 0;
+			object2.mapx = player.mapx+player.width;
+			object2.mapy = player.mapy+player.height/2-object2.height/2;
+			object2.frameIndex = 0;
+			bombs.addElement(object2);
+			System.out.println("bombSize:"+bombs.size());
+			break;
+		}
+	}
+
+	/*private void setInfo3(MoveObject player) {
+		switch(player.bombGrade){
+		case TOTORO_BOMB_GRADE_ONE:
+			break;
+		case TOTORO_BOMB_GRADE_TWO:
+			break;
+		case TOTORO_BOMB_GRADE_THREE:
+			break;
+		case TOTORO_BOMB_GRADE_FOUR:
+			break;
+		}
+	}*/
+
+	private void setInfo1(MoveObject player) {
+		switch(player.bombGrade){
+		case TOTORO_BOMB_GRADE_ONE:
+			MoveObject object = new MoveObject();
+			object.status = ROLE_STATUS_ALIVE;
+			object.id = bombParam[player.grade-1][player.bombGrade-1][0];
+			object.width = bombParam[player.grade-1][player.bombGrade-1][1];
+			object.height = bombParam[player.grade-1][player.bombGrade-1][2];
+			object.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+			object.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+			object.grade = player.bombGrade;
+			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+			object.speedY = 0;
+			object.mapx = player.mapx+player.width;
+			object.mapy = player.mapy+player.height/2-object.height/2;
+			object.frameIndex = 0;
+			bombs.addElement(object);
+			break;
+		case TOTORO_BOMB_GRADE_TWO:
+			for(int i=0;i<2;i++){
+				MoveObject object2 = new MoveObject();
+				object2.status = ROLE_STATUS_ALIVE;
+				object2.id = bombParam[player.grade-1][player.bombGrade-1][0];
+				object2.width = bombParam[player.grade-1][player.bombGrade-1][1];
+				object2.height = bombParam[player.grade-1][player.bombGrade-1][2];
+				object2.damage = bombParam[player.grade-1][player.bombGrade-1][3];
+				object2.picId = bombParam[player.grade-1][player.bombGrade-1][6];
+				object2.grade = player.bombGrade;
+				object2.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
+				object2.speedY = 0;
+				object2.mapx = player.mapx+player.width;
+				object2.mapy = player.mapy+i*(object2.height+5)+20;
+				object2.frameIndex = 0;
+				bombs.addElement(object2);
+			}
+			break;
+		case TOTORO_BOMB_GRADE_THREE:
+			for(int i=0;i<3;i++){
+				MoveObject object2 = new MoveObject();
+				object2.status = ROLE_STATUS_ALIVE;
+				object2.id = bombParam[player.grade-1][player.bombGrade-2][0];
+				object2.width = bombParam[player.grade-1][player.bombGrade-2][1];
+				object2.height = bombParam[player.grade-1][player.bombGrade-2][2];
+				object2.damage = bombParam[player.grade-1][player.bombGrade-2][3];
+				object2.picId = bombParam[player.grade-1][player.bombGrade-2][6];
+				object2.grade = player.bombGrade;
+				object2.speedX = bombParam[player.grade-1][player.bombGrade-2][4];
+				object2.speedY = 0;
+				if(i==0){
+					object2.mapx = player.mapx+player.width;
+					object2.mapy = player.mapy+15;
+				}else if(i==1){
+					object2.mapx = player.mapx+player.width+object2.width/2;
+					object2.mapy = player.mapy+(object2.height+2)+15;
+				}else{
+					object2.mapx = player.mapx+player.width-object2.width/2;
+					object2.mapy = player.mapy+2*(object2.height+2)+15;
+				}
+				object2.frameIndex = 0;
+				bombs.addElement(object2);
+			}
+			break;
+		case TOTORO_BOMB_GRADE_FOUR:
+			for(int i=0;i<3;i++){
+				MoveObject object2 = new MoveObject();
+				object2.status = ROLE_STATUS_ALIVE;
+				object2.speedY = 0;
+				object2.grade = player.bombGrade;
+				if(i==0){
+					object2.id = bombParam[player.grade-1][player.bombGrade-3][0];
+					object2.width = bombParam[player.grade-1][player.bombGrade-3][1];
+					object2.height = bombParam[player.grade-1][player.bombGrade-3][2];
+					object2.damage = bombParam[player.grade-1][player.bombGrade-3][3];
+					object2.picId = bombParam[player.grade-1][player.bombGrade-3][6];
+					object2.speedX = bombParam[player.grade-1][player.bombGrade-3][4];
+					object2.mapx = player.mapx+player.width;
+					object2.mapy = player.mapy+10;
+				}else if(i==1){
+					object2.id = bombParam[player.grade-1][player.bombGrade-4][0];
+					object2.width = bombParam[player.grade-1][player.bombGrade-4][1];
+					object2.height = bombParam[player.grade-1][player.bombGrade-4][2];
+					object2.damage = bombParam[player.grade-1][player.bombGrade-4][3];
+					object2.picId = bombParam[player.grade-1][player.bombGrade-4][6];
+					object2.speedX = bombParam[player.grade-1][player.bombGrade-4][4];
+					object2.mapx = player.mapx+player.width+15;
+					object2.mapy = player.mapy+50+10;
+				}else{
+					object2.id = bombParam[player.grade-1][player.bombGrade-2][0];
+					object2.width = bombParam[player.grade-1][player.bombGrade-2][1];
+					object2.height = bombParam[player.grade-1][player.bombGrade-2][2];
+					object2.damage = bombParam[player.grade-1][player.bombGrade-2][3];
+					object2.picId = bombParam[player.grade-1][player.bombGrade-2][6];
+					object2.speedX = bombParam[player.grade-1][player.bombGrade-2][4];
+					object2.mapx = player.mapx+player.width+10;
+					object2.mapy = player.mapy+12+10;
+				}
+				object2.frameIndex = 0;
+				bombs.addElement(object2);
+			}
+			break;
+		}
 	}
 
 	private void setInfo2(MoveObject player, MoveObject object, int i) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void setInfo1(MoveObject player, MoveObject object, int i) {
 		switch(player.bombGrade){
-		case 1:
+		case TOTORO_BOMB_GRADE_ONE:
 			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
 			object.speedY = 0;
 			object.mapx = player.mapx+player.width;
 			object.mapy = player.mapy+player.height/2-object.height/2;
 			object.frameIndex = 0;
 			break;
-		case 2:
-			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
-			object.speedY = 0;
-			object.mapx = player.mapx+player.width;
-			object.mapy = player.mapy+player.height/2-object.height/2;
-			object.frameIndex = 0;
-			break;
-		case 3:
-			break;
-		case 4:
-			break;
-		}
-	}
-
-	private void setInfo0(MoveObject player, MoveObject object, int i) {
-		switch(player.bombGrade){
-		case 1:
-			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
-			object.speedY = 0;
-			object.mapx = player.mapx+player.width;
-			object.mapy = player.mapy+player.height/2-object.height/2;
-			object.frameIndex = 0;
-			break;
-		case 2:
+		case TOTORO_BOMB_GRADE_TWO:
 			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
 			object.speedY = 0;
 			object.mapx = player.mapx+player.width;
 			object.mapy = player.mapy+i*(object.height+5)+10;
 			object.frameIndex = 0;
 			break;
-		case 3:
+		case TOTORO_BOMB_GRADE_THREE:
 			object.mapx = player.mapx+player.width;
 			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
 			if(i==0){
@@ -405,17 +642,17 @@ public class MoveObjectFactory implements Common{
 				object.frameIndex = 1;
 			}
 			break;
-		case 4:
+		case TOTORO_BOMB_GRADE_FOUR:
 			object.speedX = bombParam[player.grade-1][player.bombGrade-1][4];
 			object.mapx = player.mapx+player.width;
 			if(i==0){
-				object.speedY = 0;
+				object.speedY = -2;
 				object.mapy = player.mapy+10;
-				object.frameIndex = 0;
+				object.frameIndex = 2;
 			}else if(i==1){
-				object.speedY = 0;
+				object.speedY = 2;
 				object.mapy = player.mapy+(object.height+5)+10;
-				object.frameIndex = 0;
+				object.frameIndex = 1;
 			}else if(i==2){
 				object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
 				object.mapy = player.mapy+player.height-object.height-5;
@@ -433,22 +670,22 @@ public class MoveObjectFactory implements Common{
 	 * 创建新游戏玩家
 	 * @return
 	 */
-	public MoveObject createNewPlayer(){
+	public MoveObject createNewPlayer(int index){
 		MoveObject object = new MoveObject();
 		object.status = ROLE_STATUS_ALIVE;
-		object.id = playerParam[0][0];
-		object.mapx = playerParam[0][1];
-		object.mapy = playerParam[0][2];
-		object.width = playerParam[0][3];
-		object.height = playerParam[0][4];
-		object.lifeNum = playerParam[0][5];
-		object.blood = playerParam[0][6];
-		object.damage = playerParam[0][7];
-		object.grade = playerParam[0][8];
-		object.speedX = playerParam[0][9];
-		object.speedY = playerParam[0][10];
-		object.bombGrade = playerParam[0][11];
-		object.picId = playerParam[0][12];
+		object.id = playerParam[index][0];
+		object.mapx = playerParam[index][1];
+		object.mapy = playerParam[index][2];
+		object.width = playerParam[index][3];
+		object.height = playerParam[index][4];
+		object.lifeNum = playerParam[index][5];
+		object.blood = playerParam[index][6];
+		object.damage = playerParam[index][7];
+		object.grade = playerParam[index][8];
+		object.speedX = playerParam[index][9];
+		object.speedY = playerParam[index][10];
+		object.bombGrade = playerParam[index][11];
+		object.picId = playerParam[index][12];
 		return object;
 	}
 	
@@ -456,22 +693,22 @@ public class MoveObjectFactory implements Common{
 	 * 玩家复活
 	 * @return
 	 */
-	public MoveObject revivePlayer(){
+	public MoveObject revivePlayer(int grade){
 		MoveObject object = new MoveObject();
 		object.status = ROLE_STATUS_ALIVE;
-		object.id = playerParam[0][0];
-		object.mapx = playerParam[0][1];
-		object.mapy = playerParam[0][2];
-		object.width = playerParam[0][3];
-		object.height = playerParam[0][4];
+		object.id = playerParam[grade-1][0];
+		object.mapx = playerParam[grade-1][1];
+		object.mapy = playerParam[grade-1][2];
+		object.width = playerParam[grade-1][3];
+		object.height = playerParam[grade-1][4];
 		object.lifeNum = StateGame.lifeNum;
-		object.blood = playerParam[0][6];
-		object.damage = playerParam[0][7];
+		object.blood = playerParam[grade-1][6];
+		object.damage = playerParam[grade-1][7];
 		object.grade = StateGame.grade;
-		object.speedX = playerParam[0][9];
-		object.speedY = playerParam[0][10];
+		object.speedX = playerParam[grade-1][9];
+		object.speedY = playerParam[grade-1][10];
 		object.bombGrade = StateGame.bombGrade;
-		object.picId = playerParam[0][12];
+		object.picId = playerParam[grade-1][12];
 		System.out.println("totoro revive");
 		return object;
 	}
