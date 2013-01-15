@@ -29,6 +29,9 @@ public class MoveObjectFactory implements Common{
 	/*精灵*/
 	public Vector spirits = new Vector();
 	
+	/*幽灵boss出的小怪*/
+	public static Vector ghostSpirits = new Vector();
+	
 	/*地面上的怪(炮台)*/
 	public Vector battery = new Vector();
 	
@@ -37,7 +40,6 @@ public class MoveObjectFactory implements Common{
 	
 	/*boss skill*/
 	public Vector bossSkill = new Vector();
-	
 	
 	/*创建一批精灵*/
 	public void cteateBatchSpirits(int level){
@@ -348,11 +350,18 @@ public class MoveObjectFactory implements Common{
 			mo.speedX = bossSkillParam[index][7];
 			mo.speedY = bossSkillParam[index][8];
 		}else{
-			mo.mapx = boss.mapx+i*20;
-			mo.mapy = boss.mapy+boss.height/2-mo.width/2;
-			mo.speedX = bossSkillParam[index][7]-i*10;
-			mo.speedY = bossSkillParam[index][8];
-			mo.frameIndex = i;
+			if(boss.id == 203){
+				mo.mapx = boss.mapx+i*20;
+				mo.mapy = boss.mapy+boss.height/2-mo.width/2;
+				mo.speedX = bossSkillParam[index][7]-i*10;
+				mo.speedY = bossSkillParam[index][8];
+				mo.frameIndex = i;
+			}else if(boss.id == 204){
+				mo.mapx = boss.mapx-50;
+				mo.mapy = boss.mapy+i*55;
+				mo.speedX = bossSkillParam[index][7];
+				mo.speedY = bossSkillParam[index][8];
+			}
 		}
 	}
 
@@ -363,6 +372,36 @@ public class MoveObjectFactory implements Common{
 			}
 		}
 		return -1;
+	}
+	
+	public static void createGhostSpirit(MoveObject boss){
+		for(int i=0;i<3;i++){
+			MoveObject mo = new MoveObject();
+			mo.status = ROLE_STATUS_ALIVE;
+			mo.status2 = ROLE_STATUS2_MOVE;
+			mo.id = 111;
+			//mo.directionValue = value;
+			//mo.position = batchInfo[level-1][ran][2];
+			mo.direction = OBJECT_DIRECTION_LEFT;
+			mo.mapx = boss.mapx-55;
+			mo.mapy = boss.mapy + i*55;
+			mo.width = spiritParam[mo.id-spirit_id][1];
+			mo.height = spiritParam[mo.id-spirit_id][2];
+			mo.blood = spiritParam[mo.id-spirit_id][3];
+			mo.scores = spiritParam[mo.id-spirit_id][4];
+			mo.speedX = spiritParam[mo.id-spirit_id][5];
+			mo.speedY = spiritParam[mo.id-spirit_id][6];
+			mo.attackPermission = spiritParam[mo.id-spirit_id][10];
+			mo.picId = spiritParam[mo.id-spirit_id][11];
+			mo.pirze = spiritParam[mo.id-spirit_id][12];
+			mo.timeInterval = spiritParam[mo.id-spirit_id][13];
+			mo.frameNum = spiritParam[mo.id-spirit_id][14];
+			mo.damage = spiritParam[mo.id-spirit_id][15];
+			mo.bombInterval = spiritParam[mo.id-spirit_id][16];
+			mo.bombSTime = System.currentTimeMillis();
+			mo.startTime = System.currentTimeMillis();
+			ghostSpirits.addElement(mo);
+		}
 	}
 	
 	/*创建玩家普通攻击*/

@@ -100,6 +100,10 @@ public class Resource implements Common {
 	public static short id_ice_spirit_bomb_1 = NUMS++;
 	public static short id_ice_spirit_bomb_2 = NUMS++;
 	public static short id_ice_battery_bomb = NUMS++;
+	public static short id_ice_boss_1_fire = NUMS++;
+	public static short id_ice_boss_1_fire_object = NUMS++;
+	public static short id_ice_boss_1_fire_change = NUMS++;
+	public static short id_ice_boss_1_fire_attack = NUMS++;
 	
 	public static short id_lava_boss_1 = NUMS++;
 	public static short id_lava_boss_2 = NUMS++;
@@ -205,6 +209,10 @@ public class Resource implements Common {
 		"/spirit/ice/spirit_bomb_1.png",
 		"/spirit/ice/spirit_bomb_2.png",
 		"/spirit/ice/battery_bomb.png",
+		"/spirit/ice/boss_1_fire.png",
+		"/spirit/ice/boss_1_fire_object.png",
+		"/spirit/ice/boss_1_fire_change.png",
+		"/spirit/ice/boss_1_fire_attack.png",
 		
 		"/spirit/lava/boss_1.png",
 		"/spirit/lava/boss_2.png",
@@ -309,7 +317,10 @@ public class Resource implements Common {
 		images[id_sky_boss_1_skill] = null;
 		images[id_sky_boss_2_skill] = null;
 		images[id_burrow_boss_2_skill] = null;
-		
+		images[id_ice_boss_1_fire] = null;
+		images[id_ice_boss_1_fire_attack] = null;
+		images[id_ice_boss_1_fire_change] = null;
+		images[id_ice_boss_1_fire_object] = null;
 	}
 	
 	public static void clearSubMenuPic(){

@@ -198,7 +198,14 @@ public class MoveObjectShow implements Common{
 		for(int i=bossSkill.size()-1;i>=0;i--){
 			MoveObject mo = (MoveObject) bossSkill.elementAt(i);
 			Image moImg = Resource.loadImage(mo.picId);
-			g.drawRegion(moImg, mo.frameIndex*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			if(mo.objectId == 203){
+				g.drawRegion(moImg, mo.frameIndex*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else if(mo.objectId == 204){
+				mo.frame = (mo.frame+1)%mo.frameNum;
+				g.drawRegion(moImg, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else{
+				g.drawRegion(moImg, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}
 			mo.mapx -= mo.speedX;
 			//mo.mapy += mo.speedY;
 			if(mo.mapx+mo.width <= 0){
@@ -409,8 +416,75 @@ public class MoveObjectShow implements Common{
 		}
 	}
 
+	int fireIndex, fireIndex1,fireIndex2;
+	int changeIndex, changeIndex1, changeIndex2;
 	private void showBoss4(SGraphics g, MoveObject boss) {
-		// TODO Auto-generated method stub
+		Image bossImg = Resource.loadImage(boss.picId);
+		Image fire = Resource.loadImage(Resource.id_ice_boss_1_fire);
+		Image change = Resource.loadImage(Resource.id_ice_boss_1_fire_change);
+		int fireW = fire.getWidth()/4, fireH = fire.getHeight();
+		int changeW = change.getWidth()/3, changeH = change.getHeight();
+		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
+			boss.skill1ETime = System.currentTimeMillis()/1000;
+			boss.skill2ETime = System.currentTimeMillis()/1000;
+			if(boss.direction == OBJECT_DIRECTION_LEFT){
+				boss.mapx -= boss.speedX;
+				if(boss.mapx < (ScrW-boss.width+20)){
+					boss.direction = OBJECT_DIRECTION_UP;
+				}
+			}else if(boss.direction == OBJECT_DIRECTION_UP){
+				boss.mapy -= boss.speedY;
+				if(boss.mapy <= startP-30){
+					boss.direction = OBJECT_DIRECTION_DOWN;
+				}
+			}else if(boss.direction == OBJECT_DIRECTION_DOWN){
+				boss.mapy += boss.speedY;
+				if(boss.mapy+boss.height >= endP+30){
+					boss.direction = OBJECT_DIRECTION_UP;
+				}
+			}
+			boss.frame = (boss.frame+1)%boss.frameNum;
+			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
+			
+			if(boss.skill1ETime-boss.skill1STime>boss.skill1Interval && boss.status2 == ROLE_STATUS2_MOVE){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis()/1000;
+			}
+			
+			if(boss.skill2ETime-boss.skill2STime>boss.skill2Interval && boss.status2 == ROLE_STATUS2_MOVE){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis()/1000;
+			}
+			
+			if(boss.status2 == ROLE_STATUS2_MOVE){
+				fireIndex = (fireIndex+1)%3;
+				fireIndex1 = (fireIndex1+1)%3;
+				fireIndex2 = (fireIndex2+1)%3;
+			}else{
+				fireIndex = 3;
+				fireIndex1 = 3;
+				fireIndex2 = 3;
+			}
+			if(boss.status2 != ROLE_STATUS2_SKILL2_ATTACK){
+				g.drawRegion(fire, fireIndex*fireW, 0, fireW, fireH, 0, boss.mapx-fireW, boss.mapy, 20);
+				g.drawRegion(fire, fireIndex1*fireW, 0, fireW, fireH, 0, boss.mapx-fireW, boss.mapy+(fireH+5), 20);
+				g.drawRegion(fire, fireIndex2*fireW, 0, fireW, fireH, 0, boss.mapx-fireW, boss.mapy+2*(fireH+5), 20);
+			}
+			
+			if(boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
+				changeIndex = (changeIndex+1)%3;
+				changeIndex1 = (changeIndex1+1)%3;
+				changeIndex2= (changeIndex2+1)%3;
+				g.drawRegion(change, changeIndex*changeW, 0, changeW, changeH, 0, boss.mapx-fireW, boss.mapy, 20);
+				g.drawRegion(change, changeIndex1*changeW, 0, changeW, changeH, 0, boss.mapx-fireW, boss.mapy+(fireH+5), 20);
+				g.drawRegion(change, changeIndex2*changeW, 0, changeW, changeH, 0, boss.mapx-fireW, boss.mapy+2*(fireH+5), 20);
+				
+				if(changeIndex == 2){
+					MoveObjectFactory.createGhostSpirit(boss);
+					boss.status2 = ROLE_STATUS2_MOVE;
+				}
+			}
+		//}
 	}
 
 	private void showBoss5(SGraphics g, MoveObject boss) {
@@ -426,6 +500,26 @@ public class MoveObjectShow implements Common{
 	private void showBoss7(SGraphics g, MoveObject boss) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void showGhostSpirits(SGraphics g){
+		for(int i=0;i<MoveObjectFactory.ghostSpirits.size();i++){
+			MoveObject mo = (MoveObject) MoveObjectFactory.ghostSpirits.elementAt(i);
+			mo.bombETime = System.currentTimeMillis();
+			Image moPic = Resource.loadImage(mo.picId);
+			mo.frame = (mo.frame+1)%mo.frameNum;
+			g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			mo.mapx -= mo.speedX;
+			
+			if(mo.bombETime-mo.bombSTime > mo.bombInterval*1000){
+				mo.status2 = ROLE_STATUS2_ATTACK;
+				mo.bombSTime = System.currentTimeMillis();
+			}
+			
+			if(mo.mapx+mo.width<=0){
+				mo.status = ROLE_STATUS_DEAD;
+			}
+		}
 	}
 
 }

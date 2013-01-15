@@ -24,7 +24,7 @@ public class StateGame implements Common{
 	public static long level_end_time;
 	public static boolean level_over;
 	
-	private int level = 1;
+	private int level = 5;
 	public boolean isNextLevel;
 	
 	public MoveObjectFactory factory;
@@ -222,8 +222,17 @@ public class StateGame implements Common{
 		for(int j=0;j<factory.boss.size();j++){
 			MoveObject object = (MoveObject) factory.boss.elementAt(j);
 			if(object.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-				factory.createBossSkill(object);
-				object.status2 = ROLE_STATUS2_MOVE;
+				if(object.id==200 && object.id==201 && object.id==202 && object.id==203){
+					factory.createBossSkill(object);
+					object.status2 = ROLE_STATUS2_MOVE;
+				}else if(object.id == 204){
+					//object.status2 = ROLE_STATUS2_MOVE;
+				}
+			}else if(object.status2 == ROLE_STATUS2_SKILL_ATTACK){
+				if(object.id == 204){
+					factory.createBossSkill(object);
+					object.status2 = ROLE_STATUS2_MOVE;
+				}
 			}
 		}
 		
@@ -461,6 +470,7 @@ public class StateGame implements Common{
 		objectShow.showBattery(g, factory.battery, player);
 		objectShow.showBossSkill(g, factory.bossSkill);
 		objectShow.showBoss(g, factory.boss);
+		objectShow.showGhostSpirits(g);
 		drawInfo(g);
 		if(isNextLevel){
 			drawNextPrompt(g);

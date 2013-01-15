@@ -97,10 +97,12 @@ public interface Common {
 	public static final int spiritBomb3PicId = Resource.id_ice_spirit_bomb_1;
 	public static final int spiritBomb4PicId = Resource.id_ice_spirit_bomb_2;
 	public static final int spiritBomb5PicId = Resource.id_lava_spirit_bomb;
+	public static final int spiritBomb6PicId = Resource.id_ice_boss_1_fire_attack;
 	
 	public static final int boss1SkillPicId = Resource.id_sky_boss_1_skill;
 	public static final int boss2SkillPicId = Resource.id_sky_boss_2_skill;
 	public static final int boss4SkillPicId = Resource.id_burrow_boss_2_skill;
+	public static final int boss5SkillPicId = Resource.id_ice_boss_1_fire_attack;
 	
 	public static final int batteryBomb2PicId = Resource.id_ice_battery_bomb;
 	public static final int batteryBomb3PicId = Resource.id_lava_battery_bomb;
@@ -120,6 +122,8 @@ public interface Common {
 	
 	public static final int spirits_10 = Resource.id_lava_spirit_1;
 	public static final int spirits_11 = Resource.id_lava_spirit_2;
+	
+	public static final int spirits_12 = Resource.id_ice_boss_1_fire_object;
 	
 	/*炮台图片id*/
 	public static final int battery_1 = Resource.id_sky_battery;
@@ -144,9 +148,9 @@ public interface Common {
 		{3, 10, 4000, 10000},
 		{4, 10, 4000, 10000},
 		{5, 10, 4000, 10000},
-		{6, 60, 3000, 10000},
-		{7, 60, 3000, 60000},
-		{8, 60, 3000, 60000},
+		{6, 10, 3000, 10000},
+		{7, 10, 3000, 60000},
+		{8, 10, 3000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -202,7 +206,7 @@ public interface Common {
 			{201, 178, 231, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{202, 192, 204, 9000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{203, 196, 213, 9000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{204, 102, 160, 9000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{204, 102, 160, 9000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 1,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{205, 103, 148, 9000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{206, 275, 353, 9000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{207, 260, 299, 9000, 100, 5, 5, 0, 0, boss_8, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
@@ -215,6 +219,7 @@ public interface Common {
 			{201, 85, 50, 30, 10, 0, boss2SkillPicId, 25, 25, 1, 1},
 			{202, 85, 50, 30, 10, 0, boss2SkillPicId, 25, 25, 1, 1},
 			{203, 135, 145, 10, 10, 0, boss4SkillPicId, 80, 25, 4, 4},
+			{204, 50, 23, 10, 10, 0, boss5SkillPicId, 25, 25, 3, 3},
 	};
 
 	/*炮台属性*/
@@ -234,13 +239,14 @@ public interface Common {
 	
 	/*精灵普通攻击属性*/
 	public int spiritBombParam[][] = {
-			/*0-精灵id, 1-id, 2-宽度, 3-高度, 4-伤害, 5-x速度, 6-Y速度, 7-子弹图片id*/
+			/*0-精灵id, 1-id, 2-宽度, 3-高度, 4-伤害, 5-x速度, 6-Y速度, 7-子弹图片id, */
 			{100, 15, 20, 19, 25, 20, 20, spiritBomb1PicId},
 			{104, 16, 32, 36, 25, 20, 20, spiritBomb2PicId},
 			{107, 17, 19, 20, 25, 20, 20, spiritBomb3PicId},
 			{108, 18, 20, 20, 25, 20, 20, spiritBomb4PicId},
 			{109, 19, 32, 20, 25, 20, 20, spiritBomb5PicId},
 			{110, 14, 32, 20, 25, 20, 20, spiritBomb5PicId},
+			{111, 13, 50, 23, 25, 20, 20, spiritBomb6PicId},
 			/*{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
 			{201, 21, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{202, 22, 85, 50, 25, 20, 20, bossBomb2PicId},
@@ -273,6 +279,9 @@ public interface Common {
 		
 		{109, 105, 79, 20, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 3},
 		{110, 45, 97, 20, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 3},
+		
+		//幽灵boss出的小怪
+		{111, 22, 32, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 3},
 	};
 	
 	/*精灵批数信息*/
