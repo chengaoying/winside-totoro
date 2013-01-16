@@ -30,7 +30,7 @@ public class MoveObjectFactory implements Common{
 	public Vector spirits = new Vector();
 	
 	/*幽灵boss出的小怪*/
-	public static Vector ghostSpirits = new Vector();
+	public Vector ghostSpirits = new Vector();
 	
 	/*地面上的怪(炮台)*/
 	public Vector battery = new Vector();
@@ -329,12 +329,12 @@ public class MoveObjectFactory implements Common{
 		for(int i=0;i<num;i++){
 			MoveObject mo = new MoveObject();
 			mo.objectId = bossSkillParam[index][0];
-			mo.width = bossSkillParam[index][1];
-			mo.height = bossSkillParam[index][2];
+			//mo.width = bossSkillParam[index][1];
+			//mo.height = bossSkillParam[index][2];
 			mo.damage = bossSkillParam[index][3];
 			//mo.mapx = boss.mapx;
 			//mo.mapy = boss.mapy+boss.height/2-mo.width/2;
-			mo.picId = bossSkillParam[index][6];
+			//mo.picId = bossSkillParam[index][6];
 			//mo.speedX = bossSkillParam[index][7];
 			//mo.speedY = bossSkillParam[index][8];
 			mo.frameNum = bossSkillParam[index][9];
@@ -344,23 +344,48 @@ public class MoveObjectFactory implements Common{
 	}
 	
 	private void setBossSkillInfo(MoveObject boss, MoveObject mo, int index, int i, int num) {
-		if(num<1){
+		if(num<=1){
 			mo.mapx = boss.mapx;
 			mo.mapy = boss.mapy+boss.height/2-mo.width/2;
 			mo.speedX = bossSkillParam[index][7];
-			mo.speedY = bossSkillParam[index][8];
+			mo.speedY = 0/*bossSkillParam[index][8]*/;
+			mo.width = bossSkillParam[index][1];
+			mo.height = bossSkillParam[index][2];
+			mo.picId = bossSkillParam[index][6];
 		}else{
-			if(boss.id == 203){
+			if(boss.id == 202){
+				mo.mapx = 150+i*(mo.width+20);
+				mo.mapy = 73;
+				mo.speedX = 0/*bossSkillParam[index][7]*/;
+				mo.speedY = bossSkillParam[index][8];
+				mo.width = bossSkillParam[index][1];
+				mo.height = bossSkillParam[index][2];
+				mo.picId = bossSkillParam[index][6];
+			}else if(boss.id == 203){
 				mo.mapx = boss.mapx+i*20;
 				mo.mapy = boss.mapy+boss.height/2-mo.width/2;
 				mo.speedX = bossSkillParam[index][7]-i*10;
-				mo.speedY = bossSkillParam[index][8];
+				mo.speedY = 0/*bossSkillParam[index][8]*/;
+				mo.width = bossSkillParam[index][1];
+				mo.height = bossSkillParam[index][2];
+				mo.picId = bossSkillParam[index][6];
 				mo.frameIndex = i;
 			}else if(boss.id == 204){
 				mo.mapx = boss.mapx-50;
 				mo.mapy = boss.mapy+i*55;
 				mo.speedX = bossSkillParam[index][7];
-				mo.speedY = bossSkillParam[index][8];
+				mo.speedY = 0/*bossSkillParam[index][8]*/;
+				mo.width = bossSkillParam[index][1];
+				mo.height = bossSkillParam[index][2];
+				mo.picId = bossSkillParam[index][6];
+			}else if(boss.id == 205){
+				mo.width = bossSkillPic[i][1];
+				mo.height = bossSkillPic[i][2];
+				mo.picId = bossSkillPic[i][3];
+				mo.mapx = boss.mapx+i*20;
+				mo.mapy = boss.mapy+boss.height/2-mo.width/2;
+				mo.speedX = bossSkillParam[index][7]-i*10;
+				mo.speedY = 0/*bossSkillParam[index][8]*/;
 			}
 		}
 	}
@@ -374,7 +399,7 @@ public class MoveObjectFactory implements Common{
 		return -1;
 	}
 	
-	public static void createGhostSpirit(MoveObject boss){
+	public void createGhostSpirit(MoveObject boss){
 		for(int i=0;i<3;i++){
 			MoveObject mo = new MoveObject();
 			mo.status = ROLE_STATUS_ALIVE;
@@ -757,6 +782,8 @@ public class MoveObjectFactory implements Common{
 		spiritBombs.removeAllElements();
 		boss.removeAllElements();
 		battery.removeAllElements();
+		bossSkill.removeAllElements();
+		ghostSpirits.removeAllElements();
 	}
 	
 	public void removeAllObject(){
@@ -765,6 +792,8 @@ public class MoveObjectFactory implements Common{
 		boss.removeAllElements();
 		battery.removeAllElements();
 		bombs.removeAllElements();
+		bossSkill.removeAllElements();
+		ghostSpirits.removeAllElements();
 		StateGame.player = null;
 	}
 }

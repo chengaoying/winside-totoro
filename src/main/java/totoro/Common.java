@@ -101,8 +101,13 @@ public interface Common {
 	
 	public static final int boss1SkillPicId = Resource.id_sky_boss_1_skill;
 	public static final int boss2SkillPicId = Resource.id_sky_boss_2_skill;
+	public static final int boss3SkillPicId = Resource.id_burrow_boss_1_skill;
 	public static final int boss4SkillPicId = Resource.id_burrow_boss_2_skill;
 	public static final int boss5SkillPicId = Resource.id_ice_boss_1_fire_attack;
+	public static final int boss6SkillPicId_1 = Resource.id_ice_boss_2_skill_1;
+	public static final int boss6SkillPicId_2 = Resource.id_ice_boss_2_skill_2;
+	public static final int boss6SkillPicId_3 = Resource.id_ice_boss_2_skill_3;
+	public static final int boss6SkillPicId_4 = Resource.id_ice_boss_2_skill_4;
 	
 	public static final int batteryBomb2PicId = Resource.id_ice_battery_bomb;
 	public static final int batteryBomb3PicId = Resource.id_lava_battery_bomb;
@@ -202,24 +207,34 @@ public interface Common {
 	public int bossParam[][] = {
 			/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标
 			 * 9-图片id, 10-帧数间隔, 11-图片总帧数, 12-伤害, 13-技能一时间间隔, 14-技能二时间间隔, 15-方向, 16-初始位置,17-技能1伤害, 18-技能2伤害*/
-			{200, 186, 266, 9000, 100, 5, 5, 0, 0, boss_1, 300, 5, 50, 3, 5, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{201, 178, 231, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{202, 192, 204, 9000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{203, 196, 213, 9000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{204, 102, 160, 9000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 1,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{205, 103, 148, 9000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{206, 275, 353, 9000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{207, 260, 299, 9000, 100, 5, 5, 0, 0, boss_8, 300, 5, 50, 3, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{200, 186, 266, 9000, 100, 5, 5, 0, 0, boss_1, 300, 5, 50, 10, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{201, 178, 231, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{202, 192, 204, 9000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{203, 196, 213, 9000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{204, 102, 160, 9000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{205, 103, 148, 9000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{206, 275, 353, 9000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{207, 260, 299, 9000, 100, 5, 5, 0, 0, boss_8, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 	};
 	
 	/*boss技能属性*/
 	public int bossSkillParam[][] = {
 			/*0-bossId, 1-picW, 2-picH, 3-damage,4-mapx, 5-mapy, 6-picId, 7-speedX, 8-speedY, 9-frameNum, 10-skillNum*/
-			{200, 110, 130, 30, 10, 0, boss1SkillPicId, 15, 15, 3, 1},
-			{201, 85, 50, 30, 10, 0, boss2SkillPicId, 25, 25, 1, 1},
-			{202, 85, 50, 30, 10, 0, boss2SkillPicId, 25, 25, 1, 1},
+			{200, 110, 130, 10, 10, 0, boss1SkillPicId, 15, 15, 3, 1},
+			{201, 85, 50, 10, 10, 0, boss2SkillPicId, 25, 25, 1, 1},
+			{202, 76, 150, 10, 10, 0, boss3SkillPicId, 80, 80, 1, 4},
 			{203, 135, 145, 10, 10, 0, boss4SkillPicId, 80, 25, 4, 4},
 			{204, 50, 23, 10, 10, 0, boss5SkillPicId, 25, 25, 3, 3},
+			{205, 0, 0, 10, 10, 0, 0, 80, 25, 1, 4},
+	};
+	
+	/*第6关boss技能一图片属性*/
+	public int bossSkillPic[][] = {
+			/*0-bossId, 1-picW, 2-picH, 3-picId*/
+			{205, 68, 131, boss6SkillPicId_4},
+			{205, 48, 94, boss6SkillPicId_3},
+			{205, 34, 66, boss6SkillPicId_2},
+			{205, 23, 43, boss6SkillPicId_1},
 	};
 
 	/*炮台属性*/

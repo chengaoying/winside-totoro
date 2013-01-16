@@ -24,7 +24,7 @@ public class StateGame implements Common{
 	public static long level_end_time;
 	public static boolean level_over;
 	
-	private int level = 5;
+	private int level = 6;
 	public boolean isNextLevel;
 	
 	public MoveObjectFactory factory;
@@ -222,14 +222,14 @@ public class StateGame implements Common{
 		for(int j=0;j<factory.boss.size();j++){
 			MoveObject object = (MoveObject) factory.boss.elementAt(j);
 			if(object.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-				if(object.id==200 && object.id==201 && object.id==202 && object.id==203){
+				if(object.id==200 || object.id==201 || object.id==202 || object.id==203){
 					factory.createBossSkill(object);
 					object.status2 = ROLE_STATUS2_MOVE;
 				}else if(object.id == 204){
 					//object.status2 = ROLE_STATUS2_MOVE;
 				}
 			}else if(object.status2 == ROLE_STATUS2_SKILL_ATTACK){
-				if(object.id == 204){
+				if(object.id == 204 || object.id == 205){
 					factory.createBossSkill(object);
 					object.status2 = ROLE_STATUS2_MOVE;
 				}
@@ -240,6 +240,14 @@ public class StateGame implements Common{
 			MoveObject object = (MoveObject) factory.battery.elementAt(j);
 			if(object.status2 == ROLE_STATUS2_ATTACK && object.attackPermission == ATTACK_PERMISSION_YES){
 				factory.createBatteryBombs(object, player);
+				object.status2 = ROLE_STATUS2_MOVE;
+			}
+		}
+		
+		for(int j=0;j<factory.ghostSpirits.size();j++){
+			MoveObject object = (MoveObject) factory.ghostSpirits.elementAt(j);
+			if(object.status2 == ROLE_STATUS2_ATTACK){
+				factory.createSpiritBomb(object);
 				object.status2 = ROLE_STATUS2_MOVE;
 			}
 		}
@@ -469,8 +477,8 @@ public class StateGame implements Common{
 		objectShow.showSpirits(g, factory.spirits);
 		objectShow.showBattery(g, factory.battery, player);
 		objectShow.showBossSkill(g, factory.bossSkill);
-		objectShow.showBoss(g, factory.boss);
-		objectShow.showGhostSpirits(g);
+		objectShow.showBoss(g, factory.boss, factory);
+		objectShow.showGhostSpirits(g, factory);
 		drawInfo(g);
 		if(isNextLevel){
 			drawNextPrompt(g);

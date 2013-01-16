@@ -90,6 +90,7 @@ public class Resource implements Common {
 	public static short id_burrow_boss_1 = NUMS++;
 	public static short id_burrow_boss_2 = NUMS++;
 	public static short id_burrow_spirit_bomb_2 = NUMS++;
+	public static short id_burrow_boss_1_skill = NUMS++;
 	public static short id_burrow_boss_2_skill = NUMS++;
 	
 	public static short id_ice_battery = NUMS++;
@@ -104,6 +105,10 @@ public class Resource implements Common {
 	public static short id_ice_boss_1_fire_object = NUMS++;
 	public static short id_ice_boss_1_fire_change = NUMS++;
 	public static short id_ice_boss_1_fire_attack = NUMS++;
+	public static short id_ice_boss_2_skill_1 = NUMS++;
+	public static short id_ice_boss_2_skill_2 = NUMS++;
+	public static short id_ice_boss_2_skill_3 = NUMS++;
+	public static short id_ice_boss_2_skill_4 = NUMS++;
 	
 	public static short id_lava_boss_1 = NUMS++;
 	public static short id_lava_boss_2 = NUMS++;
@@ -199,6 +204,7 @@ public class Resource implements Common {
 		"/spirit/burrow/boss_1.png",
 		"/spirit/burrow/boss_2.png",
 		"/spirit/burrow/spirit_bomb_2.png",
+		"/spirit/burrow/boss_1_skill.png",
 		"/spirit/burrow/boss_2_skill.png",
 		
 		"/spirit/ice/battery.png",
@@ -213,6 +219,10 @@ public class Resource implements Common {
 		"/spirit/ice/boss_1_fire_object.png",
 		"/spirit/ice/boss_1_fire_change.png",
 		"/spirit/ice/boss_1_fire_attack.png",
+		"/spirit/ice/boss_2_skill_1.png",
+		"/spirit/ice/boss_2_skill_2.png",
+		"/spirit/ice/boss_2_skill_3.png",
+		"/spirit/ice/boss_2_skill_4.png",
 		
 		"/spirit/lava/boss_1.png",
 		"/spirit/lava/boss_2.png",
@@ -317,6 +327,7 @@ public class Resource implements Common {
 		images[id_sky_boss_1_skill] = null;
 		images[id_sky_boss_2_skill] = null;
 		images[id_burrow_boss_2_skill] = null;
+		images[id_burrow_boss_1_skill] = null;
 		images[id_ice_boss_1_fire] = null;
 		images[id_ice_boss_1_fire_attack] = null;
 		images[id_ice_boss_1_fire_change] = null;
