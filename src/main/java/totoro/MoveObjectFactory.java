@@ -336,7 +336,7 @@ public class MoveObjectFactory implements Common{
 			//mo.mapy = boss.mapy+boss.height/2-mo.width/2;
 			//mo.picId = bossSkillParam[index][6];
 			//mo.speedX = bossSkillParam[index][7];
-			//mo.speedY = bossSkillParam[index][8];
+			//mo.speedY = bossSkillParam[index][8];   
 			mo.frameNum = bossSkillParam[index][9];
 			setBossSkillInfo(boss, mo, index, i, num);
 			bossSkill.addElement(mo);
