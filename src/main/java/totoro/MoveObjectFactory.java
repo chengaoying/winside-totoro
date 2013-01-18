@@ -167,22 +167,23 @@ public class MoveObjectFactory implements Common{
 	public void createProps(MoveObject object, int level){
 		int ran = RandomValue.getRandInt(100);
 		System.out.println("ran:"+ran);
-		if(ran<=20){
-			int r = RandomValue.getRandInt(levelProps[level-1].length);
-			MoveObject mo = new MoveObject();
-			mo.id = levelProps[level-1][r];
-			int index = searchPropId(mo.id);
-			mo.picId = propsParam[index][1];
-			mo.width = propsParam[index][2];
-			mo.height = propsParam[index][3];
-			mo.speedX = propsParam[index][4];
-			mo.speedY = propsParam[index][5];
-			mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
-			mo.mapx = object.mapx;
-			mo.mapy = object.mapy;
-			props.addElement(mo);
-			System.out.println("create prop, id is:"+mo.id);
+		if(ran>20){
+			return;
 		}
+		int r = RandomValue.getRandInt(levelProps[level-1].length);
+		MoveObject mo = new MoveObject();
+		mo.id = levelProps[level-1][r];
+		int index = searchPropId(mo.id);
+		mo.picId = propsParam[index][1];
+		mo.width = propsParam[index][2];
+		mo.height = propsParam[index][3];
+		mo.speedX = propsParam[index][4];
+		mo.speedY = propsParam[index][5];
+		mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
+		mo.mapx = object.mapx;
+		mo.mapy = object.mapy;
+		props.addElement(mo);
+		System.out.println("create prop, id is:"+mo.id);
 	}
 	
 	private int searchPropId(int id) {
