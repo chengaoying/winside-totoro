@@ -72,6 +72,7 @@ public class Resource implements Common {
 	public static short id_game_blood_bg = NUMS++;
 	public static short id_game_bg_up = NUMS++;
 	public static short id_game_head_shadow = NUMS++;
+	public static short id_game_explosion = NUMS++;
 	
 	public static short id_sky_spirits_1 = NUMS++;
 	public static short id_sky_spirits_2 = NUMS++;
@@ -117,6 +118,18 @@ public class Resource implements Common {
 	public static short id_lava_spirit_bomb = NUMS++;
 	public static short id_lava_battery_bomb = NUMS++;
 	public static short id_lava_battery = NUMS++;
+	public static short id_lava_boss_1_bomb1 = NUMS++;
+	public static short id_lava_boss_1_bomb2 = NUMS++;
+	public static short id_lava_boss_1_bomb3 = NUMS++;
+	public static short id_lava_boss_1_bomb4 = NUMS++;
+	public static short id_lava_boss_1_bomb5 = NUMS++;
+	public static short id_lava_boss_1_bomb6 = NUMS++;
+	public static short id_lava_boss_1_bomb7 = NUMS++;
+	public static short id_lava_boss_1_bomb8 = NUMS++;
+	public static short id_lava_boss_2_skill_1 = NUMS++;
+	public static short id_lava_boss_2_skill_2 = NUMS++;
+	public static short id_lava_boss_2_skill_3 = NUMS++;
+	public static short id_lava_boss_2_skill_bg = NUMS++;
 	
 	public static short id_pause_bg = NUMS++;
 	public static short id_pause_text = NUMS++;
@@ -125,6 +138,13 @@ public class Resource implements Common {
 	public static short id_fail_num = NUMS++;
 	public static short id_fail_text = NUMS++;
 	public static short id_fail = NUMS++;
+	
+	public static short id_prop_blood_icon = NUMS++;
+	public static short id_prop_laser_icon = NUMS++;
+	public static short id_prop_missile_icon = NUMS++;
+	public static short id_prop_upgrade_icon = NUMS++;
+	public static short id_prop_ventose_icon = NUMS++;
+	public static short id_prop_wingplane_icon = NUMS++;
 	
 	public static String[] imagesrcs = {
 		"/init/bg.jpg",
@@ -186,6 +206,7 @@ public class Resource implements Common {
 		"/game/blood_bg.png",
 		"/game/bg_up.jpg",
 		"/game/head_shadow.png",
+		"/game/explosion.png",
 		
 		"/spirit/sky/spirit_1.png",
 		"/spirit/sky/spirit_2.png",
@@ -231,6 +252,18 @@ public class Resource implements Common {
 		"/spirit/lava/spirit_head_bomb.png",
 		"/spirit/lava/battery_bomb.png",
 		"/spirit/lava/battery.png",
+		"/spirit/lava/boss_1_bomb1.png",
+		"/spirit/lava/boss_1_bomb2.png",
+		"/spirit/lava/boss_1_bomb3.png",
+		"/spirit/lava/boss_1_bomb4.png",
+		"/spirit/lava/boss_1_bomb5.png",
+		"/spirit/lava/boss_1_bomb6.png",
+		"/spirit/lava/boss_1_bomb7.png",
+		"/spirit/lava/boss_1_bomb8.png",
+		"/spirit/lava/boss_2_skill_1.png",
+		"/spirit/lava/boss_2_skill_2.png",
+		"/spirit/lava/boss_2_skill_3.png",
+		"/spirit/lava/boss_2_skill_bg.png",
 		
 		"/pause/pause_bg.png",
 		"/pause/pause_text.png",
@@ -239,6 +272,13 @@ public class Resource implements Common {
 		"/fail/fail_num.png",
 		"/fail/fail_text.png",
 		"/fail/fail.png",
+		
+		"/prop/blood_icon.png",
+		"/prop/laser_icon.png",
+		"/prop/missile_icon.png",
+		"/prop/upgrade_icon.png",
+		"/prop/ventose_icon.png",
+		"/prop/wingplane_icon.png",
 	};
 	  
 	private static final Image[] images = new Image[NUMS];
@@ -317,21 +357,61 @@ public class Resource implements Common {
 		images[id_game_blood_bg] = null;
 		images[id_game_bg_up] = null;
 		images[id_game_head_shadow] = null;
-		
+		images[id_game_explosion] = null;
 		
 		images[id_sky_spirits_1] = null;
 		images[id_sky_spirits_2] = null;
 		images[id_sky_spirits_3] = null;
+		images[id_sky_battery] = null;
 		images[id_sky_boss_1] = null;
+		images[id_sky_boss_2] = null;
 		images[id_sky_spirit_bomb_1] = null;
 		images[id_sky_boss_1_skill] = null;
 		images[id_sky_boss_2_skill] = null;
+		images[id_burrow_spirit_1] = null;
+		images[id_burrow_spirit_2] = null;
+		images[id_burrow_spirit_3] = null;
+		images[id_burrow_spirit_4] = null;
+		images[id_burrow_boss_1] = null;
+		images[id_burrow_boss_2] = null;
+		images[id_burrow_spirit_bomb_2] = null;
 		images[id_burrow_boss_2_skill] = null;
 		images[id_burrow_boss_1_skill] = null;
+		images[id_ice_battery] = null;
+		images[id_ice_spirit_1] = null;
+		images[id_ice_spirit_2] = null;
+		images[id_ice_boss_1] = null;
+		images[id_ice_boss_2] = null;
+		images[id_ice_spirit_bomb_1] = null;
+		images[id_ice_spirit_bomb_2] = null;
+		images[id_ice_battery_bomb] = null;
 		images[id_ice_boss_1_fire] = null;
 		images[id_ice_boss_1_fire_attack] = null;
 		images[id_ice_boss_1_fire_change] = null;
 		images[id_ice_boss_1_fire_object] = null;
+		images[id_ice_boss_2_skill_1] = null;
+		images[id_ice_boss_2_skill_2] = null;
+		images[id_ice_boss_2_skill_3] = null;
+		images[id_ice_boss_2_skill_4] = null;
+		images[id_lava_boss_1] = null;
+		images[id_lava_boss_2] = null;
+		images[id_lava_spirit_1] = null;
+		images[id_lava_spirit_2] = null;
+		images[id_lava_spirit_bomb] = null;
+		images[id_lava_battery_bomb] = null;
+		images[id_lava_battery] = null;
+		images[id_lava_boss_1_bomb1] = null;
+		images[id_lava_boss_1_bomb2] = null;
+		images[id_lava_boss_1_bomb3] = null;
+		images[id_lava_boss_1_bomb4] = null;
+		images[id_lava_boss_1_bomb5] = null;
+		images[id_lava_boss_1_bomb6] = null;
+		images[id_lava_boss_1_bomb7] = null;
+		images[id_lava_boss_1_bomb8] = null;
+		images[id_lava_boss_2_skill_1] = null;
+		images[id_lava_boss_2_skill_2] = null;
+		images[id_lava_boss_2_skill_3] = null;
+		images[id_lava_boss_2_skill_bg] = null;
 	}
 	
 	public static void clearSubMenuPic(){

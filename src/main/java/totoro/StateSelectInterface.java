@@ -5,8 +5,6 @@ import javax.microedition.lcdui.Image;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
-import cn.ohyeah.stb.res.UIResource;
-import cn.ohyeah.stb.ui.PopupConfirm;
 
 /**
  * —°‘Ò¡˙√®ΩÁ√Ê
@@ -29,6 +27,7 @@ public class StateSelectInterface implements Common{
 	
 	public void handle(KeyState keyState) {
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
+			engine.state = STATUS_MAIN_MENU;
 			menuIndex = 0;
 			Resource.clearSelectInterface();
 		}else if(keyState.containsAndRemove(KeyCode.UP)){

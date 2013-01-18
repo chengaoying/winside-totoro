@@ -11,7 +11,7 @@ import cn.ohyeah.stb.game.SGraphics;
 public class Exploder implements Common {
 	private int mapx;
 	private int mapy;
-	private int[] frame={0,1,0,1,2,3,4,5,6,7,};
+	private int[] frame={0,1,2};
 	private int i;
 	
 	public Exploder(int mapx, int mapy){
@@ -21,15 +21,16 @@ public class Exploder implements Common {
 	
 	/*±¬Õ¨Ð§¹û*/
 	public void drawExplode(SGraphics g, StateGame stateGame) {
-		/*if (i <7) {	
+		if (i < 3) {	
 			try {
-				Image burstImage = Resource.loadImage(Resource.id_burn);
-				g.drawRegion(burstImage, frame[i] * burstImage.getWidth() / 8, 0, burstImage.getWidth() / 8,
+				Image burstImage = Resource.loadImage(Resource.id_game_explosion);
+				
+				g.drawRegion(burstImage, frame[i] * burstImage.getWidth() / 3, 0, burstImage.getWidth() / 3,
 						burstImage.getHeight(), 0, mapx, mapy, 20);
 				i++;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}*/
+		}
 	}
 }

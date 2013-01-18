@@ -24,12 +24,15 @@ public class StateGame implements Common{
 	public static long level_end_time;
 	public static boolean level_over;
 	
-	private int level = 6;
+	private int level = 1;
 	public boolean isNextLevel;
+	public static boolean isCeateBoss;
 	
 	public MoveObjectFactory factory;
 	public MoveObjectShow objectShow;
 	public static MoveObject player;
+	public Exploder[] exploders = new Exploder[12];
+	private int eIndex;
 	
 	private long bombStart, bombEnd;
 	private int bombInterval = 400;
@@ -88,10 +91,13 @@ public class StateGame implements Common{
 				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM5)){
-			/*player.grade ++;
-			if(player.grade > 5){
-				player.grade = 1;
-			}*/
+			if(engine.isDebugMode()){
+				if(player.status == ROLE_STATUS_PROTECTED){
+					player.status = ROLE_STATUS_ALIVE;
+				}
+			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM6)){
+			
 		}
 		
 	}
@@ -114,7 +120,7 @@ public class StateGame implements Common{
 		
 		level_end_time = getTime()/1000;
 		//System.out.println("time:"+(level_end_time - level_start_time));
-		if(level_end_time - level_start_time > levelInfo[level-1][1]){
+		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
 			level_over = true;
 		}
 		
@@ -185,12 +191,16 @@ public class StateGame implements Common{
 	}
 
 	private void drawPassInterface() {
-		
+		StateGameSuccess success = new StateGameSuccess(engine, this);
+		success.processGameSuccess();
+		engine.state = STATUS_MAIN_MENU;
+		Resource.clearGame();
+		factory.removeAllObject();
+		game_status = GAME_PLAY;
 	}
 
 	private void judgeNextLevel() {
-		
-		if(level_over && factory.boss.size()<1){
+		if(level_over && factory.boss.size()<1 && isCeateBoss == true){
 			isNextLevel = true;
 			player.status = ROLE_STATUS_PASS;
 			//factory.removeAllObject();
@@ -210,6 +220,7 @@ public class StateGame implements Common{
 		
 	}
 
+	/*创建敌方攻击*/
 	private void createSpiritsBombs() {
 		for(int j=0;j<factory.spirits.size();j++){
 			MoveObject object = (MoveObject) factory.spirits.elementAt(j);
@@ -222,16 +233,39 @@ public class StateGame implements Common{
 		for(int j=0;j<factory.boss.size();j++){
 			MoveObject object = (MoveObject) factory.boss.elementAt(j);
 			if(object.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-				if(object.id==200 || object.id==201 || object.id==202 || object.id==203){
-					factory.createBossSkill(object);
+				if(object.id==200 || object.id==201 || object.id==203
+						|| object.id == 205){
+					factory.createBossSkill(object, null);
 					object.status2 = ROLE_STATUS2_MOVE;
-				}else if(object.id == 204){
-					//object.status2 = ROLE_STATUS2_MOVE;
+				}else if(object.id == 206){
+					object.bombETime = System.currentTimeMillis();
+					if(object.bombNum<8){
+						if(object.bombETime-object.bombSTime>=5){
+							factory.createBoss7Bomb(object, object.bombNum);
+							object.bombNum++;
+							object.bombSTime = System.currentTimeMillis();
+						}
+					}else{
+						object.status2 = ROLE_STATUS2_MOVE;
+						object.bombNum = 0;
+					}
+				}else if(object.id == 207){ //第8个boss第2个技能
+					//factory
 				}
 			}else if(object.status2 == ROLE_STATUS2_SKILL_ATTACK){
-				if(object.id == 204 || object.id == 205){
-					factory.createBossSkill(object);
+				if(object.id == 204 || object.id == 205 || object.id == 206){
+					factory.createBossSkill(object, null);
 					object.status2 = ROLE_STATUS2_MOVE;
+				}else if(object.id == 207){
+					if(factory.boss8Spirit==null){
+						factory.createBoss8Spirit(object);
+					}else{
+						if(factory.boss8Spirit.status == ROLE_STATUS_DEAD){
+							factory.createBossSkill(object, factory.boss8Spirit);
+							object.status2 = ROLE_STATUS2_MOVE;
+							factory.boss8Spirit = null;
+						}
+					}
 				}
 			}
 		}
@@ -265,20 +299,37 @@ public class StateGame implements Common{
 						bomb.status = ROLE_STATUS_DEAD;
 					}
 					mo.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
 				}
 				if(mo.blood<=0){
 					mo.status = ROLE_STATUS_DEAD;
 					player.scores += mo.scores;
 					scores = player.scores;
+					if(mo.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(mo, level);
+					}
 				}
 			}
 			for(int k=0;k<factory.boss.size();k++){
 				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
-				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx, boss.mapy, boss.width, boss.height)){
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx+30, boss.mapy, boss.width, boss.height)){
 					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
 						bomb.status = ROLE_STATUS_DEAD;
 					}
 					boss.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
 				}
 				if(boss.blood<=0){
 					boss.status = ROLE_STATUS_DEAD;
@@ -294,11 +345,21 @@ public class StateGame implements Common{
 						bomb.status = ROLE_STATUS_DEAD;
 					}
 					battery.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
 				}
 				if(battery.blood<=0){
 					battery.status = ROLE_STATUS_DEAD;
 					player.scores += battery.scores;
 					scores = player.scores;
+					/*if(battery.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(battery, level);
+					}*/
 				}
 				//System.out.println("boss.blood:"+boss.blood);
 			}
@@ -337,13 +398,20 @@ public class StateGame implements Common{
 						player.blood = 0;
 					}
 					blood = player.blood;
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
 				}
 			}
 		}
 		
 		/*敌方技能攻击碰撞检测*/
-		for(int k=0;k<factory.bossSkill.size();k++){
-			MoveObject mo = (MoveObject) factory.bossSkill.elementAt(k);
+		for(int k=0;k<factory.boss1Skill.size();k++){
+			MoveObject mo = (MoveObject) factory.boss1Skill.elementAt(k);
 			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
 					 && player.status == ROLE_STATUS_ALIVE){
 				//mo.status = ROLE_STATUS_DEAD;
@@ -354,6 +422,37 @@ public class StateGame implements Common{
 						player.blood = 0;
 					}
 					blood = player.blood;
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+			}
+		}
+		
+		/*敌方技能攻击碰撞检测*/
+		for(int k=0;k<factory.boss8Skill.size();k++){
+			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				System.out.println("boss8attack===========");
+				if(player.status != ROLE_STATUS_PROTECTED){
+					if(player.blood - mo.damage >0){
+						player.blood -= mo.damage;
+					}else{
+						player.blood = 0;
+					}
+					blood = player.blood;
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
 				}
 			}
 		}
@@ -398,8 +497,9 @@ public class StateGame implements Common{
 			}else{
 				if(factory.boss.size()<1){
 					factory.createBoss(level);
+					isCeateBoss = true;
 				}
-			}
+			}      
 		}
 	}
 	
@@ -419,39 +519,47 @@ public class StateGame implements Common{
 			}
 		}
 		
-		for(int i=0;i<factory.spiritBombs.size();i++){
-			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(i);
+		for(int k=0;k<factory.spiritBombs.size();k++){
+			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
 			if(mo.status == ROLE_STATUS_DEAD){
 				factory.spiritBombs.removeElement(mo);
 			}
 		}
 		
-		for(int i=0;i<factory.boss.size();i++){
-			MoveObject mo = (MoveObject) factory.boss.elementAt(i);
+		for(int l=0;l<factory.boss.size();l++){
+			MoveObject mo = (MoveObject) factory.boss.elementAt(l);
 			if(mo.status == ROLE_STATUS_DEAD){
 				factory.boss.removeElement(mo);
 			}
 		}
 		
-		for(int i=0;i<factory.battery.size();i++){
-			MoveObject mo = (MoveObject) factory.battery.elementAt(i);
+		for(int m=0;m<factory.battery.size();m++){
+			MoveObject mo = (MoveObject) factory.battery.elementAt(m);
 			if(mo.status == ROLE_STATUS_DEAD){
 				factory.battery.removeElement(mo);
 			}
 		}
 		
-		for(int i=0;i<factory.bossSkill.size();i++){
-			MoveObject mo = (MoveObject) factory.bossSkill.elementAt(i);
+		for(int n=0;n<factory.boss1Skill.size();n++){
+			MoveObject mo = (MoveObject) factory.boss1Skill.elementAt(n);
 			if(mo.status == ROLE_STATUS_DEAD){
-				factory.bossSkill.removeElement(mo);
+				factory.boss1Skill.removeElement(mo);
 			}
 		}
+		
+		/*for(int n=0;n<factory.boss8Skill.size();n++){
+			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(n);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.boss8Skill.removeElement(mo);
+			}
+		}*/
 		//System.out.println("spirit.size:"+factory.spirits.size());
 		//System.out.println("bomb num:"+factory.bombs.size());
 		//System.out.println("spiritBombs num:"+factory.spiritBombs.size());
 		//System.out.println("boss num:"+factory.boss.size());
 		//System.out.println("battery num:"+factory.battery.size());
-		//System.out.println("bossSkill num:"+factory.bossSkill.size());
+		//System.out.println("bossSkill num:"+factory.boss1Skill.size());
+		//System.out.println("boss8skill:"+factory.boss8Skill.size());
 	}
 	
 	/*过关之后改变数据*/
@@ -460,6 +568,7 @@ public class StateGame implements Common{
 		player.mapx = 0;
 		isNextLevel = false;
 		level_over = false;
+		isCeateBoss = false;
 		level_start_time = getTime()/1000;
 		level++;
 		bgIndex = 0;
@@ -467,6 +576,9 @@ public class StateGame implements Common{
 		wayIndex = 0;
 		Resource.clearGame();
 		factory.removeEnemy();
+		for(int i=0;i<exploders.length;i++){
+			exploders[i]=null;
+		}
 	}
 
 	public void show(SGraphics g){
@@ -476,9 +588,19 @@ public class StateGame implements Common{
 		objectShow.showSpiritsBomb(g, factory.spiritBombs);
 		objectShow.showSpirits(g, factory.spirits);
 		objectShow.showBattery(g, factory.battery, player);
-		objectShow.showBossSkill(g, factory.bossSkill);
+		objectShow.showBossSkill(g, factory.boss1Skill);
 		objectShow.showBoss(g, factory.boss, factory);
-		objectShow.showGhostSpirits(g, factory);
+		objectShow.showGhostSpirits(g, factory.ghostSpirits);
+		objectShow.showBoss8Spirit(g, factory.boss8Spirit);
+		objectShow.showBoss8Skill2(g, factory.boss8Skill);
+		objectShow.showPropsIcon(g, factory.props);
+		Exploder exploder = null;
+		for(int i=0;i<exploders.length;i++){
+			if(exploders[i] != null){
+				exploder = exploders[i];
+				exploder.drawExplode(g, this);
+			}
+		}
 		drawInfo(g);
 		if(isNextLevel){
 			drawNextPrompt(g);

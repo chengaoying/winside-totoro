@@ -46,4 +46,6 @@ public class MoveObject {
 	long skill2ETime;
 	int skill2Interval;
 	int skill2Damage;
+	
+	int bombNum;
 }

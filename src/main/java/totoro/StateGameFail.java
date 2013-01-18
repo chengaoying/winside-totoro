@@ -2,13 +2,10 @@ package totoro;
 
 import javax.microedition.lcdui.Image;
 
-import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
-import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.DrawUtil;
-import cn.ohyeah.stb.ui.PopupConfirm;
 
 public class StateGameFail implements Common{
 
@@ -16,7 +13,6 @@ public class StateGameFail implements Common{
 	private TotoroGameEngine engine;
 	private boolean running;
 	private int failIndex;
-	private boolean isOver;
 	private long startTime, endTime;
 	private int interval;
 	
