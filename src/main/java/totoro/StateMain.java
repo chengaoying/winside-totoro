@@ -1,9 +1,13 @@
 package totoro;
 import javax.microedition.lcdui.Image;
 
+import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.res.UIResource;
+import cn.ohyeah.stb.ui.PopupConfirm;
+import cn.ohyeah.stb.ui.PopupText;
 
 public class StateMain implements Common{
 	
@@ -96,7 +100,11 @@ public class StateMain implements Common{
 		
 		int totoroW = totoro.getWidth()/2, totoroH = totoro.getHeight();
 		int totoroX = 372, totoroY = 364;
-		for(int i=0;i<4;i++){
+		for(int i=0;i<StateGame.wingplaneMaxNums;i++){
+			g.drawRegion(totoro, totoroW, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
+			totoroX += totoroW+1;
+		}
+		for(int i=0;i<4-StateGame.wingplaneMaxNums;i++){
 			g.drawRegion(totoro, 0, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
 			totoroX += totoroW+1;
 		}
@@ -132,14 +140,44 @@ public class StateMain implements Common{
 			engine.state = STATUS_SELECT_TOTORO;
 			Resource.clearMain();
 		} else if(mainIndex == 1){		//继续游戏
-			
+			boolean result = engine.readRecord();
+			if(!result){
+				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+				pt.setText("没有游戏记录,请重新开始游戏");
+				pt.popup();
+			}else{
+				stateGame.factory = MoveObjectFactory.getInstance();
+				stateGame.objectShow = MoveObjectShow.getInstance();
+				StateGame.player = stateGame.factory.createPlayer(StateGame.grade);
+				engine.state = STATUS_GAME_PLAYING;
+				StateGame.game_status = GAME_PLAY;
+				StateGame.level_start_time = System.currentTimeMillis()/1000;
+			}
 		} else if (mainIndex == 2) {	//充值
-			
+			Recharge recharge = new Recharge(engine);
+			recharge.recharge();
 		} else if (mainIndex == 3){ 	//退出游戏
 			Resource.clearMain();
+			//engine.saveRecord();
 			exit = true;
 		} else if (mainIndex == 4) {	//龙猫升级
-			
+			if(StateGame.wingplaneMaxNums<4){
+				if(engine.getEngineService().getBalance()>20){
+					StateGame.wingplaneMaxNums++;
+				}else{
+					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+					pc.setText("余额不足,是否充值?");
+					int index = pc.popup();
+					if(index==0){
+						Recharge recharge = new Recharge(engine);
+						recharge.recharge();
+					}
+				}
+			}else{
+				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+				pt.setText("守护精灵个数已达上线");
+				pt.popup();
+			}
 		} else if (mainIndex == 5) {	//购买
 		}
 	}

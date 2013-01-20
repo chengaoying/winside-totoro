@@ -48,4 +48,7 @@ public class MoveObject {
 	int skill2Damage;
 	
 	int bombNum;
+	int wingplaneNums;
+	int wingplaneMaxNums;
+	int missileGrade;  //1,2 µÈ¼¶
 }

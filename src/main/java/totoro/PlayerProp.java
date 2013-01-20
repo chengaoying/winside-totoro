@@ -5,7 +5,7 @@ package totoro;
  * @author Administrator
  *
  */
-public class Prop {
+public class PlayerProp {
 	
 	/*ID*/
 	private int id;

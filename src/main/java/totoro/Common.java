@@ -91,6 +91,10 @@ public interface Common {
 	public static final int blackBomb2PicId = Resource.id_black_totoro_bomb2;
 	public static final int blackBomb3PicId = Resource.id_black_totoro_bomb3;
 
+	/*propPic*/
+	public static final int laserPic = Resource.id_prop_laser;
+	public static final int missilePic = Resource.id_prop_missile;
+	
 	/*精灵子弹图片*/
 	public static final int spiritBomb1PicId = Resource.id_sky_spirit_bomb_1;
 	public static final int spiritBomb2PicId = Resource.id_burrow_spirit_bomb_2;
@@ -227,6 +231,12 @@ public interface Common {
 				{22, 86, 29, 30, 30, 6, blackBomb2PicId},
 				{23, 65, 65, 50, 30, 6, blackBomb3PicId},
 			},
+	};
+	
+	public int playerSkillParam[][] = {
+			/*0-id, 1-w,2-h,3-damage,4-speedx,5-speedy, 6-frameNum,7-picId*/
+			{0, 573, 11, 15, 5, 5, 4, laserPic},
+			{1, 42, 21, 30, 30, 5, 1, missilePic},
 	};
 	
 	/*道具属性*/

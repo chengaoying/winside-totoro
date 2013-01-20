@@ -32,7 +32,8 @@ public class StateGame implements Common{
 	public MoveObjectShow objectShow;
 	public static MoveObject player;
 	public Exploder[] exploders = new Exploder[12];
-	private int eIndex;
+	public Exploder[] missileEffects = new Exploder[12];
+	private int eIndex, mIndex;
 	
 	private long bombStart, bombEnd;
 	private int bombInterval = 400;
@@ -48,6 +49,9 @@ public class StateGame implements Common{
 	public static int blood;
 	public static int grade;
 	public static int bombGrade;
+	public static int wingplaneMaxNums;
+	public static int wingplaneNums;
+	public static int missileGrade;
 	public static boolean hasTotoro3;
 	public static boolean hasTotoro4;
 	
@@ -73,7 +77,10 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
 			game_status = GAME_PAUSE;
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){
-			//game_status = GAME_FAIL;
+			if(player.missileGrade<2){
+				player.missileGrade ++;
+				missileGrade = player.missileGrade;
+			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)){
 			if(engine.isDebugMode()){
 				level_over = true;
@@ -97,7 +104,21 @@ public class StateGame implements Common{
 				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM6)){
-			
+			if(engine.isDebugMode()){
+				if(factory.lasers.size()<1){
+					factory.createLaster(player);
+				}else{
+					MoveObject object = (MoveObject) factory.lasers.elementAt(0);
+					if(object.frame>0){
+						object.frame--;
+						object.damage += 5;
+					}
+				}
+			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
+			if(engine.isDebugMode()){
+				factory.createMissile(player);
+			}
 		}
 		
 	}
@@ -130,7 +151,12 @@ public class StateGame implements Common{
 			&& player.status != ROLE_STATUS_PASS 
 			&& bombEnd - bombStart > bombInterval){
 			
-			factory.createBomb(player);
+			if(factory.lasers.size()<1){
+				factory.createBomb(player);
+			}
+			if(player.missileGrade>0){
+				factory.createMissile(player);
+			}
 			bombStart = getTime();
 		}
 		
@@ -153,6 +179,7 @@ public class StateGame implements Common{
 			int index = menu.processSubMenu();
 			if(index == 1){
 				//返回主界面
+				engine.saveRecord();
 				engine.state = STATUS_MAIN_MENU;
 				Resource.clearGame();
 				factory.removeAllObject();
@@ -163,13 +190,12 @@ public class StateGame implements Common{
 			drawPassInterface();
 			break;	
 		case GAME_FAIL:		//失败
-			System.out.println(2);
 			StateGameFail fail = new StateGameFail(engine);
-			int i = fail.processGameFail();
+			int i = fail.processGameFail(level);
 			if(i == 0){
 				//买复活
-				if(engine.getEngineService().getBalance() > 3){
-					
+				if(engine.getEngineService().getBalance() > level*10){
+					player.lifeNum ++;
 				}else{
 					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 					pc.setText(engine.getEngineService().getExpendAmountUnit()+"不足,是否去充值?");
@@ -179,8 +205,11 @@ public class StateGame implements Common{
 						recharge.recharge();
 					}
 				}
+				game_status = GAME_PLAY;
 			}else{
 				//退出游戏
+				quitGameDeleteDate();
+				engine.saveRecord();
 				engine.state = STATUS_MAIN_MENU;
 				Resource.clearGame();
 				factory.removeAllObject();
@@ -197,6 +226,7 @@ public class StateGame implements Common{
 		Resource.clearGame();
 		factory.removeAllObject();
 		game_status = GAME_PLAY;
+		quitGameDeleteDate();
 	}
 
 	private void judgeNextLevel() {
@@ -214,6 +244,7 @@ public class StateGame implements Common{
 		if(player.status == ROLE_STATUS_PASS){
 			player.mapx += player.speedX;
 			if(player.mapx > ScrW){
+				engine.saveRecord();
 				changeDatePass();
 			}
 		}
@@ -473,14 +504,210 @@ public class StateGame implements Common{
 			}
 		}
 		
+		/*props*/
+		for(int i=0;i<factory.props.size();i++){
+			MoveObject mo = (MoveObject)factory.props.elementAt(i);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status != ROLE_STATUS_DEAD){
+				mo.status = ROLE_STATUS_DEAD;
+				eatProp(mo);
+			}
+		}
+		
+		for(int i=0;i<factory.lasers.size();i++){
+			MoveObject laser = (MoveObject) factory.lasers.elementAt(i);
+			for(int j=0;j<factory.spirits.size();j++){
+				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+				if((mo.mapy<=laser.mapy+laser.height && mo.mapy+mo.height>=laser.mapy)){
+					mo.blood -= laser.damage;
+					//laser.width = mo.mapx+mo.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy+mo.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(mo.blood<=0){
+					mo.status = ROLE_STATUS_DEAD;
+					player.scores += mo.scores;
+					scores = player.scores;
+					if(mo.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(mo, level);
+					}
+				}
+			}
+			for(int k=0;k<factory.boss.size();k++){
+				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
+				if((boss.mapy<=laser.mapy+laser.height && boss.mapy+boss.height>=laser.mapy)){
+					boss.blood -= laser.damage;
+					//laser.width = boss.mapx+boss.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(boss.mapx+20,boss.mapy+boss.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(boss.blood<=0){
+					boss.status = ROLE_STATUS_DEAD;
+					player.scores += boss.scores;
+					scores = player.scores;
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
+			for(int m=0;m<factory.battery.size();m++){
+				MoveObject battery = (MoveObject) factory.battery.elementAt(m);
+				if((battery.mapy<=laser.mapy+laser.height && battery.mapy+battery.height>=laser.mapy)){
+					battery.blood -= laser.damage;
+					//laser.width = battery.mapx+battery.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(battery.mapx,battery.mapy+battery.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(battery.blood<=0){
+					battery.status = ROLE_STATUS_DEAD;
+					player.scores += battery.scores;
+					scores = player.scores;
+				}
+			}
+		}
+		
+		misssileAttack();
+		
+		
 		if(player.blood <= 0 && player.status == ROLE_STATUS_ALIVE){
 			player.status = ROLE_STATUS_DEAD;
 			player.lifeNum --;
 			lifeNum = player.lifeNum;
 			reviveStime = getTime();
+			factory.lasers.removeAllElements();
 		}
 	}
 	
+	private void misssileAttack() {
+		for(int i=0;i<factory.missile.size();i++){
+			MoveObject bomb = (MoveObject) factory.missile.elementAt(i);
+			for(int j=0;j<factory.spirits.size();j++){
+				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
+					mo.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					missileEffects[mIndex] = exploder;
+					if(mIndex < missileEffects.length-1){
+						mIndex ++;
+					}else{
+						mIndex=0;
+					}
+				}
+				if(mo.blood<=0){
+					mo.status = ROLE_STATUS_DEAD;
+					player.scores += mo.scores;
+					scores = player.scores;
+					if(mo.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(mo, level);
+					}
+				}
+			}
+			for(int k=0;k<factory.boss.size();k++){
+				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx+30, boss.mapy, boss.width, boss.height)){
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
+					boss.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					missileEffects[mIndex] = exploder;
+					if(mIndex < missileEffects.length-1){
+						mIndex ++;
+					}else{
+						mIndex=0;
+					}
+				}
+				if(boss.blood<=0){
+					boss.status = ROLE_STATUS_DEAD;
+					player.scores += boss.scores;
+					scores = player.scores;
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
+			for(int k=0;k<factory.battery.size();k++){
+				MoveObject battery = (MoveObject) factory.battery.elementAt(k);
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, battery.mapx, battery.mapy, battery.width, battery.height)){
+					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
+						bomb.status = ROLE_STATUS_DEAD;
+					}
+					battery.blood -= bomb.damage;
+					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					missileEffects[mIndex] = exploder;
+					if(mIndex < missileEffects.length-1){
+						mIndex ++;
+					}else{
+						mIndex=0;
+					}
+				}
+				if(battery.blood<=0){
+					battery.status = ROLE_STATUS_DEAD;
+					player.scores += battery.scores;
+					scores = player.scores;
+					/*if(battery.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(battery, level);
+					}*/
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
+		}
+	}
+
+	private void eatProp(MoveObject mo) {
+		switch(mo.id){
+		case id_blood:
+			if(player.blood+50 < playerParam[player.grade-1][6]){
+				player.blood += 50;
+			}else{
+				player.blood = playerParam[player.grade-1][6];
+			}
+			blood = player.blood;
+			break;
+		case id_laser:
+			if(factory.lasers.size()<1){
+				factory.createLaster(player);
+			}else{
+				MoveObject object = (MoveObject) factory.lasers.elementAt(0);
+				if(object.frame>0){
+					object.frame--;
+					object.damage += 5;
+				}
+			}
+			break;
+		case id_missile:
+			break;
+		case id_upgrade:
+			if(player.bombGrade<4){
+				player.bombGrade++;
+				bombGrade = player.bombGrade;
+			}
+			break;
+		case id_ventose:
+			break;
+		case id_wingplane:
+			if(wingplaneNums<wingplaneMaxNums){
+				wingplaneNums++;
+				player.wingplaneNums = wingplaneNums;
+			}
+			break;
+		}
+	}
+
 	private void createSpirits(){
 		if(!isNextLevel){
 			spiritEnd = System.currentTimeMillis();
@@ -547,6 +774,20 @@ public class StateGame implements Common{
 			}
 		}
 		
+		for(int n=0;n<factory.props.size();n++){
+			MoveObject mo = (MoveObject) factory.props.elementAt(n);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.props.removeElement(mo);
+			}
+		}
+		
+		for(int n=0;n<factory.missile.size();n++){
+			MoveObject mo = (MoveObject) factory.missile.elementAt(n);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.missile.removeElement(mo);
+			}
+		}
+		
 		/*for(int n=0;n<factory.boss8Skill.size();n++){
 			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(n);
 			if(mo.status == ROLE_STATUS_DEAD){
@@ -560,6 +801,8 @@ public class StateGame implements Common{
 		//System.out.println("battery num:"+factory.battery.size());
 		//System.out.println("bossSkill num:"+factory.boss1Skill.size());
 		//System.out.println("boss8skill:"+factory.boss8Skill.size());
+		//System.out.println("props.size:"+factory.props.size());
+		System.out.println("missile.size:"+factory.missile.size());
 	}
 	
 	/*过关之后改变数据*/
@@ -571,6 +814,7 @@ public class StateGame implements Common{
 		isCeateBoss = false;
 		level_start_time = getTime()/1000;
 		level++;
+		currLevel = level;
 		bgIndex = 0;
 		hillIndex = 0;
 		wayIndex = 0;
@@ -578,6 +822,24 @@ public class StateGame implements Common{
 		factory.removeEnemy();
 		for(int i=0;i<exploders.length;i++){
 			exploders[i]=null;
+		}
+		for(int i=0;i<missileEffects.length;i++){
+			missileEffects[i]=null;
+		}
+	}
+	
+	private void quitGameDeleteDate(){
+		currLevel = level;
+		bgIndex = 0;
+		hillIndex = 0;
+		wayIndex = 0;
+		Resource.clearGame();
+		factory.removeAllObject();
+		for(int i=0;i<exploders.length;i++){
+			exploders[i]=null;
+		}
+		for(int i=0;i<missileEffects.length;i++){
+			missileEffects[i]=null;
 		}
 	}
 
@@ -594,13 +856,9 @@ public class StateGame implements Common{
 		objectShow.showBoss8Spirit(g, factory.boss8Spirit);
 		objectShow.showBoss8Skill2(g, factory.boss8Skill);
 		objectShow.showPropsIcon(g, factory.props);
-		Exploder exploder = null;
-		for(int i=0;i<exploders.length;i++){
-			if(exploders[i] != null){
-				exploder = exploders[i];
-				exploder.drawExplode(g, this);
-			}
-		}
+		objectShow.showLasers(g, factory.lasers, player);
+		objectShow.showMissile(g, factory.missile);
+		drawExploders(g);
 		drawInfo(g);
 		if(isNextLevel){
 			drawNextPrompt(g);
@@ -611,6 +869,23 @@ public class StateGame implements Common{
 		}
 	}
 	
+	private void drawExploders(SGraphics g) {
+		Exploder exploder = null;
+		for(int i=0;i<exploders.length;i++){
+			if(exploders[i] != null){
+				exploder = exploders[i];
+				exploder.drawExplode(g, this);
+			}
+		}
+		Exploder exploder1 = null;
+		for(int i=0;i<missileEffects.length;i++){
+			if(missileEffects[i] != null){
+				exploder1 = missileEffects[i];
+				exploder1.drawMissileExplode(g, this);
+			}
+		}
+	}
+
 	private void drawGameBg(SGraphics g) {
 		if(level == 1 || level == 2){
 			drawGameBg_sky(g);

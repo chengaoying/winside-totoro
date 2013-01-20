@@ -145,6 +145,10 @@ public class Resource implements Common {
 	public static short id_prop_upgrade_icon = NUMS++;
 	public static short id_prop_ventose_icon = NUMS++;
 	public static short id_prop_wingplane_icon = NUMS++;
+	public static short id_prop_laser = NUMS++;
+	public static short id_prop_laser_device = NUMS++;
+	public static short id_prop_missile = NUMS++;
+	public static short id_prop_missile_effect = NUMS++;
 	
 	public static String[] imagesrcs = {
 		"/init/bg.jpg",
@@ -279,6 +283,10 @@ public class Resource implements Common {
 		"/prop/upgrade_icon.png",
 		"/prop/ventose_icon.png",
 		"/prop/wingplane_icon.png",
+		"/prop/laser.png",
+		"/prop/laser_device.png",
+		"/prop/missile.png",
+		"/prop/missile_effect.png",
 	};
 	  
 	private static final Image[] images = new Image[NUMS];
@@ -412,6 +420,17 @@ public class Resource implements Common {
 		images[id_lava_boss_2_skill_2] = null;
 		images[id_lava_boss_2_skill_3] = null;
 		images[id_lava_boss_2_skill_bg] = null;
+		
+		images[id_prop_blood_icon] = null;
+		images[id_prop_laser] = null;
+		images[id_prop_laser_icon] = null;
+		images[id_prop_missile_icon] = null;
+		images[id_prop_upgrade_icon] = null;
+		images[id_prop_ventose_icon] = null;
+		images[id_prop_wingplane_icon] = null;
+		images[id_prop_laser_device] = null;
+		images[id_prop_missile] = null;
+		images[id_prop_missile_effect] = null;
 	}
 	
 	public static void clearSubMenuPic(){

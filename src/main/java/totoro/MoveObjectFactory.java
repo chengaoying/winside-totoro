@@ -23,6 +23,18 @@ public class MoveObjectFactory implements Common{
 	/*玩家普通攻击*/
 	public Vector bombs = new Vector();
 	
+	/*激光*/
+	public Vector lasers = new Vector();
+	
+	/*导弹*/
+	public Vector missile = new Vector();
+	
+	/*必杀*/
+	public Vector ventose = new Vector();
+	
+	/*守护精灵*/
+	public Vector wingplane = new Vector();
+	
 	/*道具*/
 	public Vector props = new Vector();
 	
@@ -195,6 +207,59 @@ public class MoveObjectFactory implements Common{
 		return -1;
 	}
 
+	public void createLaster(MoveObject player){
+		MoveObject mo = new MoveObject();
+		mo.id = playerSkillParam[0][0];
+		mo.width = playerSkillParam[0][1];
+		mo.height = playerSkillParam[0][2];
+		mo.damage = playerSkillParam[0][3];
+		mo.speedX = playerSkillParam[0][4];
+		mo.speedY = playerSkillParam[0][5];
+		mo.frameNum = playerSkillParam[0][6];
+		mo.picId = playerSkillParam[0][7];
+		mo.mapx = player.mapx + player.width;
+		mo.mapy = player.mapy + player.height/2 + 2;
+		mo.frame = 3;
+		lasers.addElement(mo);
+	}
+	
+	public void createMissile(MoveObject player){
+		int num;
+		if(player.missileGrade == 1){
+			num = 2;
+			for(int i=0;i<num;i++){
+				MoveObject mo = new MoveObject();
+				mo.id = playerSkillParam[1][0];
+				mo.width = playerSkillParam[1][1];
+				mo.height = playerSkillParam[1][2];
+				mo.damage = playerSkillParam[1][3];
+				mo.speedX = playerSkillParam[1][4];
+				mo.speedY = playerSkillParam[1][5];
+				mo.frameNum = playerSkillParam[1][6];
+				mo.picId = playerSkillParam[1][7];
+				mo.mapx = player.mapx + player.width;
+				mo.mapy = player.mapy + mo.height+i*40;
+				missile.addElement(mo);
+			}
+		}else if(player.missileGrade == 2){
+			num = 4;
+			for(int i=0;i<num;i++){
+				MoveObject mo = new MoveObject();
+				mo.id = playerSkillParam[1][0];
+				mo.width = playerSkillParam[1][1];
+				mo.height = playerSkillParam[1][2];
+				mo.damage = playerSkillParam[1][3];
+				mo.speedX = playerSkillParam[1][4];
+				mo.speedY = playerSkillParam[1][5];
+				mo.frameNum = playerSkillParam[1][6];
+				mo.picId = playerSkillParam[1][7];
+				mo.mapx = player.mapx + player.width;
+				mo.mapy = player.mapy+5 +i*(5 + mo.height);
+				missile.addElement(mo);
+			}
+		}
+	}
+	
 	/*敌方普通攻击*/
 	public void createSpiritBomb(MoveObject object){
 		MoveObject mo = new MoveObject();
@@ -971,6 +1036,8 @@ public class MoveObjectFactory implements Common{
 		object.speedY = playerParam[index][10];
 		object.bombGrade = playerParam[index][11];
 		object.picId = playerParam[index][12];
+		object.wingplaneMaxNums = StateGame.wingplaneMaxNums;
+		object.wingplaneNums = StateGame.wingplaneNums;
 		return object;
 	}
 	
@@ -994,6 +1061,37 @@ public class MoveObjectFactory implements Common{
 		object.speedY = playerParam[grade-1][10];
 		object.bombGrade = StateGame.bombGrade;
 		object.picId = playerParam[grade-1][12];
+		object.wingplaneMaxNums = StateGame.wingplaneMaxNums;
+		object.wingplaneNums = StateGame.wingplaneNums;
+		object.scores = StateGame.scores;
+		System.out.println("totoro revive");
+		return object;
+	}
+	
+	/**
+	 * 继续游戏创建玩家
+	 * @param grade
+	 * @return
+	 */
+	public MoveObject createPlayer(int grade){
+		MoveObject object = new MoveObject();
+		object.status = ROLE_STATUS_ALIVE;
+		object.id = playerParam[grade-1][0];
+		object.mapx = playerParam[grade-1][1];
+		object.mapy = playerParam[grade-1][2];
+		object.width = playerParam[grade-1][3];
+		object.height = playerParam[grade-1][4];
+		object.lifeNum = StateGame.lifeNum;
+		object.blood = StateGame.blood;
+		object.damage = playerParam[grade-1][7];
+		object.grade = StateGame.grade;
+		object.speedX = playerParam[grade-1][9];
+		object.speedY = playerParam[grade-1][10];
+		object.bombGrade = StateGame.bombGrade;
+		object.picId = playerParam[grade-1][12];
+		object.wingplaneMaxNums = StateGame.wingplaneMaxNums;
+		object.wingplaneNums = StateGame.wingplaneNums;
+		object.scores = StateGame.scores;
 		System.out.println("totoro revive");
 		return object;
 	}

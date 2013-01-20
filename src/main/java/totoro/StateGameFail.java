@@ -21,7 +21,7 @@ public class StateGameFail implements Common{
 		startTime = System.currentTimeMillis()/1000;
 	}
 	
-	public int processGameFail(){
+	public int processGameFail(int level){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
@@ -34,7 +34,7 @@ public class StateGameFail implements Common{
 				handleGameFail(keyState);
 				if (running) {
 					long t1 = System.currentTimeMillis();
-					showGameFail(g);
+					showGameFail(g, level);
 					engine.flushGraphics();
 					System.gc();
 					int sleepTime = (int)(125-(System.currentTimeMillis()-t1));
@@ -55,7 +55,7 @@ public class StateGameFail implements Common{
 		return failIndex;
 	}
 
-	private void showGameFail(SGraphics g) {
+	private void showGameFail(SGraphics g, int level) {
 		Image bg = Resource.loadImage(Resource.id_fail_bg);
 		Image text = Resource.loadImage(Resource.id_fail_text);
 		//Image fail = Resource.loadImage(Resource.id_fail);
@@ -92,7 +92,7 @@ public class StateGameFail implements Common{
 			textX = buttonX + buttonW/2-textW/2;
 		}
 		
-		StateMain.drawNum(g, 3, x+235, y+113);
+		StateMain.drawNum(g, level*10, x+235, y+113);
 		drawNum(g, interval, bgX+25, bgY+50);
 	}
 	

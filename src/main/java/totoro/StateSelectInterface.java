@@ -5,6 +5,8 @@ import javax.microedition.lcdui.Image;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.res.UIResource;
+import cn.ohyeah.stb.ui.PopupConfirm;
 
 /**
  * 选择龙猫界面
@@ -44,14 +46,22 @@ public class StateSelectInterface implements Common{
 	}
 	
 	private void processSelectTotoro(){
-		/*if((menuIndex==2 && !StateGame.hasTotoro3) || (menuIndex==3 && !StateGame.hasTotoro4)){
+		if((menuIndex==2 && !StateGame.hasTotoro3) || (menuIndex==3 && !StateGame.hasTotoro4)){
 			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 			pc.setText("龙猫未解锁,是否解锁?");
 			int index = pc.popup();
 			if(index==0){
-				
+				if(menuIndex==2){
+					if(engine.pm.buyProp(61, 1)){
+						StateGame.hasTotoro3 = true;
+					}
+				}else{
+					if(engine.pm.buyProp(62, 1)){
+						StateGame.hasTotoro4 = true;
+					}
+				}
 			}
-		}else{*/
+		}else{
 			stateGame.factory = MoveObjectFactory.getInstance();
 			stateGame.objectShow = MoveObjectShow.getInstance();
 			StateGame.player = stateGame.factory.createNewPlayer(menuIndex);
@@ -64,7 +74,7 @@ public class StateSelectInterface implements Common{
 			StateGame.game_status = GAME_PLAY;
 			StateGame.level_start_time = System.currentTimeMillis()/1000;
 			Resource.clearSelectInterface();
-		//}
+		}
 	}
 	
 	int bgIndex ;

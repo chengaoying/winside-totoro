@@ -50,6 +50,31 @@ public class MoveObjectShow implements Common{
 		}
 	}
 	
+	public void showLasers(SGraphics g, Vector lasers, MoveObject player){
+		for(int i=0;i<lasers.size();i++){
+			MoveObject mo = (MoveObject) lasers.elementAt(i);
+			Image laserDevice = Resource.loadImage(Resource.id_prop_laser_device);
+			Image laser = Resource.loadImage(mo.picId);
+			//mo.frame = (mo.frame+1)%mo.frameNum;
+			mo.mapy =  player.mapy + player.height/2 + 2;
+			mo.mapx = player.mapx + player.width;
+			g.drawRegion(laser, 0, mo.frame*mo.height, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			g.drawImage(laserDevice, mo.mapx, mo.mapy-2, 20);
+		}
+	}
+	
+	public void showMissile(SGraphics g, Vector missiles){
+		for(int i=0;i<missiles.size();i++){
+			MoveObject mo = (MoveObject)missiles.elementAt(i);
+			Image moPic = Resource.loadImage(mo.picId);
+			g.drawImage(moPic, mo.mapx, mo.mapy, 20);
+			mo.mapx += mo.speedX;
+			if(mo.mapx>ScrW){
+				mo.status = ROLE_STATUS_DEAD;
+			}
+		}
+	}
+	
 	public void showSpirits(SGraphics g, Vector spirits){
 		g.setClip(0, 73, ScrW, gameH);
 		for(int i=spirits.size()-1;i>=0;i--){
