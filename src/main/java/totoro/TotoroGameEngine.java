@@ -120,8 +120,15 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		
 		/*读取游戏记录*/
 		readRecord();
+		
+		/*查询排行*/
+		queryList();
 	}
 	
+	private void queryList() {
+		
+	}
+
 	private void handleInit(KeyState key) {
 		if(key.containsAndRemove(KeyCode.OK)){
 			state = STATUS_MAIN_MENU;

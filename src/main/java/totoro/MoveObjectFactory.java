@@ -111,6 +111,58 @@ public class MoveObjectFactory implements Common{
 		
 	}
 	
+	/*创建僚机*/
+	public void createWingplane(MoveObject player){
+		int id = player.id;
+		int currNum = player.wingplaneNums;
+		MoveObject mo = new MoveObject();
+		mo.status = ROLE_STATUS_ALIVE;
+		mo.id = wingplaneParam[id][0];
+		mo.picId = wingplaneParam[id][1];
+		mo.width = wingplaneParam[id][2];
+		mo.height = wingplaneParam[id][3];
+		mo.blood = wingplaneParam[id][4];
+		mo.damage = wingplaneParam[id][5];
+		setWingplaneInfo(mo, currNum, player);
+		wingplane.addElement(mo);
+	}
+	
+	public void createWingplaneBomb(MoveObject object){
+		int index = object.id;
+		MoveObject mo = new MoveObject();
+		mo.id = wingplaneBombParam[index][0];
+		mo.width = wingplaneBombParam[index][1];
+		mo.height = wingplaneBombParam[index][2];
+		mo.speedX = wingplaneBombParam[index][3];
+		mo.picId = wingplaneBombParam[index][4];
+		mo.damage = wingplaneBombParam[index][5];
+		mo.frameIndex = 0;
+		mo.mapx = object.mapx+object.width;
+		mo.mapy = object.mapy+object.height/2-mo.height/2;
+		bombs.addElement(mo);
+	}
+	
+	private void setWingplaneInfo(MoveObject mo, int currNum, MoveObject player) {
+		switch(currNum){
+		case 1:
+			mo.mapx = player.mapx + player.width/2-mo.width/2;
+			mo.mapy = player.mapy-mo.height;
+			break;
+		case 2:
+			mo.mapx = player.mapx + player.width/2-mo.width/2;
+			mo.mapy = player.mapy + player.height;
+			break;
+		case 3:
+			mo.mapx = player.mapx + player.width/2-mo.width/2;
+			mo.mapy = player.mapy-mo.height-mo.height;
+			break;
+		case 4:
+			mo.mapx = player.mapx + player.width/2-mo.width/2;
+			mo.mapy = player.mapy + player.height+mo.height;
+			break;
+		}
+	}
+
 	/*精灵初始坐标*/
 	private void spiritPosition(MoveObject mo, int i, int count){
 		switch (mo.position){
@@ -179,7 +231,7 @@ public class MoveObjectFactory implements Common{
 	public void createProps(MoveObject object, int level){
 		int ran = RandomValue.getRandInt(100);
 		System.out.println("ran:"+ran);
-		if(ran>20){
+		if(ran>40 || object.status==ROLE_STATUS_DEAD){
 			return;
 		}
 		int r = RandomValue.getRandInt(levelProps[level-1].length);
@@ -208,19 +260,23 @@ public class MoveObjectFactory implements Common{
 	}
 
 	public void createLaster(MoveObject player){
-		MoveObject mo = new MoveObject();
-		mo.id = playerSkillParam[0][0];
-		mo.width = playerSkillParam[0][1];
-		mo.height = playerSkillParam[0][2];
-		mo.damage = playerSkillParam[0][3];
-		mo.speedX = playerSkillParam[0][4];
-		mo.speedY = playerSkillParam[0][5];
-		mo.frameNum = playerSkillParam[0][6];
-		mo.picId = playerSkillParam[0][7];
-		mo.mapx = player.mapx + player.width;
-		mo.mapy = player.mapy + player.height/2 + 2;
-		mo.frame = 3;
-		lasers.addElement(mo);
+		for(int i=0;i<2;i++){
+			MoveObject mo = new MoveObject();
+			mo.status = ROLE_STATUS_ALIVE;
+			mo.status2 = ROLE_STATUS2_ATTACK;
+			mo.id = playerSkillParam[0][0];
+			mo.width = playerSkillParam[0][1];
+			mo.height = playerSkillParam[0][2];
+			mo.damage = playerSkillParam[0][3];
+			mo.speedX = playerSkillParam[0][4];
+			mo.speedY = playerSkillParam[0][5];
+			mo.frameNum = playerSkillParam[0][6];
+			mo.picId = playerSkillParam[0][7];
+			mo.mapx = player.mapx+player.width-10;
+			mo.mapy = player.mapy - mo.height + (i*(player.height+mo.height-15))+10;
+			mo.startTime = System.currentTimeMillis();
+			lasers.addElement(mo);
+		}
 	}
 	
 	public void createMissile(MoveObject player){
@@ -1047,7 +1103,7 @@ public class MoveObjectFactory implements Common{
 	 */
 	public MoveObject revivePlayer(int grade){
 		MoveObject object = new MoveObject();
-		object.status = ROLE_STATUS_ALIVE;
+		object.status = ROLE_STATUS_PROTECTED;
 		object.id = playerParam[grade-1][0];
 		object.mapx = playerParam[grade-1][1];
 		object.mapy = playerParam[grade-1][2];
@@ -1064,6 +1120,7 @@ public class MoveObjectFactory implements Common{
 		object.wingplaneMaxNums = StateGame.wingplaneMaxNums;
 		object.wingplaneNums = StateGame.wingplaneNums;
 		object.scores = StateGame.scores;
+		object.startTime = System.currentTimeMillis();
 		System.out.println("totoro revive");
 		return object;
 	}
@@ -1113,6 +1170,11 @@ public class MoveObjectFactory implements Common{
 		bombs.removeAllElements();
 		boss1Skill.removeAllElements();
 		ghostSpirits.removeAllElements();
+		lasers.removeAllElements();
+		missile.removeAllElements();
+		ventose.removeAllElements();
+		wingplane.removeAllElements();
+		props.removeAllElements();
 		StateGame.player = null;
 	}
 }

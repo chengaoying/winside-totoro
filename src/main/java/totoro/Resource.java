@@ -36,19 +36,23 @@ public class Resource implements Common {
 	
 	public static short id_pink_totoro = NUMS++;
 	public static short id_pink_totoro_bomb = NUMS++;
+	public static short id_pink_totoro_wingplane = NUMS++;
 	public static short id_yellow_totoro = NUMS++;
 	public static short id_yellow_totoro_bomb1 = NUMS++;
 	public static short id_yellow_totoro_bomb2 = NUMS++;
 	public static short id_yellow_totoro_bomb3 = NUMS++;
+	public static short id_yellow_totoro_wingplane = NUMS++;
 	public static short id_blue_totoro = NUMS++;
 	public static short id_blue_totoro_bomb1 = NUMS++;
 	public static short id_blue_totoro_bomb2 = NUMS++;
 	public static short id_blue_totoro_bomb3 = NUMS++;
 	public static short id_blue_totoro_bomb4 = NUMS++;
+	public static short id_blue_totoro_wingplane = NUMS++;
 	public static short id_black_totoro = NUMS++;
 	public static short id_black_totoro_bomb1 = NUMS++;
 	public static short id_black_totoro_bomb2 = NUMS++;
 	public static short id_black_totoro_bomb3 = NUMS++;
+	public static short id_black_totoro_wingplane = NUMS++;
 	
 	public static short id_sky_game_bg = NUMS++;
 	public static short id_sky_game_hill = NUMS++;
@@ -174,19 +178,23 @@ public class Resource implements Common {
 		
 		"/own/pink/totoro.png",
 		"/own/pink/bomb.png",
+		"/own/pink/wingplane.png",
 		"/own/yellow/totoro.png",
 		"/own/yellow/bomb1.png",
 		"/own/yellow/bomb2.png",
 		"/own/yellow/bomb3.png",
+		"/own/yellow/wingplane.png",
 		"/own/blue/totoro.png",
 		"/own/blue/bomb1.png",
 		"/own/blue/bomb2.png",
 		"/own/blue/bomb3.png",
 		"/own/blue/bomb4.png",
+		"/own/blue/wingplane.png",
 		"/own/black/totoro.png",
 		"/own/black/bomb1.png",
 		"/own/black/bomb2.png",
 		"/own/black/bomb3.png",
+		"/own/black/wingplane.png",
 		
 		"/game/sky/sky_bg.jpg",
 		"/game/sky/sky_hill.png",
@@ -329,19 +337,23 @@ public class Resource implements Common {
 	public static void clearGame(){
 		images[id_pink_totoro] = null;
 		images[id_pink_totoro_bomb] = null;
+		images[id_pink_totoro_wingplane] = null;
 		images[id_yellow_totoro] = null;
 		images[id_yellow_totoro_bomb1] = null;
 		images[id_yellow_totoro_bomb2] = null;
 		images[id_yellow_totoro_bomb3] = null;
+		images[id_yellow_totoro_wingplane] = null;
 		images[id_blue_totoro] = null;
 		images[id_blue_totoro_bomb1] = null;
 		images[id_blue_totoro_bomb2] = null;
 		images[id_blue_totoro_bomb3] = null;
 		images[id_blue_totoro_bomb4] = null;
+		images[id_blue_totoro_wingplane] = null;
 		images[id_black_totoro] = null;
 		images[id_black_totoro_bomb1] = null;
 		images[id_black_totoro_bomb2] = null;
 		images[id_black_totoro_bomb3] = null;
+		images[id_black_totoro_wingplane] = null;
 		
 		images[id_sky_game_bg] = null;
 		images[id_sky_game_hill] = null;

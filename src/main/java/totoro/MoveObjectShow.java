@@ -55,11 +55,17 @@ public class MoveObjectShow implements Common{
 			MoveObject mo = (MoveObject) lasers.elementAt(i);
 			Image laserDevice = Resource.loadImage(Resource.id_prop_laser_device);
 			Image laser = Resource.loadImage(mo.picId);
-			//mo.frame = (mo.frame+1)%mo.frameNum;
-			mo.mapy =  player.mapy + player.height/2 + 2;
-			mo.mapx = player.mapx + player.width;
-			g.drawRegion(laser, 0, mo.frame*mo.height, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			g.drawImage(laserDevice, mo.mapx, mo.mapy-2, 20);
+			mo.mapy =  player.mapy - mo.height + (i*(player.height+mo.height-15))+10;
+			mo.mapx = player.mapx+player.width-10;
+			if(mo.status2 != ROLE_STATUS2_MOVE){
+				mo.frame = (mo.frame+1)%mo.frameNum;
+				g.drawRegion(laser, 0, mo.frame*mo.height, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				if(mo.frame == 3){
+					mo.status2 = ROLE_STATUS2_MOVE;
+					mo.startTime = System.currentTimeMillis();
+				}
+			}
+			g.drawImage(laserDevice, mo.mapx, mo.mapy-4, 20);
 		}
 	}
 	
@@ -72,6 +78,24 @@ public class MoveObjectShow implements Common{
 			if(mo.mapx>ScrW){
 				mo.status = ROLE_STATUS_DEAD;
 			}
+		}
+	}
+	
+	public void showWingplane(SGraphics g, Vector wingplane, MoveObject player){
+		for(int i=0;i<wingplane.size();i++){
+			MoveObject mo = (MoveObject)wingplane.elementAt(i);
+			Image moPic = Resource.loadImage(mo.picId);
+			mo.mapx = player.mapx + player.width/2-mo.width/2;
+			if(i==0){
+				mo.mapy = player.mapy-mo.height;
+			}else if(i==1){
+				mo.mapy = player.mapy + player.height;
+			}else if(i==2){
+				mo.mapy = player.mapy-mo.height-mo.height;
+			}else {
+				mo.mapy = player.mapy + player.height+mo.height;
+			}
+			g.drawImage(moPic, mo.mapx, mo.mapy, 20);
 		}
 	}
 	

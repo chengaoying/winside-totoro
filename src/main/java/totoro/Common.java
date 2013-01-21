@@ -78,6 +78,12 @@ public interface Common {
 	public static final int blueTotoroPicId = Resource.id_blue_totoro;
 	public static final int blackTotoroPicId = Resource.id_black_totoro;
 	
+	/*僚机图片*/
+	public static final int pinkWingplane = Resource.id_pink_totoro_wingplane;
+	public static final int yellowWingplane = Resource.id_yellow_totoro_wingplane;
+	public static final int blueWingplane = Resource.id_blue_totoro_wingplane;
+	public static final int blackWingplane = Resource.id_black_totoro_wingplane;
+	
 	/*子弹图片id*/
 	public static final int pinkBombPicId = Resource.id_pink_totoro_bomb;
 	public static final int yellowBomb1PicId = Resource.id_yellow_totoro_bomb1;
@@ -178,14 +184,14 @@ public interface Common {
 	/*关卡等级信息*/
 	public static final int levelInfo[][] = {
 		/*0-关卡, 1-关卡时间(秒), 2-出怪时间间隔, 3-battery interval*/
-		{1, 120, 5000, 10000},
-		{2, 120, 5000, 10000},
-		{3, 120, 4000, 10000},
-		{4, 120, 4000, 10000},
-		{5, 120, 4000, 10000},
-		{6, 120, 3000, 10000},
-		{7, 120, 3000, 60000},
-		{8, 120, 3000, 60000},
+		{1, 120, 3000, 10000},
+		{2, 120, 3000, 10000},
+		{3, 120, 3000, 10000},
+		{4, 120, 3000, 10000},
+		{5, 120, 3000, 10000},
+		{6, 120, 2000, 10000},
+		{7, 120, 2000, 60000},
+		{8, 120, 1000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -194,8 +200,25 @@ public interface Common {
 			 * ,11-玩家子弹等级, 12-玩家图片id, 13-体力, 14-威力, 15-效果*/
 			{0, 20, 250, 48, 100, 3, 100, 15, TOTORO_GRADE_ONE, 10, 8, TOTORO_BOMB_GRADE_ONE, yellowTotoroPicId, 4, 4, 7},
 			{1, 20, 250, 35, 53, 3, 150, 10, TOTORO_GRADE_TWO, 8, 10, TOTORO_BOMB_GRADE_ONE, pinkTotoroPicId, 6, 3, 7},
-			{2, 20, 250, 63, 97, 3, 200, 30, TOTORO_GRADE_THREE, 12, 12, TOTORO_BOMB_GRADE_ONE, blueTotoroPicId, 8, 6, 6},
-			{3, 20, 250, 53, 97, 3, 150, 40, TOTORO_GRADE_FOUR, 15, 15, TOTORO_BOMB_GRADE_ONE, blackTotoroPicId, 6, 8, 7},
+			{2, 20, 250, 63, 97, 3, 200, 5, TOTORO_GRADE_THREE, 12, 12, TOTORO_BOMB_GRADE_ONE, blueTotoroPicId, 8, 6, 6},
+			{3, 20, 250, 53, 97, 3, 150, 7, TOTORO_GRADE_FOUR, 15, 15, TOTORO_BOMB_GRADE_ONE, blackTotoroPicId, 6, 8, 7},
+	};
+	
+	/*僚机属性*/
+	public int wingplaneParam[][] = {
+			/*0-id, 1-picId, 2-w, 3-h, 4-blood,5-damage*/
+			{0,yellowWingplane, 16,25,50,15},
+			{1,pinkWingplane, 23,47,75,10},
+			{2,blueWingplane, 30,45,100,15},
+			{3,blackWingplane, 24,45,75,15},
+	};
+	
+	public int wingplaneBombParam[][] = {
+			/*0-id, 1-w, 2-h, 3-damage, 4-picId*/
+			{0, 32, 18, 30, yellowBomb1PicId, 15},
+			{1, 27, 21, 30, pinkBombPicId, 10},
+			{2, 34, 14, 30, blueBomb1PicId,20},
+			{3, 22, 23, 30, blackBomb1PicId,20},
 	};
 	
 	/*玩家普通攻击属性, 	数组中的数值为0表示不使用该值*/
@@ -235,8 +258,8 @@ public interface Common {
 	
 	public int playerSkillParam[][] = {
 			/*0-id, 1-w,2-h,3-damage,4-speedx,5-speedy, 6-frameNum,7-picId*/
-			{0, 573, 11, 15, 5, 5, 4, laserPic},
-			{1, 42, 21, 30, 30, 5, 1, missilePic},
+			{0, 573, 11, 5, 5, 5, 4, laserPic},
+			{1, 42, 21, 20, 30, 5, 1, missilePic},
 	};
 	
 	/*道具属性*/
@@ -252,14 +275,14 @@ public interface Common {
 	
 	/*每个关卡所掉落的奖品*/
 	public int levelProps[][] = {
-			{id_blood,id_laser,id_missile, id_upgrade,id_wingplane},
-			{id_blood,id_laser, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_missile, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_ventose,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_ventose,id_wingplane},
+			{/*id_blood,*/id_laser,id_missile, /*id_upgrade,id_wingplane*/},
+			{id_blood,id_laser, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane},
 	};
 	
 	/*boss属性*/
@@ -320,26 +343,26 @@ public interface Common {
 			/*0-id, 1-width, 2-height, 3-blood, 4-scores, 5-speedX, 6-speedY, 7-coorX, 8-coorY
 			 * 9-position, 10-attackpermission, 11-picId, 12-frameNum, 13-damage, 14-bombInterval, 15-picInterval, 16-prize*/
 			
-			{300, 70, 69, 105, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{300, 70, 69, 105, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{301, 131, 146, 120, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{301, 131, 146, 120, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{301, 131, 146, 135, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{301, 131, 146, 135, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{302, 92, 97, 150, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{302, 92, 97, 150, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{300, 70, 69, 155, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
+			{300, 70, 69, 155, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
+			{301, 131, 146, 170, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{301, 131, 146, 170, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{301, 131, 146, 185, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{301, 131, 146, 185, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
 	};
 	
 	/*精灵普通攻击属性*/
 	public int spiritBombParam[][] = {
 			/*0-精灵id, 1-id, 2-宽度, 3-高度, 4-伤害, 5-x速度, 6-Y速度, 7-子弹图片id, */
-			{100, 15, 20, 19, 25, 20, 20, spiritBomb1PicId},
-			{104, 16, 32, 36, 25, 20, 20, spiritBomb2PicId},
-			{107, 17, 19, 20, 25, 20, 20, spiritBomb3PicId},
-			{108, 18, 20, 20, 25, 20, 20, spiritBomb4PicId},
-			{109, 19, 32, 20, 25, 20, 20, spiritBomb5PicId},
-			{110, 14, 32, 20, 25, 20, 20, spiritBomb5PicId},
-			{111, 13, 50, 23, 25, 20, 20, spiritBomb6PicId},
+			{100, 15, 20, 19, 10, 20, 20, spiritBomb1PicId},
+			{104, 16, 32, 36, 10, 20, 20, spiritBomb2PicId},
+			{107, 17, 19, 20, 10, 20, 20, spiritBomb3PicId},
+			{108, 18, 20, 20, 10, 20, 20, spiritBomb4PicId},
+			{109, 19, 32, 20, 10, 20, 20, spiritBomb5PicId},
+			{110, 14, 32, 20, 10, 20, 20, spiritBomb5PicId},
+			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId},
 			/*{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
 			{201, 21, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{202, 22, 85, 50, 25, 20, 20, bossBomb2PicId},
@@ -348,9 +371,9 @@ public interface Common {
 			{205, 25, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{206, 27, 32, 20, 25, 20, 20, spiritBomb5PicId},
 			{207, 28, 32, 20, 25, 20, 20, spiritBomb5PicId},*/
-			{300, 30, 20, 19, 25, 20, 10, spiritBomb1PicId},
-			{301, 31, 49, 52, 25, 20, 10, batteryBomb2PicId},
-			{302, 32, 31, 31, 25, 20, 10, batteryBomb3PicId},
+			{300, 30, 20, 19, 10, 20, 10, spiritBomb1PicId},
+			{301, 31, 49, 52, 10, 20, 10, batteryBomb2PicId},
+			{302, 32, 31, 31, 10, 20, 10, batteryBomb3PicId},
 	};
 	
 	/*精灵属性*/

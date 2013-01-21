@@ -4,6 +4,7 @@ import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
@@ -49,7 +50,7 @@ public class StateGame implements Common{
 	public static int blood;
 	public static int grade;
 	public static int bombGrade;
-	public static int wingplaneMaxNums;
+	public static int wingplaneMaxNums = 1;
 	public static int wingplaneNums;
 	public static int missileGrade;
 	public static boolean hasTotoro3;
@@ -107,17 +108,21 @@ public class StateGame implements Common{
 			if(engine.isDebugMode()){
 				if(factory.lasers.size()<1){
 					factory.createLaster(player);
-				}else{
+				}/*else{
 					MoveObject object = (MoveObject) factory.lasers.elementAt(0);
 					if(object.frame>0){
 						object.frame--;
 						object.damage += 5;
 					}
-				}
+				}*/
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
 			if(engine.isDebugMode()){
 				factory.createMissile(player);
+			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM8)){
+			if(engine.isDebugMode()){
+				//factory.createWingplane(player);
 			}
 		}
 		
@@ -137,6 +142,12 @@ public class StateGame implements Common{
 			game_status = GAME_FAIL;
 		}
 		
+		/*复活后无敌时间*/
+		player.endTime = getTime();
+		if(player.status == ROLE_STATUS_PROTECTED && player.endTime-player.startTime > 3000){
+			player.status = ROLE_STATUS_ALIVE;
+		}
+		
 		judgeNextLevel();
 		
 		level_end_time = getTime()/1000;
@@ -151,13 +162,26 @@ public class StateGame implements Common{
 			&& player.status != ROLE_STATUS_PASS 
 			&& bombEnd - bombStart > bombInterval){
 			
-			if(factory.lasers.size()<1){
+			//if(factory.lasers.size()<1){
 				factory.createBomb(player);
-			}
-			if(player.missileGrade>0){
+			//}
+			if(player.missileGrade>0 && factory.lasers.size()<1){
 				factory.createMissile(player);
 			}
+			for(int k=0;k<factory.wingplane.size();k++){ //僚机普通攻击
+				MoveObject mo = (MoveObject) factory.wingplane.elementAt(k);
+				factory.createWingplaneBomb(mo);
+			}
 			bombStart = getTime();
+			
+			for(int m=0;m<factory.lasers.size();m++){
+				MoveObject laser = (MoveObject) factory.lasers.elementAt(m);
+				laser.endTime = getTime();
+				if(laser.endTime-laser.startTime > 1000){
+					laser.startTime = getTime();
+					laser.status2 = ROLE_STATUS2_ATTACK;
+				}
+			}
 		}
 		
 		createSpirits();
@@ -195,7 +219,10 @@ public class StateGame implements Common{
 			if(i == 0){
 				//买复活
 				if(engine.getEngineService().getBalance() > level*10){
-					player.lifeNum ++;
+					ServiceWrapper sw = engine.getServiceWrapper();
+					sw.expend(level*10, "购买复活");
+					player.lifeNum = 3;
+					lifeNum = player.lifeNum;
 				}else{
 					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 					pc.setText(engine.getEngineService().getExpendAmountUnit()+"不足,是否去充值?");
@@ -230,9 +257,10 @@ public class StateGame implements Common{
 	}
 
 	private void judgeNextLevel() {
-		if(level_over && factory.boss.size()<1 && isCeateBoss == true){
+		if(level_over && factory.boss.size()<1 && isCeateBoss == true && player.status != ROLE_STATUS_PASS){
 			isNextLevel = true;
 			player.status = ROLE_STATUS_PASS;
+			player.speedX += 10;
 			//factory.removeAllObject();
 			if(level >= 8){
 				//通关
@@ -244,6 +272,7 @@ public class StateGame implements Common{
 		if(player.status == ROLE_STATUS_PASS){
 			player.mapx += player.speedX;
 			if(player.mapx > ScrW){
+				player.speedX -= 10;
 				engine.saveRecord();
 				changeDatePass();
 			}
@@ -321,6 +350,247 @@ public class StateGame implements Common{
 	private void collisionDetection() {
 		
 		/*玩家普通攻击碰撞检测*/
+		playerCollision();
+		
+		/*怪物碰撞检测*/
+		spiritsCollision();
+		
+		/*敌方普通攻击碰撞检测*/
+		spiritBombCollision();
+		
+		/*敌方技能攻击碰撞检测*/
+		bossSkillCollision();
+		
+		/*敌方技能攻击碰撞检测*/
+		bossSkill2Collision();
+		
+		/*boss冲撞撞检测*/
+		bossCollision();
+		
+		/*props*/
+		propCollision();
+		
+		/*激光*/
+		laserCollision();
+		
+		/*导弹*/
+		misssileCollision();
+		
+		if(player.blood <= 0 && player.status == ROLE_STATUS_ALIVE){
+			player.status = ROLE_STATUS_DEAD;
+			player.lifeNum --;
+			lifeNum = player.lifeNum;
+			reviveStime = getTime();
+			factory.lasers.removeAllElements();
+		}
+	}
+	
+	private void propCollision() {
+		for(int i=0;i<factory.props.size();i++){
+			MoveObject mo = (MoveObject)factory.props.elementAt(i);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status != ROLE_STATUS_DEAD){
+				mo.status = ROLE_STATUS_DEAD;
+				eatProp(mo);
+			}
+		}
+	}
+
+	private void laserCollision() {
+		for(int i=0;i<factory.lasers.size();i++){
+			MoveObject laser = (MoveObject) factory.lasers.elementAt(i);
+			for(int j=0;j<factory.spirits.size();j++){
+				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+				if((mo.mapy<=laser.mapy+laser.height && mo.mapy+mo.height>=laser.mapy)
+						&& laser.mapx<mo.mapx && laser.status2 == ROLE_STATUS2_ATTACK){
+					mo.blood -= laser.damage;
+					//laser.width = mo.mapx+mo.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy+mo.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(mo.blood<=0){
+					if(mo.pirze == SPIRITI_PRIZE_YES){
+						factory.createProps(mo, level);
+					}
+					mo.status = ROLE_STATUS_DEAD;
+					player.scores += mo.scores;
+					scores = player.scores;
+				}
+			}
+			for(int k=0;k<factory.boss.size();k++){
+				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
+				if((boss.mapy<=laser.mapy+laser.height && boss.mapy+boss.height>=laser.mapy)
+						&& laser.mapx<boss.mapx && laser.status2 == ROLE_STATUS2_ATTACK){
+					boss.blood -= laser.damage;
+					//laser.width = boss.mapx+boss.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(boss.mapx+20,boss.mapy+boss.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(boss.blood<=0){
+					boss.status = ROLE_STATUS_DEAD;
+					player.scores += boss.scores;
+					scores = player.scores;
+				}
+				//System.out.println("boss.blood:"+boss.blood);
+			}
+			for(int m=0;m<factory.battery.size();m++){
+				MoveObject battery = (MoveObject) factory.battery.elementAt(m);
+				if((battery.mapy<=laser.mapy+laser.height && battery.mapy+battery.height>=laser.mapy)
+						&& laser.mapx<battery.mapx && laser.status2 == ROLE_STATUS2_ATTACK){
+					battery.blood -= laser.damage;
+					//laser.width = battery.mapx+battery.width/2 - laser.mapx;
+					Exploder exploder = new Exploder(battery.mapx,battery.mapy+battery.height/2);
+					exploders[eIndex] = exploder;
+					if(eIndex < exploders.length-1){
+						eIndex ++;
+					}else{
+						eIndex=0;
+					}
+				}
+				if(battery.blood<=0){
+					battery.status = ROLE_STATUS_DEAD;
+					player.scores += battery.scores;
+					scores = player.scores;
+				}
+			}
+		}
+	}
+
+	private void bossCollision() {
+		for(int j=0;j<factory.boss.size();j++){
+			MoveObject mo = (MoveObject) factory.boss.elementAt(j);
+			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				hitPlayer(mo);
+			}
+			for(int m=0;m<factory.wingplane.size();m++){
+				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
+				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					hitWingplane(wing, mo);
+				}
+			}
+		}
+	}
+
+	private void bossSkill2Collision() {
+		for(int k=0;k<factory.boss8Skill.size();k++){
+			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				bombHitPlayer(mo);
+			}
+			for(int m=0;m<factory.wingplane.size();m++){
+				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
+				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					hitWingplane(wing, mo);
+				}
+			}
+		}
+	}
+
+	private void bossSkillCollision() {
+		for(int k=0;k<factory.boss1Skill.size();k++){
+			MoveObject mo = (MoveObject) factory.boss1Skill.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				//mo.status = ROLE_STATUS_DEAD;
+				bombHitPlayer(mo);
+			}
+			for(int m=0;m<factory.wingplane.size();m++){
+				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
+				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					hitWingplane(wing, mo);
+				}
+			}
+		}
+	}
+
+	private void spiritBombCollision() {
+		for(int k=0;k<factory.spiritBombs.size();k++){
+			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
+			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				mo.status = ROLE_STATUS_DEAD;
+				bombHitPlayer(mo);
+			}
+			for(int m=0;m<factory.wingplane.size();m++){
+				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
+				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					hitWingplane(wing, mo);
+				}
+			}
+		}
+	}
+
+	private void bombHitPlayer(MoveObject mo) {
+		if(player.status != ROLE_STATUS_PROTECTED){
+			if(player.blood - mo.damage >0){
+				player.blood -= mo.damage;
+			}else{
+				player.blood = 0;
+			}
+			blood = player.blood;
+			Exploder exploder = new Exploder(mo.mapx,mo.mapy);
+			exploders[eIndex] = exploder;
+			if(eIndex < exploders.length-1){
+				eIndex ++;
+			}else{
+				eIndex=0;
+			}
+		}
+	}
+
+	private void spiritsCollision() {
+		for(int j=0;j<factory.spirits.size();j++){
+			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
+			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)
+					 && player.status == ROLE_STATUS_ALIVE){
+				hitPlayer(mo);
+			}
+			for(int k=0;k<factory.wingplane.size();k++){
+				MoveObject wing = (MoveObject) factory.wingplane.elementAt(k);
+				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+					hitWingplane(wing,mo);
+				}
+			}
+			if(mo.blood <= 0){
+				mo.status = ROLE_STATUS_DEAD;
+			}
+		}
+	}
+
+	private void hitWingplane(MoveObject wing, MoveObject mo) {
+		if(wing.blood - mo.damage >0){
+			wing.blood -= mo.damage;
+		}else{
+			wing.status = ROLE_STATUS_DEAD;
+		}
+		mo.blood -= wing.damage;
+	}
+
+	private void hitPlayer(MoveObject mo) {
+		if(player.status != ROLE_STATUS_PROTECTED){
+			if(player.blood - mo.damage >0){
+				player.blood -= mo.damage;
+			}else{
+				player.blood = 0;
+			}
+			blood = player.blood;
+		}
+		mo.blood -= player.damage;
+	}
+
+	private void playerCollision() {
 		for(int i=0;i<factory.bombs.size();i++){
 			MoveObject bomb = (MoveObject) factory.bombs.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
@@ -339,12 +609,12 @@ public class StateGame implements Common{
 					}
 				}
 				if(mo.blood<=0){
-					mo.status = ROLE_STATUS_DEAD;
-					player.scores += mo.scores;
-					scores = player.scores;
 					if(mo.pirze == SPIRITI_PRIZE_YES){
 						factory.createProps(mo, level);
 					}
+					mo.status = ROLE_STATUS_DEAD;
+					player.scores += mo.scores;
+					scores = player.scores;
 				}
 			}
 			for(int k=0;k<factory.boss.size();k++){
@@ -395,203 +665,9 @@ public class StateGame implements Common{
 				//System.out.println("boss.blood:"+boss.blood);
 			}
 		}
-		
-		/*怪物碰撞检测*/
-		for(int j=0;j<factory.spirits.size();j++){
-			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)
-					 && player.status == ROLE_STATUS_ALIVE){
-				if(player.status != ROLE_STATUS_PROTECTED){
-					if(player.blood - mo.damage >0){
-						player.blood -= mo.damage;
-					}else{
-						player.blood = 0;
-					}
-					blood = player.blood;
-				}
-				mo.blood -= player.damage;
-			}
-			if(mo.blood <= 0){
-				mo.status = ROLE_STATUS_DEAD;
-			}
-		}
-		
-		/*敌方普通攻击碰撞检测*/
-		for(int k=0;k<factory.spiritBombs.size();k++){
-			MoveObject mo = (MoveObject) factory.spiritBombs.elementAt(k);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
-					 && player.status == ROLE_STATUS_ALIVE){
-				mo.status = ROLE_STATUS_DEAD;
-				if(player.status != ROLE_STATUS_PROTECTED){
-					if(player.blood - mo.damage >0){
-						player.blood -= mo.damage;
-					}else{
-						player.blood = 0;
-					}
-					blood = player.blood;
-					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-			}
-		}
-		
-		/*敌方技能攻击碰撞检测*/
-		for(int k=0;k<factory.boss1Skill.size();k++){
-			MoveObject mo = (MoveObject) factory.boss1Skill.elementAt(k);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
-					 && player.status == ROLE_STATUS_ALIVE){
-				//mo.status = ROLE_STATUS_DEAD;
-				if(player.status != ROLE_STATUS_PROTECTED){
-					if(player.blood - mo.damage >0){
-						player.blood -= mo.damage;
-					}else{
-						player.blood = 0;
-					}
-					blood = player.blood;
-					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-			}
-		}
-		
-		/*敌方技能攻击碰撞检测*/
-		for(int k=0;k<factory.boss8Skill.size();k++){
-			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(k);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
-					 && player.status == ROLE_STATUS_ALIVE){
-				System.out.println("boss8attack===========");
-				if(player.status != ROLE_STATUS_PROTECTED){
-					if(player.blood - mo.damage >0){
-						player.blood -= mo.damage;
-					}else{
-						player.blood = 0;
-					}
-					blood = player.blood;
-					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-			}
-		}
-		
-		/*boss冲撞撞检测*/
-		for(int j=0;j<factory.boss.size();j++){
-			MoveObject mo = (MoveObject) factory.boss.elementAt(j);
-			if(Collision.checkSquareCollision(player.mapx, player.mapy, player.width, player.height, mo.mapx, mo.mapy, mo.width, mo.height)
-					 && player.status == ROLE_STATUS_ALIVE){
-				if(player.status != ROLE_STATUS_PROTECTED){
-					if(player.blood - mo.damage >0){
-						player.blood -= mo.damage;
-					}else{
-						player.blood = 0;
-					}
-					blood = player.blood;
-				}
-			}
-		}
-		
-		/*props*/
-		for(int i=0;i<factory.props.size();i++){
-			MoveObject mo = (MoveObject)factory.props.elementAt(i);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
-					 && player.status != ROLE_STATUS_DEAD){
-				mo.status = ROLE_STATUS_DEAD;
-				eatProp(mo);
-			}
-		}
-		
-		for(int i=0;i<factory.lasers.size();i++){
-			MoveObject laser = (MoveObject) factory.lasers.elementAt(i);
-			for(int j=0;j<factory.spirits.size();j++){
-				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-				if((mo.mapy<=laser.mapy+laser.height && mo.mapy+mo.height>=laser.mapy)){
-					mo.blood -= laser.damage;
-					//laser.width = mo.mapx+mo.width/2 - laser.mapx;
-					Exploder exploder = new Exploder(mo.mapx,mo.mapy+mo.height/2);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-				if(mo.blood<=0){
-					mo.status = ROLE_STATUS_DEAD;
-					player.scores += mo.scores;
-					scores = player.scores;
-					if(mo.pirze == SPIRITI_PRIZE_YES){
-						factory.createProps(mo, level);
-					}
-				}
-			}
-			for(int k=0;k<factory.boss.size();k++){
-				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
-				if((boss.mapy<=laser.mapy+laser.height && boss.mapy+boss.height>=laser.mapy)){
-					boss.blood -= laser.damage;
-					//laser.width = boss.mapx+boss.width/2 - laser.mapx;
-					Exploder exploder = new Exploder(boss.mapx+20,boss.mapy+boss.height/2);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-				if(boss.blood<=0){
-					boss.status = ROLE_STATUS_DEAD;
-					player.scores += boss.scores;
-					scores = player.scores;
-				}
-				//System.out.println("boss.blood:"+boss.blood);
-			}
-			for(int m=0;m<factory.battery.size();m++){
-				MoveObject battery = (MoveObject) factory.battery.elementAt(m);
-				if((battery.mapy<=laser.mapy+laser.height && battery.mapy+battery.height>=laser.mapy)){
-					battery.blood -= laser.damage;
-					//laser.width = battery.mapx+battery.width/2 - laser.mapx;
-					Exploder exploder = new Exploder(battery.mapx,battery.mapy+battery.height/2);
-					exploders[eIndex] = exploder;
-					if(eIndex < exploders.length-1){
-						eIndex ++;
-					}else{
-						eIndex=0;
-					}
-				}
-				if(battery.blood<=0){
-					battery.status = ROLE_STATUS_DEAD;
-					player.scores += battery.scores;
-					scores = player.scores;
-				}
-			}
-		}
-		
-		misssileAttack();
-		
-		
-		if(player.blood <= 0 && player.status == ROLE_STATUS_ALIVE){
-			player.status = ROLE_STATUS_DEAD;
-			player.lifeNum --;
-			lifeNum = player.lifeNum;
-			reviveStime = getTime();
-			factory.lasers.removeAllElements();
-		}
 	}
-	
-	private void misssileAttack() {
+
+	private void misssileCollision() {
 		for(int i=0;i<factory.missile.size();i++){
 			MoveObject bomb = (MoveObject) factory.missile.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
@@ -610,12 +686,12 @@ public class StateGame implements Common{
 					}
 				}
 				if(mo.blood<=0){
-					mo.status = ROLE_STATUS_DEAD;
-					player.scores += mo.scores;
-					scores = player.scores;
 					if(mo.pirze == SPIRITI_PRIZE_YES){
 						factory.createProps(mo, level);
 					}
+					mo.status = ROLE_STATUS_DEAD;
+					player.scores += mo.scores;
+					scores = player.scores;
 				}
 			}
 			for(int k=0;k<factory.boss.size();k++){
@@ -681,15 +757,24 @@ public class StateGame implements Common{
 		case id_laser:
 			if(factory.lasers.size()<1){
 				factory.createLaster(player);
-			}else{
+				factory.missile.removeAllElements();
+				player.missileGrade = 0;
+			}/*else{
 				MoveObject object = (MoveObject) factory.lasers.elementAt(0);
 				if(object.frame>0){
 					object.frame--;
 					object.damage += 5;
 				}
-			}
+			}*/
 			break;
 		case id_missile:
+			if(player.missileGrade<2){
+				player.missileGrade ++;
+				missileGrade = player.missileGrade;
+				factory.lasers.removeAllElements();
+				System.out.println("laser.size:"+factory.lasers.size());
+				System.out.println("player.missileGrade:"+player.missileGrade);
+			}
 			break;
 		case id_upgrade:
 			if(player.bombGrade<4){
@@ -703,6 +788,7 @@ public class StateGame implements Common{
 			if(wingplaneNums<wingplaneMaxNums){
 				wingplaneNums++;
 				player.wingplaneNums = wingplaneNums;
+				factory.createWingplane(player);
 			}
 			break;
 		}
@@ -741,7 +827,6 @@ public class StateGame implements Common{
 		for(int j=0;j<factory.spirits.size();j++){
 			MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
 			if(mo.status == ROLE_STATUS_DEAD){
-				//System.out.println("------remove------");
 				factory.spirits.removeElement(mo);
 			}
 		}
@@ -787,6 +872,12 @@ public class StateGame implements Common{
 				factory.missile.removeElement(mo);
 			}
 		}
+		for(int i=0;i<factory.wingplane.size();i++){
+			MoveObject mo = (MoveObject)factory.wingplane.elementAt(i);
+			if(mo.status == ROLE_STATUS_DEAD){
+				factory.wingplane.removeElement(mo);
+			}
+		}
 		
 		/*for(int n=0;n<factory.boss8Skill.size();n++){
 			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(n);
@@ -802,13 +893,16 @@ public class StateGame implements Common{
 		//System.out.println("bossSkill num:"+factory.boss1Skill.size());
 		//System.out.println("boss8skill:"+factory.boss8Skill.size());
 		//System.out.println("props.size:"+factory.props.size());
-		System.out.println("missile.size:"+factory.missile.size());
+		//System.out.println("missile.size:"+factory.missile.size());
+		//System.out.println("wingplane.size:"+factory.wingplane.size());
 	}
 	
 	/*过关之后改变数据*/
 	private void changeDatePass(){
 		player.status = ROLE_STATUS_ALIVE;
 		player.mapx = 0;
+		player.blood = playerParam[player.grade-1][6];
+		player.lifeNum ++;
 		isNextLevel = false;
 		level_over = false;
 		isCeateBoss = false;
@@ -858,10 +952,16 @@ public class StateGame implements Common{
 		objectShow.showPropsIcon(g, factory.props);
 		objectShow.showLasers(g, factory.lasers, player);
 		objectShow.showMissile(g, factory.missile);
+		objectShow.showWingplane(g, factory.wingplane, player);
 		drawExploders(g);
 		drawInfo(g);
 		if(isNextLevel){
-			drawNextPrompt(g);
+			String str = "恭喜你通过本关卡,下一关为第"+(level+1)+"关";
+			drawPrompt(g, str);
+		}
+		if(player.status == ROLE_STATUS_PROTECTED){
+			String str = "无敌时间:"+(3-(player.endTime-player.startTime)/1000)+"秒";
+			drawPrompt(g, str);
 		}
 		if(engine.isDebugMode()){
 			String str = "1键:无敌, 3键:过关, 4键:子弹升级";
@@ -898,8 +998,7 @@ public class StateGame implements Common{
 		}
 	}
 
-	private void drawNextPrompt(SGraphics g){
-		String str = "恭喜你通过本关卡,下一关为第"+(level+1)+"关"; 
+	private void drawPrompt(SGraphics g, String str){
 		Font font = g.getFont();
 		int textW = font.stringWidth(str);
 		int w = textW+30;
