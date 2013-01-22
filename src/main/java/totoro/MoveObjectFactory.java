@@ -67,10 +67,9 @@ public class MoveObjectFactory implements Common{
 	public Vector boss8Skill = new Vector();*/
 	
 	/*创建一批精灵*/
-	public void cteateBatchSpirits(int level){
-		int ran = RandomValue.getRandInt(batchInfo[level-1].length);
-		int count = batchInfo[level-1][ran][1];
-		int spiritId = batchInfo[level-1][ran][0];
+	public void cteateBatchSpirits(int level, int batcheIndex){
+		int count = batchInfo[level-1][batcheIndex][1];
+		int spiritId = batchInfo[level-1][batcheIndex][0];
 		int value = RandomValue.getRandInt(10);
 		for(int i=0;i<count;i++){
 			MoveObject mo = new MoveObject();
@@ -78,8 +77,8 @@ public class MoveObjectFactory implements Common{
 			mo.status2 = ROLE_STATUS2_MOVE;
 			mo.id = spiritId;
 			mo.directionValue = value;
-			mo.position = batchInfo[level-1][ran][2];
-			mo.direction = batchInfo[level-1][ran][3];
+			mo.position = batchInfo[level-1][batcheIndex][2];
+			mo.direction = batchInfo[level-1][batcheIndex][3];
 			mo.width = spiritParam[mo.id-spirit_id][1];
 			mo.height = spiritParam[mo.id-spirit_id][2];
 			mo.blood = spiritParam[mo.id-spirit_id][3];
@@ -230,8 +229,8 @@ public class MoveObjectFactory implements Common{
 	/**/
 	public void createProps(MoveObject object, int level){
 		int ran = RandomValue.getRandInt(100);
-		System.out.println("ran:"+ran);
-		if(ran>40 || object.status==ROLE_STATUS_DEAD){
+		//System.out.println("ran:"+ran);
+		if(ran>25 || object.status==ROLE_STATUS_DEAD){
 			return;
 		}
 		int r = RandomValue.getRandInt(levelProps[level-1].length);
@@ -247,7 +246,7 @@ public class MoveObjectFactory implements Common{
 		mo.mapx = object.mapx;
 		mo.mapy = object.mapy;
 		props.addElement(mo);
-		System.out.println("create prop, id is:"+mo.id);
+		//System.out.println("create prop, id is:"+mo.id);
 	}
 	
 	private int searchPropId(int id) {
@@ -313,6 +312,80 @@ public class MoveObjectFactory implements Common{
 				mo.mapy = player.mapy+5 +i*(5 + mo.height);
 				missile.addElement(mo);
 			}
+		}
+	}
+	
+	public void createVentose(MoveObject player){
+		int grade = player.grade;
+		switch(grade){
+		case TOTORO_GRADE_ONE:
+			for(int i=0;i<7;i++){
+				MoveObject mo = new MoveObject();
+				mo.status = ROLE_STATUS_ALIVE;
+				mo.id = playerSkillParam[grade+1][0];
+				mo.width = playerSkillParam[grade+1][1];
+				mo.height = playerSkillParam[grade+1][2];
+				mo.damage = playerSkillParam[grade+1][3];
+				mo.speedX = playerSkillParam[grade+1][4];
+				mo.speedY = playerSkillParam[grade+1][5];
+				mo.frameNum = playerSkillParam[grade+1][6];
+				mo.picId = playerSkillParam[grade+1][7];
+				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
+				mo.mapy = 0;
+				ventose.addElement(mo);
+			}
+			break;
+		case TOTORO_GRADE_TWO:
+			for(int i=0;i<7;i++){
+				MoveObject mo = new MoveObject();
+				mo.status = ROLE_STATUS_ALIVE;
+				mo.id = playerSkillParam[grade+1][0];
+				mo.width = playerSkillParam[grade+1][1];
+				mo.height = playerSkillParam[grade+1][2];
+				mo.damage = playerSkillParam[grade+1][3];
+				mo.speedX = playerSkillParam[grade+1][4];
+				mo.speedY = playerSkillParam[grade+1][5];
+				mo.frameNum = playerSkillParam[grade+1][6];
+				mo.picId = playerSkillParam[grade+1][7];
+				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
+				mo.mapy = 0;
+				ventose.addElement(mo);
+			}
+			break;
+		case TOTORO_GRADE_THREE:
+			for(int i=0;i<7;i++){
+				MoveObject mo = new MoveObject();
+				mo.status = ROLE_STATUS_ALIVE;
+				mo.id = playerSkillParam[grade+1][0];
+				mo.width = playerSkillParam[grade+1][1];
+				mo.height = playerSkillParam[grade+1][2];
+				mo.damage = playerSkillParam[grade+1][3];
+				mo.speedX = playerSkillParam[grade+1][4];
+				mo.speedY = playerSkillParam[grade+1][5];
+				mo.frameNum = playerSkillParam[grade+1][6];
+				mo.picId = playerSkillParam[grade+1][7];
+				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
+				mo.mapy = 0;
+				ventose.addElement(mo);
+			}
+			break;
+		case TOTORO_GRADE_FOUR:
+			for(int i=0;i<7;i++){
+				MoveObject mo = new MoveObject();
+				mo.status = ROLE_STATUS_ALIVE;
+				mo.id = playerSkillParam[grade+1][0];
+				mo.width = playerSkillParam[grade+1][1];
+				mo.height = playerSkillParam[grade+1][2];
+				mo.damage = playerSkillParam[grade+1][3];
+				mo.speedX = playerSkillParam[grade+1][4];
+				mo.speedY = playerSkillParam[grade+1][5];
+				mo.frameNum = playerSkillParam[grade+1][6];
+				mo.picId = playerSkillParam[grade+1][7];
+				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
+				mo.mapy = 0;
+				ventose.addElement(mo);
+			}
+			break;
 		}
 	}
 	
@@ -556,7 +629,7 @@ public class MoveObjectFactory implements Common{
 			mo.picId = bossSkillParam[index][6];
 			mo.damage = bossSkillParam[index][3];
 			mo.frameNum = bossSkillParam[index][9];
-			mo.mapx = 150+i*(mo.width+20);
+			mo.mapx = 50+i*(mo.width+80);
 			mo.mapy = 73;
 			mo.speedX = 0/*bossSkillParam[index][7]*/;
 			mo.speedY = bossSkillParam[index][8];
@@ -605,7 +678,7 @@ public class MoveObjectFactory implements Common{
 				mo.picId = bossSkillParam[index][6];
 				mo.damage = bossSkillParam[index][3];
 				mo.frameNum = bossSkillParam[index][9];
-				mo.mapx = 200+i*(mo.width+60);
+				mo.mapx = 150+i*(mo.width+90);
 				mo.mapy = 40;
 				mo.speedX = bossSkillParam[index][7];
 				mo.speedY = bossSkillParam[index][8];

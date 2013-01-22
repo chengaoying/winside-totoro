@@ -6,7 +6,6 @@ import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
-import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 
 public class StateMain implements Common{
@@ -90,10 +89,19 @@ public class StateMain implements Common{
 			}
 		}
 		
+		int price;
+		if(StateGame.wingplaneMaxNums==1){
+			price = engine.pm.getPriceById(63);
+		}else if(StateGame.wingplaneMaxNums==2){
+			price = engine.pm.getPriceById(64);
+		}else {
+			price = engine.pm.getPriceById(65);
+		}
+		
 		g.drawRegion(button2, 0, mainIndex==4?0:button2H, button2W, button2H, 0, menuAxis2[0][0], menuAxis2[0][1], 20);
 		g.drawImage(upgrade, menuAxis2[0][0]+20, menuAxis2[0][1]+33, 20);
 		g.drawImage(coin, menuAxis2[0][0]+20, menuAxis2[0][1]+8, 20);
-		drawNum(g, 88, menuAxis2[0][0]+36, menuAxis2[0][1]+10);
+		drawNum(g, price, menuAxis2[0][0]+36, menuAxis2[0][1]+10);
 		
 		g.drawRegion(button2, 0, mainIndex==5?0:button2H, button2W, button2H, 0, menuAxis2[1][0], menuAxis2[1][1], 20);
 		g.drawImage(buy, menuAxis2[1][0]+15, menuAxis2[1][1]+20, 20);
@@ -109,7 +117,7 @@ public class StateMain implements Common{
 			totoroX += totoroW+1;
 		}
 		
-		drawNum(g, 100, 450, 452);
+		drawNum(g, StateGame.ventoseNum, 450, 452);
 	}
 	
 	public static void drawNum(SGraphics g, int n, int x, int y) {
@@ -158,19 +166,21 @@ public class StateMain implements Common{
 			recharge.recharge();
 		} else if (mainIndex == 3){ 	//ÍË³öÓÎÏ·
 			Resource.clearMain();
-			//engine.saveRecord();
+			engine.saveRecord();
 			exit = true;
 		} else if (mainIndex == 4) {	//ÁúÃ¨Éý¼¶
 			if(StateGame.wingplaneMaxNums<4){
-				if(engine.getEngineService().getBalance()>20){
-					StateGame.wingplaneMaxNums++;
-				}else{
-					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-					pc.setText("Óà¶î²»×ã,ÊÇ·ñ³äÖµ?");
-					int index = pc.popup();
-					if(index==0){
-						Recharge recharge = new Recharge(engine);
-						recharge.recharge();
+				if(StateGame.wingplaneMaxNums==1){
+					if(engine.pm.buyProp(63, 1)){
+						StateGame.wingplaneMaxNums ++;
+					}
+				}else if(StateGame.wingplaneMaxNums==2){
+					if(engine.pm.buyProp(64, 1)){
+						StateGame.wingplaneMaxNums ++;
+					}
+				}else {
+					if(engine.pm.buyProp(65, 1)){
+						StateGame.wingplaneMaxNums ++;
 					}
 				}
 			}else{
@@ -179,6 +189,9 @@ public class StateMain implements Common{
 				pt.popup();
 			}
 		} else if (mainIndex == 5) {	//¹ºÂò
+			if(engine.pm.buyProp(66, 1)){
+				StateGame.ventoseNum ++;
+			}
 		}
 	}
 }

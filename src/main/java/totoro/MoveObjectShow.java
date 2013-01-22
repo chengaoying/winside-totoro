@@ -99,6 +99,26 @@ public class MoveObjectShow implements Common{
 		}
 	}
 	
+	public void showVentose(SGraphics g, Vector ventose){
+		for(int i=0;i<ventose.size();i++){
+			MoveObject mo = (MoveObject) ventose.elementAt(i);
+			Image moPic = Resource.loadImage(mo.picId);
+			if(mo.mapy+mo.height<=490){
+				mo.frame = (mo.frame+1)%3;
+				mo.mapx += mo.speedX;
+				mo.mapy += mo.speedY;
+			}else{
+				mo.frame = (mo.frame+1)%mo.frameNum;
+				if(mo.frame==0 || mo.frame==1 || mo.frame == 2){
+					mo.frame = 3;
+				}else if(mo.frame==7){
+					mo.status = ROLE_STATUS_DEAD;
+				}
+			}
+			g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+		}
+	}
+	
 	public void showSpirits(SGraphics g, Vector spirits){
 		g.setClip(0, 73, ScrW, gameH);
 		for(int i=spirits.size()-1;i>=0;i--){
@@ -227,7 +247,12 @@ public class MoveObjectShow implements Common{
 		for(int i=bombs.size()-1;i>=0;i--){
 			MoveObject mo = (MoveObject) bombs.elementAt(i);
 			Image moImg = Resource.loadImage(mo.picId);
-			g.drawRegion(moImg, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			if(mo.id==16){
+				mo.frame = (mo.frame+1)%3;
+				g.drawRegion(moImg, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else{
+				g.drawRegion(moImg, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}
 			mo.mapx += mo.speedX;
 			mo.mapy += mo.speedY;
 			if(mo.mapx+mo.width <= 0){
@@ -249,7 +274,7 @@ public class MoveObjectShow implements Common{
 			Image moImg = Resource.loadImage(mo.picId);
 			if(mo.objectId == 203){
 				g.drawRegion(moImg, mo.frameIndex*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			}else if(mo.objectId == 204){
+			}else if(mo.objectId == 204 || mo.objectId == 200){
 				mo.frame = (mo.frame+1)%mo.frameNum;
 				g.drawRegion(moImg, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
 			}else{
@@ -802,8 +827,9 @@ public class MoveObjectShow implements Common{
 			if(mo.direction == OBJECT_DIRECTION_LEFT_DOWN){
 				mo.mapx -= mo.speedX;
 				mo.mapy += mo.speedY;
-				if(mo.mapx <= 0){
-					mo.direction = OBJECT_DIRECTION_RIGHT_DOWN;
+				if(mo.mapx+mo.width <= 0){
+					//mo.direction = OBJECT_DIRECTION_RIGHT_DOWN;
+					mo.status = ROLE_STATUS_DEAD;
 				}else if(mo.mapy+mo.height >= 490){
 					mo.direction = OBJECT_DIRECTION_LEFT_UP;
 				}
@@ -818,8 +844,9 @@ public class MoveObjectShow implements Common{
 			}else if(mo.direction == OBJECT_DIRECTION_LEFT_UP){
 				mo.mapx -= mo.speedX;
 				mo.mapy -= mo.speedY;
-				if(mo.mapx <= 0){
-					mo.direction = OBJECT_DIRECTION_RIGHT_UP;
+				if(mo.mapx+mo.width <= 0){
+					//mo.direction = OBJECT_DIRECTION_RIGHT_UP;
+					mo.status = ROLE_STATUS_DEAD;
 				}else if(mo.mapy <= startP){
 					mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
 				}

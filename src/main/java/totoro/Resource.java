@@ -42,6 +42,7 @@ public class Resource implements Common {
 	public static short id_yellow_totoro_bomb2 = NUMS++;
 	public static short id_yellow_totoro_bomb3 = NUMS++;
 	public static short id_yellow_totoro_wingplane = NUMS++;
+	public static short id_yellow_totoro_ventose = NUMS++;
 	public static short id_blue_totoro = NUMS++;
 	public static short id_blue_totoro_bomb1 = NUMS++;
 	public static short id_blue_totoro_bomb2 = NUMS++;
@@ -184,6 +185,7 @@ public class Resource implements Common {
 		"/own/yellow/bomb2.png",
 		"/own/yellow/bomb3.png",
 		"/own/yellow/wingplane.png",
+		"/own/yellow/ventose.png",
 		"/own/blue/totoro.png",
 		"/own/blue/bomb1.png",
 		"/own/blue/bomb2.png",
@@ -343,6 +345,7 @@ public class Resource implements Common {
 		images[id_yellow_totoro_bomb2] = null;
 		images[id_yellow_totoro_bomb3] = null;
 		images[id_yellow_totoro_wingplane] = null;
+		images[id_yellow_totoro_ventose] = null;
 		images[id_blue_totoro] = null;
 		images[id_blue_totoro_bomb1] = null;
 		images[id_blue_totoro_bomb2] = null;

@@ -81,6 +81,16 @@ public class PropManager implements Common{
 		return null;
 	}
 	
+	public int getPriceById(int propId){
+		int len = props.length;
+		for(int i=len-1;i>=0;i--){
+			if(props[i].getPropId()==propId){
+				return props[i].getPrice();
+			}
+		}
+		return 0;
+	}
+	
 	public boolean buyProp(int propId, int propCount){
 		PlayerProp pp = getPropById(propId);
 		if (engine.getEngineService().getBalance() >= pp.getPrice()) {
@@ -97,13 +107,13 @@ public class PropManager implements Common{
 			pt.popup();
 			return sw.isServiceSuccessful();
 		}else {
-				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-				pc.setText("游戏币不足,是否充值");
-				if (pc.popup() == 0) {
-					StateRecharge recharge = new StateRecharge(engine);
-					recharge.recharge();
-				}
-				return false;
+			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+			pc.setText("游戏币不足,是否充值");
+			if (pc.popup() == 0) {
+				StateRecharge recharge = new StateRecharge(engine);
+				recharge.recharge();
+			}
+			return false;
 		}
 	}
 }

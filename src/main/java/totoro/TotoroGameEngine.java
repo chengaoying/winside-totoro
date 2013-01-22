@@ -118,6 +118,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		/*查询道具*/
 		pm.queryProps();
 		
+		setRecordId();
+		
 		/*读取游戏记录*/
 		readRecord();
 		
@@ -186,7 +188,6 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		DataOutputStream dout = new DataOutputStream(bout);
 		ServiceWrapper sw = getServiceWrapper();
 		try {
-			setRecordId();
 			setRecordData(dout);
 			record = bout.toByteArray();
 			GameRecord gameRecord = new GameRecord();
@@ -225,6 +226,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		dout.write(StateGame.wingplaneMaxNums);
 		dout.write(StateGame.wingplaneNums);
 		dout.write(StateGame.missileGrade);
+		dout.write(StateGame.batchIndex);
+		dout.write(StateGame.ventoseNum);
 		dout.writeBoolean(StateGame.hasTotoro3);
 		dout.writeBoolean(StateGame.hasTotoro4);
 		
@@ -272,6 +275,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.wingplaneMaxNums = din.read();
 		StateGame.wingplaneNums = din.read();
 		StateGame.missileGrade = din.read();
+		StateGame.batchIndex = din.read();
+		StateGame.ventoseNum = din.read();
 		StateGame.hasTotoro3 = din.readBoolean();
 		StateGame.hasTotoro4 = din.readBoolean();
 		
@@ -287,7 +292,10 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		System.out.println("StateGame.wingplaneMaxNums:"+StateGame.wingplaneMaxNums);
 		System.out.println("StateGame.wingplaneNums:"+StateGame.wingplaneNums);
 		System.out.println("StateGame.missileGrade:"+StateGame.missileGrade);
+		System.out.println("StateGame.batchIndex:"+StateGame.batchIndex);
+		System.out.println("StateGame.ventoseNum:"+StateGame.ventoseNum);
 		System.out.println("StateGame.hasTotoro3:"+StateGame.hasTotoro3);
 		System.out.println("StateGame.hasTotoro4:"+StateGame.hasTotoro4);
+		System.out.println("StateGame.scores:"+StateGame.scores);
 	}
 }

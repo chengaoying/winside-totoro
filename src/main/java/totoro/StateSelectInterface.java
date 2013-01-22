@@ -70,6 +70,7 @@ public class StateSelectInterface implements Common{
 			StateGame.lifeNum = StateGame.player.lifeNum;
 			StateGame.blood = StateGame.player.blood;
 			StateGame.currLevel = 1;
+			StateGame.batchIndex = 0;
 			//StateGame.scores = stateGame.player.scores;
 			engine.state = STATUS_GAME_PLAYING;
 			StateGame.game_status = GAME_PLAY;
