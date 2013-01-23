@@ -199,10 +199,18 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	    System.out.println("GetServiceDate: Date=" + recordId);
 	}
 	
-	public void saveRecord(){
+	public void sysProps(){
 		pm.sysProps();
-		saveAttainment();
+	}
+	
+	public void saveRecord(){
+		
 		queryList();
+		
+		if(StateGame.lifeNum<1 || StateGame.scores<=0){
+			return;
+		}
+		
 		byte record[];
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);

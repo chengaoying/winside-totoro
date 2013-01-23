@@ -197,7 +197,7 @@ public class StateGame implements Common{
 		
 		/*必杀技*/
 		venETime = getTime();
-		if(venETime - venSTime > 4000){
+		if(venETime - venSTime > 4000 && isUserVentose){
 			 isUserVentose = false;
 			 player.status = ROLE_STATUS_ALIVE;
 		}
@@ -226,6 +226,8 @@ public class StateGame implements Common{
 			if(index == 1){
 				//返回主界面
 				engine.saveRecord();
+				engine.sysProps();
+				engine.saveAttainment();
 				engine.state = STATUS_MAIN_MENU;
 				quitGameDeleteDate();
 			}else{
@@ -259,7 +261,7 @@ public class StateGame implements Common{
 				game_status = GAME_PLAY;
 			}else{
 				//退出游戏
-				engine.saveRecord();
+				//engine.saveRecord();
 				quitGameDeleteDate();
 				engine.state = STATUS_MAIN_MENU;
 				game_status = GAME_PLAY;
@@ -273,6 +275,7 @@ public class StateGame implements Common{
 		success.processGameSuccess();
 		engine.state = STATUS_MAIN_MENU;
 		game_status = GAME_PLAY;
+		engine.saveAttainment();
 		quitGameDeleteDate();
 	}
 
@@ -294,6 +297,8 @@ public class StateGame implements Common{
 			if(player.mapx >= ScrW){
 				player.speedX = playerParam[player.grade-1][9];
 				engine.saveRecord();
+				engine.sysProps();
+				engine.saveAttainment();
 				changeDatePass();
 			}
 		}
@@ -638,9 +643,6 @@ public class StateGame implements Common{
 				player.blood -= mo.damage;
 			}else{
 				player.blood = 0;
-				if(player.bombGrade>1){
-					player.bombGrade--;
-				}
 			}
 			blood = player.blood;
 			Exploder exploder = new Exploder(mo.mapx,mo.mapy);

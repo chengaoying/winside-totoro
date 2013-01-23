@@ -319,7 +319,7 @@ public class MoveObjectFactory implements Common{
 		int grade = player.grade;
 		switch(grade){
 		case TOTORO_GRADE_ONE:
-			for(int i=0;i<8;i++){
+			for(int i=0;i<6;i++){
 				MoveObject mo = new MoveObject();
 				mo.status = ROLE_STATUS_ALIVE;
 				mo.id = playerSkillParam[grade+1][0];
@@ -387,6 +387,7 @@ public class MoveObjectFactory implements Common{
 		}
 	}
 	
+	int offX = 60;
 	private void setVentoseInfo(MoveObject mo, int i) {
 		switch(i){
 		case 0:
@@ -394,56 +395,84 @@ public class MoveObjectFactory implements Common{
 			mo.mapy = 0;
 			break;
 		case 1:
-			mo.mapx = -mo.width;
+			mo.mapx = -mo.width+offX;
 			mo.mapy = -mo.height/2;
 			break;
 		case 2:
-			mo.mapx = -mo.width;
+			mo.mapx = -mo.width+offX;
 			mo.mapy = mo.height/2;
 			break;
 		case 3:
-			mo.mapx = 0;
+			mo.mapx = 0+offX;
 			mo.mapy = 0;
 			break;
 		case 4:
-			mo.mapx = mo.width;
+			mo.mapx = mo.width+offX;
 			mo.mapy = -mo.height/2;
 			break;
 		case 5:
-			mo.mapx = mo.width;
+			mo.mapx = mo.width+offX;
 			mo.mapy = +mo.height/2;
 			break;
-		case 6:
+		/*case 6:
 			mo.mapx = 2*mo.width;
 			mo.mapy = 0;
 			break;
 		case 7:
 			mo.mapx = 2*mo.width;
-			mo.mapy = -mo.height/2-50;
+			mo.mapy = -mo.height/2-50;*/
 		}
 	}
 
 	/*敌方普通攻击*/
 	public void createSpiritBomb(MoveObject object){
-		MoveObject mo = new MoveObject();
 		int index = searchObjectIdIndex(object.id);
-		mo.status = ROLE_STATUS_ALIVE;
-		mo.status2 = ROLE_STATUS2_MOVE;
-		mo.objectId = spiritBombParam[index][0];
-		mo.id = spiritBombParam[index][1];
-		mo.width = spiritBombParam[index][2];
-		mo.height = spiritBombParam[index][3];
-		mo.damage = spiritBombParam[index][4];
-		mo.speedX = -spiritBombParam[index][5];
-		mo.speedY = 0/*spiritBombParam[index][6]*/;
-		mo.picId = spiritBombParam[index][7];
-		mo.mapx = object.mapx+3;
-		mo.mapy = object.mapy+object.height/2 - mo.height/2;
-		mo.bombSTime = System.currentTimeMillis();
-		spiritBombs.addElement(mo);
+		int num = spiritBombParam[index][8];
+		for(int i=0;i<num;i++){
+			MoveObject mo = new MoveObject();
+			mo.status = ROLE_STATUS_ALIVE;
+			mo.status2 = ROLE_STATUS2_MOVE;
+			mo.objectId = spiritBombParam[index][0];
+			mo.id = spiritBombParam[index][1];
+			mo.width = spiritBombParam[index][2];
+			mo.height = spiritBombParam[index][3];
+			mo.damage = spiritBombParam[index][4];
+			//mo.speedX = -spiritBombParam[index][5];
+			//mo.speedY = 0/*spiritBombParam[index][6]*/;
+			mo.picId = spiritBombParam[index][7];
+			//mo.mapx = object.mapx+3;
+			//mo.mapy = object.mapy+object.height/2 - mo.height/2;
+			setSpiritsBombInfo(object, mo, i, index, num);
+			mo.bombSTime = System.currentTimeMillis();
+			spiritBombs.addElement(mo);
+		}
 		//System.out.println("spiritBombs.size:"+spiritBombs.size());
 	}
 	
+	private void setSpiritsBombInfo(MoveObject object, MoveObject mo, int i,
+			int index, int num) {
+		switch(num){
+		case 1:
+			mo.speedX = -spiritBombParam[index][5];
+			mo.speedY = 0/*spiritBombParam[index][6]*/;
+			mo.mapx = object.mapx+3;
+			mo.mapy = object.mapy+object.height/2 - mo.height/2;
+			break;
+		case 2:
+			mo.speedX = -spiritBombParam[index][5];
+			mo.speedY = -spiritBombParam[index][6]+i*spiritBombParam[index][6];
+			mo.mapx = object.mapx+3;
+			mo.mapy = object.mapy+object.height/2 - mo.height/2;
+			break;
+		case 3:
+			mo.speedX = -spiritBombParam[index][5];
+			mo.speedY = -spiritBombParam[index][6]+i*spiritBombParam[index][6];
+			mo.mapx = object.mapx+3;
+			mo.mapy = object.mapy+object.height/2 - mo.height/2;
+			break;
+		}
+	}
+
 	/*创建炮台*/
 	public void createBattery(int level){
 		MoveObject mo = new MoveObject();
@@ -482,27 +511,30 @@ public class MoveObjectFactory implements Common{
 
 	/*炮台普通攻击*/
 	public void createBatteryBombs(MoveObject object, MoveObject player){
-		MoveObject mo = new MoveObject();
 		int index = searchObjectIdIndex(object.id);
-		mo.status = ROLE_STATUS_ALIVE;
-		mo.status2 = ROLE_STATUS2_MOVE;
-		mo.objectId = spiritBombParam[index][0];
-		mo.id = spiritBombParam[index][1];
-		mo.width = spiritBombParam[index][2];
-		mo.height = spiritBombParam[index][3];
-		mo.damage = spiritBombParam[index][4];
-		//mo.speedX = batteryBombParam[index][5];
-		//mo.speedY = batteryBombParam[index][6];
-		mo.picId = spiritBombParam[index][7];
-		//mo.mapx = object.mapx+3;
-		//mo.mapy = object.mapy+object.height/2 - mo.height/2;
-		mo.bombSTime = System.currentTimeMillis();
-		batteryBombOtherInfo(index, mo, object, player);
-		spiritBombs.addElement(mo);
-		//System.out.println("spiritBombs:"+spiritBombs.size());
+		int num = spiritBombParam[index][8];
+		for(int i=0;i<num;i++){
+			MoveObject mo = new MoveObject();
+			mo.status = ROLE_STATUS_ALIVE;
+			mo.status2 = ROLE_STATUS2_MOVE;
+			mo.objectId = spiritBombParam[index][0];
+			mo.id = spiritBombParam[index][1];
+			mo.width = spiritBombParam[index][2];
+			mo.height = spiritBombParam[index][3];
+			mo.damage = spiritBombParam[index][4];
+			//mo.speedX = batteryBombParam[index][5];
+			//mo.speedY = batteryBombParam[index][6];
+			mo.picId = spiritBombParam[index][7];
+			//mo.mapx = object.mapx+3;
+			//mo.mapy = object.mapy+object.height/2 - mo.height/2;
+			mo.bombSTime = System.currentTimeMillis();
+			batteryBombOtherInfo(index, mo, object, player, i);
+			spiritBombs.addElement(mo);
+			//System.out.println("spiritBombs:"+spiritBombs.size());
+		}
 	}
 	
-	private void batteryBombOtherInfo(int index, MoveObject mo,MoveObject object, MoveObject player) {
+	private void batteryBombOtherInfo(int index, MoveObject mo,MoveObject object, MoveObject player, int i) {
 		if(object.id == 300){
 			if(object.mapx > (player.mapx+player.width)){
 				mo.frame = 0;
@@ -530,11 +562,25 @@ public class MoveObjectFactory implements Common{
 			mo.speedX = -spiritBombParam[index][5];
 			mo.speedY = -spiritBombParam[index][6];
 		}else if(object.id == 302){
-			mo.frame = 0;
-			mo.mapx = object.mapx+45;
-			mo.mapy = object.mapy;
-			mo.speedX = -spiritBombParam[index][5];
-			mo.speedY = -spiritBombParam[index][6];
+			if(i==0){
+				mo.frame = 0;
+				mo.mapx = object.mapx+32;
+				mo.mapy = object.mapy;
+				mo.speedX = 0/*-spiritBombParam[index][5]*/;
+				mo.speedY = -spiritBombParam[index][6];
+			}else if(i==1){
+				mo.frame = 1;
+				mo.mapx = object.mapx+7;
+				mo.mapy = object.mapy+5;
+				mo.speedX = -spiritBombParam[index][5];
+				mo.speedY = -spiritBombParam[index][6];
+			}else{
+				mo.frame = 2;
+				mo.mapx = object.mapx;
+				mo.mapy = object.mapy+26;
+				mo.speedX = -spiritBombParam[index][5];
+				mo.speedY = -6/*-spiritBombParam[index][6]*/;
+			}
 		}
 	}
 

@@ -7,6 +7,7 @@ import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
+import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.ui.TextView;
 
@@ -162,17 +163,6 @@ public class StateMain implements Common{
 	
 	private void processSubMenu() {
 		if (mainIndex == 0) { 			//新游戏
-			/*stateGame.factory = MoveObjectFactory.getInstance();
-			stateGame.objectShow = MoveObjectShow.getInstance();
-			StateGame.player = stateGame.factory.createNewPlayer();
-			StateGame.grade = StateGame.player.grade;
-			StateGame.bombGrade = StateGame.player.bombGrade;
-			StateGame.lifeNum = StateGame.player.lifeNum;
-			StateGame.blood = StateGame.player.blood;
-			//StateGame.scores = stateGame.player.scores;
-			engine.state = STATUS_GAME_PLAYING;
-			StateGame.game_status = GAME_PLAY;
-			StateGame.level_start_time = System.currentTimeMillis()/1000;*/
 			engine.state = STATUS_SELECT_TOTORO;
 			Resource.clearMain();
 		} else if(mainIndex == 1){		//继续游戏
@@ -181,6 +171,7 @@ public class StateMain implements Common{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录,请重新开始游戏");
 				pt.popup();
+				mainIndex = 0;
 			}else{
 				stateGame.factory = MoveObjectFactory.getInstance();
 				stateGame.objectShow = MoveObjectShow.getInstance();
@@ -217,8 +208,13 @@ public class StateMain implements Common{
 				pt.popup();
 			}
 		} else if (mainIndex == 5) {	//购买
-			if(engine.pm.buyProp(66, 1)){
-				StateGame.ventoseNum ++;
+			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+			pc.setText("是否要购买道具必杀技?");
+			int index = pc.popup();
+			if(index == 0){
+				if(engine.pm.buyProp(66, 1)){
+					StateGame.ventoseNum ++;
+				}
 			}
 		}
 	}

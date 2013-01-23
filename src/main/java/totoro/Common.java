@@ -187,14 +187,14 @@ public interface Common {
 	/*关卡等级信息*/
 	public static final int levelInfo[][] = {
 		/*0-关卡, 1-关卡时间(秒), 2-出怪时间间隔, 3-battery interval*/
-		{1, 120, 3000, 10000},
-		{2, 120, 3000, 10000},
-		{3, 120, 3000, 10000},
-		{4, 120, 3000, 10000},
-		{5, 120, 3000, 10000},
-		{6, 120, 3000, 10000},
-		{7, 120, 3000, 60000},
-		{8, 120, 3000, 60000},
+		{1, 120, 5000, 10000},
+		{2, 120, 5000, 10000},
+		{3, 120, 5000, 10000},
+		{4, 120, 5000, 10000},
+		{5, 120, 5000, 10000},
+		{6, 120, 5000, 10000},
+		{7, 120, 5000, 60000},
+		{8, 120, 5000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -231,8 +231,8 @@ public interface Common {
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
 				{14, 32, 18, 20, 30, 6, yellowBomb1PicId},
-				{15, 46, 25, 30, 30, 6, yellowBomb2PicId},
-				{16, 100, 50, 50, 30, 6, yellowBomb3PicId},
+				{15, 46, 25, 25, 30, 6, yellowBomb2PicId},
+				{16, 100, 50, 30, 30, 6, yellowBomb3PicId},
 			},
 			{
 				/*子弹等级*/
@@ -245,16 +245,16 @@ public interface Common {
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
-				{17, 34, 14, 15, 30, 6, blueBomb1PicId},
-				{18, 67, 14, 20, 30, 6, blueBomb2PicId},
-				{19, 93, 33, 20, 30, 6, blueBomb3PicId},
-				{20, 114, 51, 25, 30, 6, blueBomb4PicId},
+				{17, 34, 14, 15, 20, 6, blueBomb1PicId},
+				{18, 67, 14, 20, 20, 6, blueBomb2PicId},
+				{19, 93, 33, 20, 20, 6, blueBomb3PicId},
+				{20, 114, 51, 25, 20, 6, blueBomb4PicId},
 			},
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
 				{21, 22, 23, 15, 30, 6, blackBomb1PicId},
-				{22, 86, 29, 20, 30, 6, blackBomb2PicId},
+				{22, 86, 29, 20, 20, 6, blackBomb2PicId},
 				{23, 65, 65, 50, 30, 6, blackBomb3PicId},
 			},
 	};
@@ -262,7 +262,7 @@ public interface Common {
 	public int playerSkillParam[][] = {
 			/*0-id, 1-w,2-h,3-damage,4-speedx,5-speedy, 6-frameNum,7-picId*/
 			{0, 573, 11, 5, 5, 5, 4, laserPic},
-			{1, 42, 21, 20, 30, 5, 1, missilePic},
+			{1, 42, 21, 20, 45, 45, 1, missilePic},
 			
 			{2, 164, 159, 50, 60, 60, 8, yellowVentose},
 			{3, 164, 159, 50, 60, 60, 8, yellowVentose},
@@ -275,7 +275,7 @@ public interface Common {
 			/*0-Id, 1-propPicId, 2-picW, 3-picH, 4-speedX, 5-speedY, 6-*/
 			{id_blood, prop_blood_icon, 42,41,5,5},
 			{id_laser, prop_laser_icon, 44,44,5,5},
-			{id_missile, prop_missile_icon, 44,44,5,5},
+			{id_missile, prop_missile_icon, 44,44,15,15},
 			{id_upgrade, prop_upgrade_icon, 49,57,5,5},
 			{id_ventose, prop_ventose_icon, 40,40,5,5},
 			{id_wingplane, prop_wingplane_icon, 47,46,5,5},
@@ -363,15 +363,17 @@ public interface Common {
 	
 	/*精灵普通攻击属性*/
 	public int spiritBombParam[][] = {
-			/*0-精灵id, 1-id, 2-宽度, 3-高度, 4-伤害, 5-x速度, 6-Y速度, 7-子弹图片id, */
-			{100, 15, 20, 19, 10, 20, 20, spiritBomb1PicId},
-			{104, 16, 32, 36, 10, 20, 20, spiritBomb2PicId},
-			{106, 16, 32, 36, 10, 20, 20, spiritBomb2PicId},
-			{107, 17, 19, 20, 10, 20, 20, spiritBomb3PicId},
-			{108, 18, 20, 20, 10, 20, 20, spiritBomb4PicId},
-			{109, 19, 32, 20, 10, 20, 20, spiritBomb5PicId},
-			{110, 14, 32, 20, 10, 20, 20, spiritBomb5PicId},
-			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId},
+			/*0-精灵id, 1-id, 2-宽度, 3-高度, 4-伤害, 5-x速度, 6-Y速度, 7-子弹图片id,8-发射子弹个数 */
+			{100, 15, 15, 14, 10, 10, 20, spiritBomb1PicId, 1},
+			{101, 15, 15, 14, 10, 10, 3, spiritBomb1PicId, 3},
+			{102, 15, 15, 14, 10, 10, 3, spiritBomb1PicId, 1},
+			{104, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
+			{106, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
+			{107, 17, 14, 15, 10, 20, 20, spiritBomb3PicId, 1},
+			{108, 18, 15, 15, 10, 20, 20, spiritBomb4PicId, 1},
+			{109, 19, 24, 15, 10, 20, 20, spiritBomb5PicId, 1},
+			{110, 14, 24, 15, 10, 20, 20, spiritBomb5PicId, 1},
+			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId, 1},
 			/*{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
 			{201, 21, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{202, 22, 85, 50, 25, 20, 20, bossBomb2PicId},
@@ -380,9 +382,9 @@ public interface Common {
 			{205, 25, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{206, 27, 32, 20, 25, 20, 20, spiritBomb5PicId},
 			{207, 28, 32, 20, 25, 20, 20, spiritBomb5PicId},*/
-			{300, 30, 20, 19, 10, 20, 10, spiritBomb1PicId},
-			{301, 31, 49, 52, 10, 20, 10, batteryBomb2PicId},
-			{302, 32, 31, 31, 10, 20, 10, batteryBomb3PicId},
+			{300, 30, 15, 14, 10, 20, 10, spiritBomb1PicId, 1},
+			{301, 31, 49, 52, 10, 20, 10, batteryBomb2PicId, 1},
+			{302, 32, 31, 31, 10, 20, 30, batteryBomb3PicId, 3},
 	};
 	
 	/*精灵属性*/
@@ -391,8 +393,8 @@ public interface Common {
 	 * 10-是否会攻击, 11-图片id, 12-是否会掉落奖品, 13-帧数间隔, 14-图片总帧数 , 15-精灵伤害
 	 * 16-发射子弹间隔*/
 		{100, 47, 62, 10, 15, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_1, SPIRITI_PRIZE_YES, 500, 5, 10, 5},
-		{101, 84, 76, 20, 10, 8, 8, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_2, SPIRITI_PRIZE_YES, 500, 3, 10, 0},
-		{102, 80, 62, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{101, 84, 76, 20, 10, 8, 8, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_2, SPIRITI_PRIZE_YES, 500, 3, 10, 5},
+		{102, 80, 62, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
 		
 		{103, 50, 69, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
 		{104, 63, 89, 15, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_YES, 500, 3, 10, 3},

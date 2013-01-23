@@ -241,6 +241,11 @@ public class MoveObjectShow implements Common{
 				mo.mapx -= mo.speedX;
 			}else if(mo.id == 302){
 				g.drawRegion(moPic, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+				if(mo.status2 == ROLE_STATUS2_ATTACK){
+					Image effect = Resource.loadImage(Resource.id_lava_battery_effect);
+					int eW = effect.getWidth()/2, eH = effect.getHeight();
+					g.drawRegion(effect, eW, 0, eW, eH, 0, mo.mapx-8, mo.mapy-8, 20);
+				}
 				mo.mapx -= 1;
 			}
 			
@@ -256,6 +261,8 @@ public class MoveObjectShow implements Common{
 			Image moImg = Resource.loadImage(mo.picId);
 			if(mo.id==16){
 				mo.frame = (mo.frame+1)%3;
+				g.drawRegion(moImg, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			}else if(mo.id==32){
 				g.drawRegion(moImg, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
 			}else{
 				g.drawRegion(moImg, 0, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);

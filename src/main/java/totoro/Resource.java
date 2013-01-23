@@ -123,6 +123,7 @@ public class Resource implements Common {
 	public static short id_lava_spirit_2 = NUMS++;
 	public static short id_lava_spirit_bomb = NUMS++;
 	public static short id_lava_battery_bomb = NUMS++;
+	public static short id_lava_battery_effect = NUMS++;
 	public static short id_lava_battery = NUMS++;
 	public static short id_lava_boss_1_bomb1 = NUMS++;
 	public static short id_lava_boss_1_bomb2 = NUMS++;
@@ -267,6 +268,7 @@ public class Resource implements Common {
 		"/spirit/lava/spirit_2.png",
 		"/spirit/lava/spirit_head_bomb.png",
 		"/spirit/lava/battery_bomb.png",
+		"/spirit/lava/battery_effect.png",
 		"/spirit/lava/battery.png",
 		"/spirit/lava/boss_1_bomb1.png",
 		"/spirit/lava/boss_1_bomb2.png",
@@ -425,6 +427,7 @@ public class Resource implements Common {
 		images[id_lava_spirit_2] = null;
 		images[id_lava_spirit_bomb] = null;
 		images[id_lava_battery_bomb] = null;
+		images[id_lava_battery_effect] = null;
 		images[id_lava_battery] = null;
 		images[id_lava_boss_1_bomb1] = null;
 		images[id_lava_boss_1_bomb2] = null;
