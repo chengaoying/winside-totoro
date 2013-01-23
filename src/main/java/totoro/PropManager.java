@@ -34,11 +34,11 @@ public class PropManager implements Common{
 			}
 		}
 		
-		for(int i=0;i<pps.length;i++){
+/*		for(int i=0;i<pps.length;i++){
 			System.out.println("ID=="+pps[i].getPropId());
 			System.out.println("count=="+pps[i].getCount());
 		}
-		for(int i=0;i<props.length;i++){
+*/		for(int i=0;i<props.length;i++){
 			System.out.println("道具ID=="+props[i].getPropId());
 			System.out.println("道具数量=="+props[i].getNums());
 		}
@@ -81,6 +81,16 @@ public class PropManager implements Common{
 		return null;
 	}
 	
+	public int getPropNumsById(int id){
+		int len = props.length;
+		for(int i=len-1;i>=0;i--){
+			if(props[i].getPropId()==id){
+				return props[i].getNums();
+			}
+		}
+		return 0;
+	}
+	
 	public int getPriceById(int propId){
 		int len = props.length;
 		for(int i=len-1;i>=0;i--){
@@ -114,6 +124,17 @@ public class PropManager implements Common{
 				recharge.recharge();
 			}
 			return false;
+		}
+	}
+	
+	/*同步道具*/
+	public void sysProps(){
+		ServiceWrapper sw = engine.getServiceWrapper();
+		sw.synProps(66, StateGame.ventoseNum);
+		System.out.println("同步道具:"+sw.isServiceSuccessful());
+		for(int i=0;i<props.length;i++){
+			System.out.println("道具ID=="+props[i].getPropId());
+			System.out.println("道具数量=="+props[i].getNums());
 		}
 	}
 }

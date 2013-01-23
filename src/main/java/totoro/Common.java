@@ -102,6 +102,7 @@ public interface Common {
 	public static final int missilePic = Resource.id_prop_missile;
 	
 	public static final int yellowVentose = Resource.id_yellow_totoro_ventose;
+	public static final int pinkVentose = Resource.id_pink_totoro_ventose;
 	
 	/*精灵子弹图片*/
 	public static final int spiritBomb1PicId = Resource.id_sky_spirit_bomb_1;
@@ -190,10 +191,10 @@ public interface Common {
 		{2, 120, 3000, 10000},
 		{3, 120, 3000, 10000},
 		{4, 120, 3000, 10000},
-		{5, 120, 2000, 10000},
-		{6, 120, 2000, 10000},
-		{7, 120, 2000, 60000},
-		{8, 120, 1000, 60000},
+		{5, 120, 3000, 10000},
+		{6, 120, 3000, 10000},
+		{7, 120, 3000, 60000},
+		{8, 120, 3000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -263,10 +264,10 @@ public interface Common {
 			{0, 573, 11, 5, 5, 5, 4, laserPic},
 			{1, 42, 21, 20, 30, 5, 1, missilePic},
 			
-			{2, 164, 159, 300, 60, 60, 8, yellowVentose},
-			{3, 164, 159, 300, 60, 60, 8, yellowVentose},
-			{4, 164, 159, 300, 60, 60, 8, yellowVentose},
-			{5, 164, 159, 300, 60, 60, 8, yellowVentose},
+			{2, 164, 159, 50, 60, 60, 8, yellowVentose},
+			{3, 164, 159, 50, 60, 60, 8, yellowVentose},
+			{4, 158, 454, 50, 60, 60, 5, pinkVentose},
+			{5, 158, 454, 50, 60, 60, 5, pinkVentose},
 	};
 	
 	/*道具属性*/
@@ -297,7 +298,7 @@ public interface Common {
 			/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标
 			 * 9-图片id, 10-帧数间隔, 11-图片总帧数, 12-伤害, 13-技能一时间间隔, 14-技能二时间间隔, 15-方向, 16-初始位置,17-技能1伤害, 18-技能2伤害*/
 			{200, 186, 266, 9000, 100, 5, 5, 0, 0, boss_1, 300, 5, 50, 10, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{201, 178, 231, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{201, 162, 210, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{202, 192, 204, 15000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{203, 196, 213, 15000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{204, 102, 160, 20000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
@@ -398,11 +399,11 @@ public interface Common {
 		{105, 93, 114, 30, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 3},
 		{106, 79, 104, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_7, SPIRITI_PRIZE_YES, 500, 2, 10, 3},
 		
-		{107, 60, 75, 20, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
-		{108, 75, 66, 45, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
+		{107, 60, 75, 50, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
+		{108, 75, 66, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
 		
-		{109, 105, 79, 20, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 3},
-		{110, 45, 97, 45, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 3},
+		{109, 105, 79, 50, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 3},
+		{110, 45, 97, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 3},
 		
 		//幽灵boss出的小怪
 		{111, 22, 32, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 3},
@@ -557,4 +558,9 @@ public interface Common {
 		},
 	};
 	
+	/*描述信息*/
+	public String descInfo[] = {
+			"购买守护精灵,数量越多,您在游戏中就能携带更多的守护精灵,最多只能携带4只",
+			"购买必杀技,可在游戏中使用,使用威力极大,并且是无敌状态",
+	};
 }

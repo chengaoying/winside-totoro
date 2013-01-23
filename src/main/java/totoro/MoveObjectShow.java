@@ -103,19 +103,26 @@ public class MoveObjectShow implements Common{
 		for(int i=0;i<ventose.size();i++){
 			MoveObject mo = (MoveObject) ventose.elementAt(i);
 			Image moPic = Resource.loadImage(mo.picId);
-			if(mo.mapy+mo.height<=490){
-				mo.frame = (mo.frame+1)%3;
-				mo.mapx += mo.speedX;
-				mo.mapy += mo.speedY;
-			}else{
+			g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
+			if(mo.id == 2 || mo.id ==3){
+				if(mo.mapy+mo.height<=490){
+					mo.frame = (mo.frame+1)%3;
+					mo.mapx += mo.speedX;
+					mo.mapy += mo.speedY;
+				}else{
+					mo.frame = (mo.frame+1)%mo.frameNum;
+					if(mo.frame==0 || mo.frame==1 || mo.frame == 2){
+						mo.frame = 3;
+					}else if(mo.frame==7){
+						mo.status = ROLE_STATUS_DEAD;
+					}
+				}
+			}else if(mo.id==4 || mo.id==5){
 				mo.frame = (mo.frame+1)%mo.frameNum;
-				if(mo.frame==0 || mo.frame==1 || mo.frame == 2){
-					mo.frame = 3;
-				}else if(mo.frame==7){
+				if(mo.frame==4){
 					mo.status = ROLE_STATUS_DEAD;
 				}
 			}
-			g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
 		}
 	}
 	

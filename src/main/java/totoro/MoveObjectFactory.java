@@ -319,7 +319,7 @@ public class MoveObjectFactory implements Common{
 		int grade = player.grade;
 		switch(grade){
 		case TOTORO_GRADE_ONE:
-			for(int i=0;i<7;i++){
+			for(int i=0;i<8;i++){
 				MoveObject mo = new MoveObject();
 				mo.status = ROLE_STATUS_ALIVE;
 				mo.id = playerSkillParam[grade+1][0];
@@ -330,13 +330,12 @@ public class MoveObjectFactory implements Common{
 				mo.speedY = playerSkillParam[grade+1][5];
 				mo.frameNum = playerSkillParam[grade+1][6];
 				mo.picId = playerSkillParam[grade+1][7];
-				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
-				mo.mapy = 0;
+				setVentoseInfo(mo,i);
 				ventose.addElement(mo);
 			}
 			break;
 		case TOTORO_GRADE_TWO:
-			for(int i=0;i<7;i++){
+			for(int i=0;i<8;i++){
 				MoveObject mo = new MoveObject();
 				mo.status = ROLE_STATUS_ALIVE;
 				mo.id = playerSkillParam[grade+1][0];
@@ -347,13 +346,12 @@ public class MoveObjectFactory implements Common{
 				mo.speedY = playerSkillParam[grade+1][5];
 				mo.frameNum = playerSkillParam[grade+1][6];
 				mo.picId = playerSkillParam[grade+1][7];
-				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
-				mo.mapy = 0;
+				setVentoseInfo(mo,i);
 				ventose.addElement(mo);
 			}
 			break;
 		case TOTORO_GRADE_THREE:
-			for(int i=0;i<7;i++){
+			for(int i=0;i<5;i++){
 				MoveObject mo = new MoveObject();
 				mo.status = ROLE_STATUS_ALIVE;
 				mo.id = playerSkillParam[grade+1][0];
@@ -361,16 +359,16 @@ public class MoveObjectFactory implements Common{
 				mo.height = playerSkillParam[grade+1][2];
 				mo.damage = playerSkillParam[grade+1][3];
 				mo.speedX = playerSkillParam[grade+1][4];
-				mo.speedY = playerSkillParam[grade+1][5];
+				mo.speedY = 0/*playerSkillParam[grade+1][5]*/;
 				mo.frameNum = playerSkillParam[grade+1][6];
 				mo.picId = playerSkillParam[grade+1][7];
-				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
-				mo.mapy = 0;
+				mo.mapx = i*(mo.width-5)-35;
+				mo.mapy = 73;
 				ventose.addElement(mo);
 			}
 			break;
 		case TOTORO_GRADE_FOUR:
-			for(int i=0;i<7;i++){
+			for(int i=0;i<5;i++){
 				MoveObject mo = new MoveObject();
 				mo.status = ROLE_STATUS_ALIVE;
 				mo.id = playerSkillParam[grade+1][0];
@@ -378,17 +376,53 @@ public class MoveObjectFactory implements Common{
 				mo.height = playerSkillParam[grade+1][2];
 				mo.damage = playerSkillParam[grade+1][3];
 				mo.speedX = playerSkillParam[grade+1][4];
-				mo.speedY = playerSkillParam[grade+1][5];
+				mo.speedY = 0/*playerSkillParam[grade+1][5]*/;
 				mo.frameNum = playerSkillParam[grade+1][6];
 				mo.picId = playerSkillParam[grade+1][7];
-				mo.mapx = -2*(mo.width+3) + i*(mo.width+3);
-				mo.mapy = 0;
+				mo.mapx = i*(mo.width-5)-35;
+				mo.mapy = 73;
 				ventose.addElement(mo);
 			}
 			break;
 		}
 	}
 	
+	private void setVentoseInfo(MoveObject mo, int i) {
+		switch(i){
+		case 0:
+			mo.mapx = -2*mo.width;
+			mo.mapy = 0;
+			break;
+		case 1:
+			mo.mapx = -mo.width;
+			mo.mapy = -mo.height/2;
+			break;
+		case 2:
+			mo.mapx = -mo.width;
+			mo.mapy = mo.height/2;
+			break;
+		case 3:
+			mo.mapx = 0;
+			mo.mapy = 0;
+			break;
+		case 4:
+			mo.mapx = mo.width;
+			mo.mapy = -mo.height/2;
+			break;
+		case 5:
+			mo.mapx = mo.width;
+			mo.mapy = +mo.height/2;
+			break;
+		case 6:
+			mo.mapx = 2*mo.width;
+			mo.mapy = 0;
+			break;
+		case 7:
+			mo.mapx = 2*mo.width;
+			mo.mapy = -mo.height/2-50;
+		}
+	}
+
 	/*µÐ·½ÆÕÍ¨¹¥»÷*/
 	public void createSpiritBomb(MoveObject object){
 		MoveObject mo = new MoveObject();
@@ -1232,7 +1266,9 @@ public class MoveObjectFactory implements Common{
 		boss.removeAllElements();
 		battery.removeAllElements();
 		boss1Skill.removeAllElements();
+		boss8Skill.removeAllElements();
 		ghostSpirits.removeAllElements();
+		props.removeAllElements();
 	}
 	
 	public void removeAllObject(){
@@ -1242,6 +1278,7 @@ public class MoveObjectFactory implements Common{
 		battery.removeAllElements();
 		bombs.removeAllElements();
 		boss1Skill.removeAllElements();
+		boss8Skill.removeAllElements();
 		ghostSpirits.removeAllElements();
 		lasers.removeAllElements();
 		missile.removeAllElements();

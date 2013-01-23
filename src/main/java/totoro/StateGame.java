@@ -201,7 +201,7 @@ public class StateGame implements Common{
 			 isUserVentose = false;
 			 player.status = ROLE_STATUS_ALIVE;
 		}
-		if(isUserVentose && (venETime - venSTime2)>500){
+		if(game_status!=GAME_PAUSE && isUserVentose && (venETime - venSTime2)>500){
 			venSTime2 = getTime();
 			factory.createVentose(player);
 		}
@@ -228,6 +228,9 @@ public class StateGame implements Common{
 				engine.saveRecord();
 				engine.state = STATUS_MAIN_MENU;
 				quitGameDeleteDate();
+			}else{
+				venSTime = getTime()-(venETime-venSTime); //调整必杀技时间
+				level_start_time = getTime()-(level_end_time - level_start_time);
 			}
 			game_status = GAME_PLAY;
 			break;
@@ -400,8 +403,13 @@ public class StateGame implements Common{
 			player.status = ROLE_STATUS_DEAD;
 			player.lifeNum --;
 			lifeNum = player.lifeNum;
+			if(player.bombGrade>1){
+				player.bombGrade--;
+				bombGrade = player.bombGrade;
+			}
 			reviveStime = getTime();
 			factory.lasers.removeAllElements();
+			factory.missile.removeAllElements();
 		}
 	}
 	
@@ -831,9 +839,9 @@ public class StateGame implements Common{
 			MoveObject bomb = (MoveObject) factory.ventose.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-				if(Collision.checkCircularCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				if(Collision.checkSquareCollision( mo.mapx, mo.mapy, mo.width, mo.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)){
 					mo.blood -= bomb.damage;
-					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
 					missileEffects[mIndex] = exploder;
 					if(mIndex < missileEffects.length-1){
 						mIndex ++;
@@ -852,10 +860,10 @@ public class StateGame implements Common{
 			}
 			for(int k=0;k<factory.boss.size();k++){
 				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
-				if(Collision.checkCircularCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, boss.mapx+30, boss.mapy, boss.width, boss.height)){
+				if(Collision.checkSquareCollision(boss.mapx, boss.mapy, boss.width, boss.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)){
 					boss.blood -= bomb.damage;
 					bomb.status = ROLE_STATUS_DEAD;
-					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					Exploder exploder = new Exploder(boss.mapx,boss.mapy);
 					missileEffects[mIndex] = exploder;
 					if(mIndex < missileEffects.length-1){
 						mIndex ++;
@@ -885,9 +893,9 @@ public class StateGame implements Common{
 			}
 			for(int k=0;k<factory.battery.size();k++){
 				MoveObject battery = (MoveObject) factory.battery.elementAt(k);
-				if(Collision.checkCircularCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, battery.mapx, battery.mapy, battery.width, battery.height)){
+				if(Collision.checkSquareCollision(battery.mapx, battery.mapy, battery.width, battery.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)){
 					battery.blood -= bomb.damage;
-					Exploder exploder = new Exploder(bomb.mapx,bomb.mapy);
+					Exploder exploder = new Exploder(battery.mapx,battery.mapy);
 					missileEffects[mIndex] = exploder;
 					if(mIndex < missileEffects.length-1){
 						mIndex ++;
@@ -960,17 +968,17 @@ public class StateGame implements Common{
 
 	private void createSpirits(){
 		if(!isNextLevel){
-			spiritEnd = System.currentTimeMillis();
-			batteryEnd = System.currentTimeMillis();
+			spiritEnd = getTime();
+			batteryEnd = getTime();
 			if(!level_over){
 				if(spiritEnd - spiritStart >= levelInfo[level-1][2]){
 					factory.cteateBatchSpirits(level, batchIndex);
 					batchIndex = (batchIndex+1)%batchInfo[level-1].length;
-					spiritStart = System.currentTimeMillis();
+					spiritStart = getTime();
 				}
 				if(batteryEnd - batteryStart >= levelInfo[level-1][3] && level != 1 && level != 2){
 					factory.createBattery(level);
-					batteryStart = System.currentTimeMillis();
+					batteryStart = getTime();
 				}
 			}else{
 				if(factory.boss.size()<1 && factory.spirits.size()<1){
@@ -1105,13 +1113,16 @@ public class StateGame implements Common{
 		blood = 0;
 		grade = 0;
 		bombGrade = 0;
-		wingplaneMaxNums = 1;
+		//wingplaneMaxNums = 1;
 		wingplaneNums = 0;
 		missileGrade = 0;
 		currLevel = level;
 		bgIndex = 0;
 		hillIndex = 0;
 		wayIndex = 0;
+		isNextLevel = false;
+		level_over = false;
+		isCeateBoss = false;
 		Resource.clearGame();
 		factory.removeAllObject();
 		for(int i=0;i<exploders.length;i++){
@@ -1322,25 +1333,31 @@ public class StateGame implements Common{
 	}
 	
 	private void drawInfo(SGraphics g){
-		Image infoBg = Resource.loadImage(Resource.id_game_info_bg);
+		//Image infoBg = Resource.loadImage(Resource.id_game_info_bg);
 		Image infoHead = Resource.loadImage(Resource.id_game_info_head);
 		Image bloodBg = Resource.loadImage(Resource.id_game_blood_bg);
 		Image headShadow = Resource.loadImage(Resource.id_game_head_shadow);
 		Image bgUp = Resource.loadImage(Resource.id_game_bg_up);
 		
-		int infoBgW = infoBg.getWidth(), infoBgH = infoBg.getHeight();
+		int infoBgW = 349, infoBgH = 46;
 		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
 		int bloodBgW = bloodBg.getWidth(), bloodBgH = bloodBg.getHeight();
 		int /*bgUpW = bgUp.getWidth(),*/ bgUpH = bgUp.getHeight();
-		int offX = 120, offY = bgUpH/2-infoBgH/2;
+		int offX = 135, offY = bgUpH/2-infoBgH/2;
 		
 		g.drawImage(bgUp, 0, 0, 20);
-		StateMain.drawNum(g, player.scores, 25, offY+10);
-		g.drawImage(infoBg, offX, offY, 20);
+		if(player.scores>999999){
+			StateMain.drawNum(g, player.scores, 0, offY+10);
+		}else if(player.scores<100){
+			StateMain.drawNum(g, player.scores, 45, offY+10);
+		}else{
+			StateMain.drawNum(g, player.scores, 25, offY+10);
+		}
+		//g.drawImage(infoBg, offX, offY, 20);
 		g.drawImage(headShadow, offX+3, offY, 20);
 		g.drawImage(infoHead, offX, offY, 20);
-		StateMain.drawNum(g, level, offX+56, offY+15);
-		StateMain.drawNum(g, player.lifeNum, offX+80, offY+15);
+		//StateMain.drawNum(g, level, offX+56, offY+15);
+		StateMain.drawNum(g, player.lifeNum, offX+70, offY+15);
 		offX += infoBgW - bloodBgW - 25;
 		offY += infoBgH/2 - bloodBgH/2;
 		g.drawImage(bloodBg, offX, offY, 20);

@@ -1,12 +1,14 @@
 package totoro;
 import javax.microedition.lcdui.Image;
 
+import cn.ohyeah.itvgame.model.GameRanking;
 import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.PopupText;
+import cn.ohyeah.stb.ui.TextView;
 
 public class StateMain implements Common{
 	
@@ -116,8 +118,34 @@ public class StateMain implements Common{
 			g.drawRegion(totoro, 0, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
 			totoroX += totoroW+1;
 		}
+		g.setColor(0xffffff);
+		if(mainIndex==4){
+			TextView.showMultiLineText(g, descInfo[mainIndex-4]+",价格为:"+price, 2, 33, 330, 220, 145);
+		}else if(mainIndex==5){
+			TextView.showMultiLineText(g, descInfo[mainIndex-4]+",价格为:"+engine.pm.getPriceById(66), 2, 33, 330, 220, 145);
+		}
+		g.drawString("当前游戏币:"+engine.getEngineService().getBalance(), 33, 475, 20);
 		
-		drawNum(g, StateGame.ventoseNum, 450, 452);
+		/*排行数据*/
+		if(engine.rankList!=null){
+			int x = 340, y = 65, w = 160, h = 26, w1 = 125;
+			int myRanking = 0;
+			for(int i=0;i<engine.rankList.length;i++){
+				GameRanking rank = engine.rankList[i];
+				String userId = rank.getUserId();
+				String scores = String.valueOf(rank.getScores());
+				TextView.showSingleLineText(g, userId, x, y, w, h, 1);
+				TextView.showSingleLineText(g, scores, x+w, y, w1, h, 1);
+				y += h+13;
+				if(userId.equals(engine.getEngineService().getUserId())){
+					myRanking = rank.getRanking();
+				}
+			}
+			drawNum(g, myRanking, 450, 272);
+		}
+		g.setColor(0);
+		
+		drawNum(g, StateGame.ventoseNum, 450, 448);
 	}
 	
 	public static void drawNum(SGraphics g, int n, int x, int y) {

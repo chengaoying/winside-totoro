@@ -80,12 +80,12 @@ public class StateSelectInterface implements Common{
 	}
 	
 	int bgIndex ;
-	int bombX = 294, bombY = 396;
+	int bombX = 66, bombY = 396;
 	public void show(SGraphics g){
 		Image button = Resource.loadImage(Resource.id_main_button);
 		Image infoBg = Resource.loadImage(Resource.id_selectInterface_info_bg);
 		Image head = Resource.loadImage(Resource.id_selectInterface_head);
-		Image head2 = Resource.loadImage(Resource.id_selectInterface_head2);
+		//Image head2 = Resource.loadImage(Resource.id_selectInterface_head2);
 		Image lock = Resource.loadImage(Resource.id_selectInterface_lock);
 		Image slant = Resource.loadImage(Resource.id_selectInterface_slant);
 		Image text = Resource.loadImage(Resource.id_selectInterface_text);
@@ -99,7 +99,7 @@ public class StateSelectInterface implements Common{
 		int textW = text.getWidth(), textH = text.getHeight()/4;
 		int text2W = text2.getWidth(), text2H = text2.getHeight()/3;
 		int headW = head.getWidth()/4, headH = head.getHeight();
-		int head2W = head2.getWidth()/4, head2H = head2.getHeight();
+		//int head2W = head2.getWidth()/4, head2H = head2.getHeight();
 		int slantW = slant.getWidth(), slantH = slant.getHeight();
 		for(int i=0;i<4;i++){
 			if (menuIndex == i){
@@ -117,7 +117,7 @@ public class StateSelectInterface implements Common{
 			g.drawImage(lock, menuAxis[3][0]+2, menuAxis[3][1]+2, 20);
 		}
 		
-		g.drawRegion(head2, head2W*menuIndex, 0, head2W, head2H, 0, 10, ScrH-head2H-20, 20);
+		//g.drawRegion(head2, head2W*menuIndex, 0, head2W, head2H, 0, 10, ScrH-head2H-20, 20);
 		
 		int mapx = buttonW+45;
 		int mapy = 23;
@@ -150,8 +150,8 @@ public class StateSelectInterface implements Common{
 			x += slantW;
 		}
 		
-		int bgX = 254, bgY = 321, bgW = bg.getWidth(), bgH = bg.getHeight();
-		g.setClip(bgX, bgY, 360, 190);
+		int bgX = 26, bgY = 321, bgW = bg.getWidth(), bgH = bg.getHeight();
+		g.setClip(bgX, bgY, 588, 190);
 		bgIndex = (bgIndex+1)%bgW;
 		g.drawRegion(bg, bgIndex, 0, bgW-bgIndex, bgH, 0, bgX, bgY, 20);
 		g.drawRegion(bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex+bgX, bgY, 20);
@@ -189,9 +189,9 @@ public class StateSelectInterface implements Common{
 	}
 	
 	public void execute(){
-		bombX += 25;
+		bombX += 35;
 		if(bombX+50>=610){
-			bombX = 294;
+			bombX = 66;
 		}
 	}
 

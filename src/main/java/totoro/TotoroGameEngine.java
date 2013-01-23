@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 
+import cn.ohyeah.itvgame.model.GameAttainment;
+import cn.ohyeah.itvgame.model.GameRanking;
 import cn.ohyeah.itvgame.model.GameRecord;
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.game.SGraphics;
@@ -59,6 +61,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	public int mainIndex, playingIndex;
 	private int cursorFrame;
 	public PlayerProp[] props;
+	public GameRanking[] rankList;
 	
 	protected void loop() {
 		
@@ -120,15 +123,29 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		
 		setRecordId();
 		
-		/*读取游戏记录*/
-		readRecord();
-		
 		/*查询排行*/
 		queryList();
+		
+		if(pm.getPropNumsById(65)>0){
+			StateGame.wingplaneMaxNums = 4;
+		}else if(pm.getPropNumsById(64)>0){
+			StateGame.wingplaneMaxNums = 3;
+		}else if(pm.getPropNumsById(63)>0){
+			StateGame.wingplaneMaxNums = 2;
+		}else{
+			StateGame.wingplaneMaxNums = 1;
+		}
+		StateGame.ventoseNum = pm.getPropNumsById(66);
+		StateGame.hasTotoro3 = pm.getPropNumsById(61)>0?true:false;
+		StateGame.hasTotoro4 = pm.getPropNumsById(62)>0?true:false;
+		
+		/*读取游戏记录*/
+		readRecord();
 	}
 	
 	private void queryList() {
-		
+		ServiceWrapper sw = getServiceWrapper();
+		rankList = sw.queryRankingList(0, 10);
 	}
 
 	private void handleInit(KeyState key) {
@@ -183,6 +200,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	public void saveRecord(){
+		pm.sysProps();
+		saveAttainment();
+		queryList();
 		byte record[];
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		DataOutputStream dout = new DataOutputStream(bout);
@@ -199,7 +219,45 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 			sw.saveRecord(gameRecord);
 		} catch (Exception e) {
 			System.out.println("保存游戏失败，原因："+e.getMessage());
-			state = STATUS_MAIN_MENU;
+			//state = STATUS_MAIN_MENU;
+		} finally{
+			try {
+				dout.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally{
+				try {
+					bout.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+	}
+	
+	public void saveAttainment(){
+		byte record[];
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bout);
+		ServiceWrapper sw = getServiceWrapper();
+		GameAttainment ga = sw.readAttainment(recordId);
+		if(ga!=null && ga.getScores()>=StateGame.scores){
+			return;
+		}
+		try {
+			//setRecordData(dout);
+			record = bout.toByteArray();
+			GameAttainment gameAttainment = new GameAttainment();
+			gameAttainment.setData(record);
+			gameAttainment.setScores(StateGame.scores);
+			gameAttainment.setRemark("存成就");
+			gameAttainment.setAttainmentId(recordId);
+			sw.saveAttainment(gameAttainment);
+		} catch (Exception e) {
+			System.out.println("保存成就失败，原因："+e.getMessage());
+			//state = STATUS_MAIN_MENU;
 		} finally{
 			try {
 				dout.close();
@@ -223,13 +281,13 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		dout.write(StateGame.blood);
 		dout.write(StateGame.grade);
 		dout.write(StateGame.bombGrade);
-		dout.write(StateGame.wingplaneMaxNums);
+		//dout.write(StateGame.wingplaneMaxNums);
 		dout.write(StateGame.wingplaneNums);
 		dout.write(StateGame.missileGrade);
 		dout.write(StateGame.batchIndex);
-		dout.write(StateGame.ventoseNum);
-		dout.writeBoolean(StateGame.hasTotoro3);
-		dout.writeBoolean(StateGame.hasTotoro4);
+		//dout.write(StateGame.ventoseNum);
+		//dout.writeBoolean(StateGame.hasTotoro3);
+		//dout.writeBoolean(StateGame.hasTotoro4);
 		
 		printInfo();
 	}
@@ -272,13 +330,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.blood = din.read();
 		StateGame.grade = din.read();
 		StateGame.bombGrade = din.read();
-		StateGame.wingplaneMaxNums = din.read();
 		StateGame.wingplaneNums = din.read();
 		StateGame.missileGrade = din.read();
 		StateGame.batchIndex = din.read();
-		StateGame.ventoseNum = din.read();
-		StateGame.hasTotoro3 = din.readBoolean();
-		StateGame.hasTotoro4 = din.readBoolean();
 		
 		printInfo();
 	}
