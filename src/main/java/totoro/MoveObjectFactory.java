@@ -315,6 +315,23 @@ public class MoveObjectFactory implements Common{
 		}
 	}
 	
+	public MoveObject queryNearestObject(MoveObject player, Vector objects){
+		if(objects.size()<1){
+			return null;
+		}
+		MoveObject object = (MoveObject) objects.elementAt(0);
+		int len = (object.mapx-player.mapx)*(object.mapx-player.mapx)+(object.mapy-player.mapy)*(object.mapy-player.mapy);
+		for(int i=objects.size()-1;i>=0;i--){
+			MoveObject mo = (MoveObject) objects.elementAt(i);
+			int len2 = (mo.mapx-player.mapx)*(mo.mapx-player.mapx)+(mo.mapy-player.mapy)*(mo.mapy-player.mapy);
+			if(len>len2){
+				object = mo;
+				len = len2;
+			}
+		}
+		return object;
+	}
+	
 	public void createVentose(MoveObject player){
 		int grade = player.grade;
 		switch(grade){
@@ -867,15 +884,15 @@ public class MoveObjectFactory implements Common{
 		return -1;
 	}
 	
-	public void createGhostSpirit(MoveObject boss){
-		for(int i=0;i<3;i++){
+	public void createGhostSpirit(MoveObject boss, int num){
+		for(int i=0;i<num;i++){
 			MoveObject mo = new MoveObject();
 			mo.status = ROLE_STATUS_ALIVE;
 			mo.status2 = ROLE_STATUS2_MOVE;
 			mo.id = 111;
 			//mo.directionValue = value;
 			//mo.position = batchInfo[level-1][ran][2];
-			mo.direction = OBJECT_DIRECTION_LEFT;
+			mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
 			mo.mapx = boss.mapx-55;
 			mo.mapy = boss.mapy + i*55;
 			mo.width = spiritParam[mo.id-spirit_id][1];

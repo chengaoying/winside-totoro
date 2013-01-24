@@ -560,7 +560,7 @@ public class MoveObjectShow implements Common{
 
 	int fireIndex, fireIndex1,fireIndex2;
 	int changeIndex, changeIndex1, changeIndex2;
-	private void showBoss4(SGraphics g, MoveObject boss, MoveObjectFactory facotry) {
+	private void showBoss4(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		Image bossImg = Resource.loadImage(boss.picId);
 		Image fire = Resource.loadImage(Resource.id_ice_boss_1_fire);
 		Image change = Resource.loadImage(Resource.id_ice_boss_1_fire_change);
@@ -621,8 +621,9 @@ public class MoveObjectShow implements Common{
 				g.drawRegion(change, changeIndex1*changeW, 0, changeW, changeH, 0, boss.mapx-fireW, boss.mapy+(fireH+5), 20);
 				g.drawRegion(change, changeIndex2*changeW, 0, changeW, changeH, 0, boss.mapx-fireW, boss.mapy+2*(fireH+5), 20);
 				
+				int num = 3-factory.ghostSpirits.size();
 				if(changeIndex == 2){
-					facotry.createGhostSpirit(boss);
+					factory.createGhostSpirit(boss, num);
 					boss.status2 = ROLE_STATUS2_MOVE;
 				}
 			}
@@ -802,16 +803,49 @@ public class MoveObjectShow implements Common{
 			Image moPic = Resource.loadImage(mo.picId);
 			mo.frame = (mo.frame+1)%mo.frameNum;
 			g.drawRegion(moPic, mo.frame*mo.width, 0, mo.width, mo.height, 0, mo.mapx, mo.mapy, 20);
-			mo.mapx -= mo.speedX;
+			/*mo.mapx -= mo.speedX;*/
+			if(mo.direction == OBJECT_DIRECTION_LEFT_DOWN){
+				mo.mapx -= mo.speedX;
+				mo.mapy += mo.speedY;
+				if(mo.mapx+mo.width <= 0){
+					mo.direction = OBJECT_DIRECTION_RIGHT_DOWN;
+				}else if(mo.mapy+mo.height >= 490){
+					mo.direction = OBJECT_DIRECTION_LEFT_UP;
+				}
+			}else if(mo.direction == OBJECT_DIRECTION_RIGHT_DOWN){
+				mo.mapx += mo.speedX;
+				mo.mapy += mo.speedY;
+				if(mo.mapx+mo.width >= ScrW){
+					mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
+				}else if(mo.mapy+mo.height >= 490){
+					mo.direction = OBJECT_DIRECTION_RIGHT_UP;
+				}
+			}else if(mo.direction == OBJECT_DIRECTION_LEFT_UP){
+				mo.mapx -= mo.speedX;
+				mo.mapy -= mo.speedY;
+				if(mo.mapx+mo.width <= 0){
+					mo.direction = OBJECT_DIRECTION_RIGHT_UP;
+				}else if(mo.mapy <= startP){
+					mo.direction = OBJECT_DIRECTION_LEFT_DOWN;
+				}
+			}else if(mo.direction == OBJECT_DIRECTION_RIGHT_UP){
+				mo.mapx += mo.speedX;
+				mo.mapy -= mo.speedY;
+				if(mo.mapx+mo.width >= ScrW){
+					mo.direction = OBJECT_DIRECTION_LEFT_UP;
+				}else if(mo.mapy <= startP){
+					mo.direction = OBJECT_DIRECTION_RIGHT_DOWN;
+				}
+			}
 			
 			if(mo.bombETime-mo.bombSTime > mo.bombInterval*1000){
 				mo.status2 = ROLE_STATUS2_ATTACK;
 				mo.bombSTime = System.currentTimeMillis();
 			}
 			
-			if(mo.mapx+mo.width<=0){
+			/*if(mo.mapx+mo.width<=0){
 				mo.status = ROLE_STATUS_DEAD;
-			}
+			}*/
 		}
 	}
 	

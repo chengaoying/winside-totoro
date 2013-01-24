@@ -79,6 +79,9 @@ public class Resource implements Common {
 	public static short id_game_bg_up = NUMS++;
 	public static short id_game_head_shadow = NUMS++;
 	public static short id_game_explosion = NUMS++;
+	public static short id_game_key_0 = NUMS++;
+	public static short id_game_key_1 = NUMS++;
+	public static short id_game_ventose_icon = NUMS++;
 	
 	public static short id_sky_spirits_1 = NUMS++;
 	public static short id_sky_spirits_2 = NUMS++;
@@ -224,6 +227,9 @@ public class Resource implements Common {
 		"/game/bg_up.jpg",
 		"/game/head_shadow.png",
 		"/game/explosion.png",
+		"/game/key_0.png",
+		"/game/key_1.png",
+		"/game/ventose_icon.png",
 		
 		"/spirit/sky/spirit_1.png",
 		"/spirit/sky/spirit_2.png",
@@ -386,6 +392,9 @@ public class Resource implements Common {
 		images[id_game_bg_up] = null;
 		images[id_game_head_shadow] = null;
 		images[id_game_explosion] = null;
+		images[id_game_key_0] = null;
+		images[id_game_key_1] = null;
+		images[id_game_ventose_icon] = null;
 		
 		images[id_sky_spirits_1] = null;
 		images[id_sky_spirits_2] = null;
