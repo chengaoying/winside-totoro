@@ -427,7 +427,7 @@ public class StateGame implements Common{
 				mo.status = ROLE_STATUS_DEAD;
 				eatProp(mo);
 			}
-		}
+		} 
 	}
 
 	private void laserCollision() {
@@ -568,14 +568,14 @@ public class StateGame implements Common{
 	private void bossSkillCollision() {
 		for(int k=0;k<factory.boss1Skill.size();k++){
 			MoveObject mo = (MoveObject) factory.boss1Skill.elementAt(k);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+			if(Collision.checkCircularCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
 					 && player.status == ROLE_STATUS_ALIVE){
 				//mo.status = ROLE_STATUS_DEAD;
 				bombHitPlayer(mo);
 			}
 			for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
-				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				if(Collision.checkCircularCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
 					hitWingplane(wing, mo);
 				}
 			}
@@ -1454,6 +1454,7 @@ public class StateGame implements Common{
 		Image key0 = Resource.loadImage(Resource.id_game_key_0);
 		Image key1 = Resource.loadImage(Resource.id_game_key_1);
 		Image ventose_icon = Resource.loadImage(Resource.id_game_ventose_icon);
+		Image boss_blood_bg = Resource.loadImage(Resource.id_game_boss_blood_bg);
 		
 		int infoBgW = 349, infoBgH = 46;
 		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
@@ -1489,6 +1490,15 @@ public class StateGame implements Common{
 		y = y + venH/2-key0H/2;
 		g.drawImage(key1, x+venW+10, y, 20);
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
+		
+		//boss blood
+		if(factory.boss.size()>1){
+			int bbW = boss_blood_bg.getWidth(), bbH = boss_blood_bg.getHeight();
+			int bbX = ScrW/2-bbW/2, bbY = startP;
+			g.drawImage(boss_blood_bg, bbX, bbY, 20);
+			MoveObject boss = (MoveObject) factory.boss.elementAt(0);
+			DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);
+		}
 	}
 	
 	private long getTime(){

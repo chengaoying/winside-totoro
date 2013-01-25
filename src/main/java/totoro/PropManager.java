@@ -109,7 +109,7 @@ public class PropManager implements Common{
 			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 			if (sw.isServiceSuccessful()) {
 				pt.setText("购买"+pp.getName()+"成功");
-			}
+			} 
 			else {
 				pt.setText("购买"+pp.getName()+"失败, 原因: "+sw.getServiceMessage());
 				
