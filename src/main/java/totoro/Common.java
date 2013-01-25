@@ -262,7 +262,7 @@ public interface Common {
 	public int playerSkillParam[][] = {
 			/*0-id, 1-w,2-h,3-damage,4-speedx,5-speedy, 6-frameNum,7-picId*/
 			{0, 573, 11, 5, 5, 5, 4, laserPic},
-			{1, 42, 21, 20, 45, 45, 1, missilePic},
+			{1, 42, 21, 70, 20, 20, 1, missilePic},
 			
 			{2, 164, 159, 50, 60, 60, 8, yellowVentose},
 			{3, 164, 159, 50, 60, 60, 8, yellowVentose},

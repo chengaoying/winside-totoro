@@ -69,15 +69,40 @@ public class MoveObjectShow implements Common{
 		}
 	}
 	
-	public void showMissile(SGraphics g, Vector missiles){
+	public void showMissile(SGraphics g, Vector missiles, MoveObjectFactory factory){
 		for(int i=0;i<missiles.size();i++){
 			MoveObject mo = (MoveObject)missiles.elementAt(i);
 			Image moPic = Resource.loadImage(mo.picId);
 			g.drawImage(moPic, mo.mapx, mo.mapy, 20);
+			if(mo.mo == null || mo.mo.status == ROLE_STATUS_DEAD){
+				mo.mo = factory.queryNearestObject(mo, factory.spirits);
+			}
+			if(mo.mo != null){
+				float distanceX = getAbsValue(mo.mo.mapx-mo.mapx);
+				float distanceY = getAbsValue(mo.mo.mapy-mo.mapy);
+				float speedY = distanceY/distanceX*mo.speedX;
+				mo.speedY = (int) speedY;
+				if(mo.speedY>mo.speedX){
+					mo.speedY = mo.speedX;
+				}
+				if(mo.mo.mapy>mo.mapy){
+					mo.mapy += mo.speedY;
+				}else if(mo.mo.mapy<mo.mapy){
+					mo.mapy -= mo.speedY;
+				}
+			}
 			mo.mapx += mo.speedX;
 			if(mo.mapx>ScrW){
 				mo.status = ROLE_STATUS_DEAD;
 			}
+		}
+	}
+	
+	private int getAbsValue(int value){
+		if(value<0){
+			return -value;
+		}else{
+			return value;
 		}
 	}
 	

@@ -40,6 +40,9 @@ public class StateGame implements Common{
 	private long bombStart, bombEnd;
 	private int bombInterval = 400;
 	
+	private long missileStart;
+	private int missileInterval = 1000;
+	
 	private long spiritStart, spiritEnd;
 	private long batteryStart, batteryEnd;
 	private long reviveStime, reviveEtime;
@@ -130,7 +133,7 @@ public class StateGame implements Common{
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
 			if(engine.isDebugMode()){
-				factory.createMissile(player);
+				factory.createMissile(player, factory.spirits);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM8)){
 			if(engine.isDebugMode()){
@@ -142,6 +145,31 @@ public class StateGame implements Common{
 	
 	public void execute(){
 		
+		revivePlayer();
+		
+		judgeNextLevel();
+		
+		level_end_time = getTime()/1000;
+		//System.out.println("time:"+(level_end_time - level_start_time));
+		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
+			level_over = true;
+		}
+		
+		createPlayerSkill();
+		
+		createSpirits();
+		
+		createSpiritsBombs();
+		
+		collisionDetection();
+		
+		removeOutsideObject();
+		
+		entryGameStatus();
+		
+	}
+	
+	private void revivePlayer() {
 		//玩家复活
 		if(player.status == ROLE_STATUS_DEAD && player.lifeNum>0){
 			reviveEtime = getTime();
@@ -159,15 +187,9 @@ public class StateGame implements Common{
 		if(!isUserVentose && player.status == ROLE_STATUS_PROTECTED && player.endTime-player.startTime > 3000){
 			player.status = ROLE_STATUS_ALIVE;
 		}
-		
-		judgeNextLevel();
-		
-		level_end_time = getTime()/1000;
-		//System.out.println("time:"+(level_end_time - level_start_time));
-		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
-			level_over = true;
-		}
-		
+	}
+
+	private void createPlayerSkill() {
 		bombEnd = getTime();
 		if(player != null 
 			&& player.status != ROLE_STATUS_DEAD 
@@ -177,9 +199,6 @@ public class StateGame implements Common{
 			//if(factory.lasers.size()<1){
 				factory.createBomb(player);
 			//}
-			if(player.missileGrade>0 && factory.lasers.size()<1){
-				factory.createMissile(player);
-			}
 			for(int k=0;k<factory.wingplane.size();k++){ //僚机普通攻击
 				MoveObject mo = (MoveObject) factory.wingplane.elementAt(k);
 				factory.createWingplaneBomb(mo);
@@ -196,6 +215,13 @@ public class StateGame implements Common{
 			}
 		}
 		
+		if(player != null && bombEnd - missileStart>missileInterval){
+			if(player.missileGrade>0 && factory.lasers.size()<1){
+				factory.createMissile(player, factory.spirits);
+				missileStart = getTime();
+			}
+		}
+		
 		/*必杀技*/
 		venETime = getTime();
 		if(venETime - venSTime > 4000 && isUserVentose){
@@ -206,19 +232,8 @@ public class StateGame implements Common{
 			venSTime2 = getTime();
 			factory.createVentose(player);
 		}
-		
-		createSpirits();
-		
-		createSpiritsBombs();
-		
-		collisionDetection();
-		
-		removeOutsideObject();
-		
-		entryGameStatus();
-		
 	}
-	
+
 	private void entryGameStatus() {
 		switch (game_status){
 		case GAME_PAUSE:	//暂停
@@ -1265,7 +1280,7 @@ public class StateGame implements Common{
 		objectShow.showBoss8Skill2(g, factory.boss8Skill);
 		objectShow.showPropsIcon(g, factory.props);
 		objectShow.showLasers(g, factory.lasers, player);
-		objectShow.showMissile(g, factory.missile);
+		objectShow.showMissile(g, factory.missile, factory);
 		objectShow.showWingplane(g, factory.wingplane, player);
 		objectShow.showVentose(g, factory.ventose);
 		drawExploders(g);
@@ -1454,7 +1469,6 @@ public class StateGame implements Common{
 		Image key0 = Resource.loadImage(Resource.id_game_key_0);
 		Image key1 = Resource.loadImage(Resource.id_game_key_1);
 		Image ventose_icon = Resource.loadImage(Resource.id_game_ventose_icon);
-		Image boss_blood_bg = Resource.loadImage(Resource.id_game_boss_blood_bg);
 		
 		int infoBgW = 349, infoBgH = 46;
 		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
@@ -1479,7 +1493,9 @@ public class StateGame implements Common{
 		offY += infoBgH/2 - bloodBgH/2;
 		g.drawImage(bloodBg, offX, offY, 20);
 		g.setColor(0xffff00);
-		DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);
+		if(player.blood>0){
+			DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);
+		}
 		g.setColor(0xffffff);
 		
 		int venW = ventose_icon.getWidth(), venH = ventose_icon.getHeight();
@@ -1492,12 +1508,52 @@ public class StateGame implements Common{
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
 		
 		//boss blood
-		if(factory.boss.size()>1){
-			int bbW = boss_blood_bg.getWidth(), bbH = boss_blood_bg.getHeight();
-			int bbX = ScrW/2-bbW/2, bbY = startP;
-			g.drawImage(boss_blood_bg, bbX, bbY, 20);
+		if(factory.boss.size()>0){
 			MoveObject boss = (MoveObject) factory.boss.elementAt(0);
-			DrawUtil.drawRect(g, offX+4, offY+4, player.blood*(bloodBgW-8)/playerParam[player.id][6], bloodBgH-8);
+			int bloodW = 500, bloodH = 24;
+			int bloodX = ScrW/2-250, bloodY = startP+15;
+			DrawUtil.drawRect(0xffffff, g, bloodX, bloodY, bloodW, bloodH);
+			bloodX = bloodX+2;
+			bloodY = bloodY+2;
+			bloodW = bloodW-4;
+			bloodH = bloodH-4;
+			DrawUtil.drawRect(0x000000, g, bloodX, bloodY, bloodW, bloodH);
+			if(boss.blood>0){
+				int num = bossParam[level-1][3]/bossParam[0][3];
+				if(num == 1){
+					DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, boss.blood*(bloodW)/bossParam[0][3], bloodH);
+				}else if(num == 2){
+					if(boss.blood > bossParam[0][3]){
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0xffec42, g, bloodX, bloodY, (boss.blood-bossParam[0][3])*(bloodW)/bossParam[0][3], bloodH);
+					}else {
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, boss.blood*(bloodW)/bossParam[0][3], bloodH);
+					}
+				}else if(num == 3){
+					if(boss.blood > bossParam[0][3]*2){
+						DrawUtil.drawRect(0xffec42, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0x00f540, g, bloodX, bloodY, (boss.blood-bossParam[0][3]*2)*(bloodW)/bossParam[0][3], bloodH);
+					}else if(boss.blood>bossParam[0][3] && boss.blood <= bossParam[0][3]*2){
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0xffec42, g, bloodX, bloodY, (boss.blood-bossParam[0][3])*(bloodW)/bossParam[0][3], bloodH);
+					}else{
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, boss.blood*(bloodW)/bossParam[0][3], bloodH);
+					}
+				}else if(num == 4){
+					if(boss.blood > bossParam[0][3]*3){
+						DrawUtil.drawRect(0x00f540, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0xf600ff, g, bloodX, bloodY, (boss.blood-bossParam[0][3]*3)*(bloodW)/bossParam[0][3], bloodH);
+					}else if(boss.blood>bossParam[0][3]*2 && boss.blood <= bossParam[0][3]*3){
+						DrawUtil.drawRect(0xffec42, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0x00f540, g, bloodX, bloodY, (boss.blood-bossParam[0][3]*2)*(bloodW)/bossParam[0][3], bloodH);
+					}else if(boss.blood>bossParam[0][3] && boss.blood <= bossParam[0][3]*2){
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, bloodW, bloodH);
+						DrawUtil.drawRect(0xffec42, g, bloodX, bloodY, (boss.blood-bossParam[0][3])*(bloodW)/bossParam[0][3], bloodH);
+					}else{
+						DrawUtil.drawRect(0xff0000, g, bloodX, bloodY, boss.blood*(bloodW)/bossParam[0][3], bloodH);
+					}
+				}
+			}
 		}
 	}
 	

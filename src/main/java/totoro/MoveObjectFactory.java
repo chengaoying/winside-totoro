@@ -278,38 +278,43 @@ public class MoveObjectFactory implements Common{
 		}
 	}
 	
-	public void createMissile(MoveObject player){
+	public void createMissile(MoveObject player, Vector objects){
 		int num;
 		if(player.missileGrade == 1){
+			MoveObject object = queryNearestObject(player, objects);
+			MoveObject mo = new MoveObject();
+			mo.id = playerSkillParam[1][0];
+			mo.width = playerSkillParam[1][1];
+			mo.height = playerSkillParam[1][2];
+			mo.damage = playerSkillParam[1][3];
+			mo.speedX = playerSkillParam[1][4];
+			//mo.speedY = playerSkillParam[1][5];
+			mo.frameNum = playerSkillParam[1][6];
+			mo.picId = playerSkillParam[1][7];
+			mo.mapx = player.mapx + player.width;
+			mo.mapy = player.mapy+5;
+			if(object!=null){
+				mo.mo = object;
+			}
+			missile.addElement(mo);
+		}else if(player.missileGrade == 2){
 			num = 2;
 			for(int i=0;i<num;i++){
+				MoveObject object = queryNearestObject(player, objects);
 				MoveObject mo = new MoveObject();
 				mo.id = playerSkillParam[1][0];
 				mo.width = playerSkillParam[1][1];
 				mo.height = playerSkillParam[1][2];
 				mo.damage = playerSkillParam[1][3];
 				mo.speedX = playerSkillParam[1][4];
-				mo.speedY = playerSkillParam[1][5];
+				//mo.speedY = playerSkillParam[1][5];
 				mo.frameNum = playerSkillParam[1][6];
 				mo.picId = playerSkillParam[1][7];
 				mo.mapx = player.mapx + player.width;
-				mo.mapy = player.mapy + mo.height+i*40;
-				missile.addElement(mo);
-			}
-		}else if(player.missileGrade == 2){
-			num = 4;
-			for(int i=0;i<num;i++){
-				MoveObject mo = new MoveObject();
-				mo.id = playerSkillParam[1][0];
-				mo.width = playerSkillParam[1][1];
-				mo.height = playerSkillParam[1][2];
-				mo.damage = playerSkillParam[1][3];
-				mo.speedX = playerSkillParam[1][4];
-				mo.speedY = playerSkillParam[1][5];
-				mo.frameNum = playerSkillParam[1][6];
-				mo.picId = playerSkillParam[1][7];
-				mo.mapx = player.mapx + player.width;
-				mo.mapy = player.mapy+5 +i*(5 + mo.height);
+				mo.mapy = player.mapy+5;
+				if(object!=null){
+					mo.mo = object;
+				}
 				missile.addElement(mo);
 			}
 		}
@@ -323,13 +328,18 @@ public class MoveObjectFactory implements Common{
 		int len = (object.mapx-player.mapx)*(object.mapx-player.mapx)+(object.mapy-player.mapy)*(object.mapy-player.mapy);
 		for(int i=objects.size()-1;i>=0;i--){
 			MoveObject mo = (MoveObject) objects.elementAt(i);
-			int len2 = (mo.mapx-player.mapx)*(mo.mapx-player.mapx)+(mo.mapy-player.mapy)*(mo.mapy-player.mapy);
-			if(len>len2){
-				object = mo;
-				len = len2;
+			if(mo.mapy+mo.height>startP && mo.mapy+mo.height<=490 && mo.mapx<ScrW && mo.mapx+mo.width>0){
+				int len2 = (mo.mapx-player.mapx)*(mo.mapx-player.mapx)+(mo.mapy-player.mapy)*(mo.mapy-player.mapy);
+				if(len>len2){
+					object = mo;
+					len = len2;
+				}
 			}
 		}
-		return object;
+		if(object.mapy+object.height>startP && object.mapy+object.height<=490 && object.mapx<ScrW && object.mapx+object.width>0){
+			return object;
+		}
+		return null;
 	}
 	
 	public void createVentose(MoveObject player){
