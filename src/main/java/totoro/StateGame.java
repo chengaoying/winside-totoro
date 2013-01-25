@@ -150,7 +150,7 @@ public class StateGame implements Common{
 		judgeNextLevel();
 		
 		level_end_time = getTime()/1000;
-		//System.out.println("time:"+(level_end_time - level_start_time));
+		System.out.println("time:"+(level_end_time - level_start_time));
 		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
 			level_over = true;
 		}
@@ -248,7 +248,7 @@ public class StateGame implements Common{
 				quitGameDeleteDate();
 			}else{
 				venSTime = getTime()-(venETime-venSTime); //调整必杀技时间
-				level_start_time = getTime()-(level_end_time - level_start_time);
+				level_start_time = getTime()/1000-(level_end_time - level_start_time);
 			}
 			game_status = GAME_PLAY;
 			break;
