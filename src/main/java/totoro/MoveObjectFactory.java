@@ -1224,7 +1224,7 @@ public class MoveObjectFactory implements Common{
 				object.frameIndex = 0;
 			}else{
 				object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
-				object.mapy = player.mapy+player.height-object.height-5;
+				object.mapy = player.mapy+player.height-object.height+1;
 				object.frameIndex = 1;
 			}
 			break;
@@ -1241,11 +1241,11 @@ public class MoveObjectFactory implements Common{
 				object.frameIndex = 1;
 			}else if(i==2){
 				object.speedY = bombParam[player.grade-1][player.bombGrade-1][5];
-				object.mapy = player.mapy+player.height-object.height-5;
+				object.mapy = player.mapy+player.height-object.height+10;
 				object.frameIndex = 4;
 			}else{
 				object.speedY = -bombParam[player.grade-1][player.bombGrade-1][5];
-				object.mapy = player.mapy-5;
+				object.mapy = player.mapy-3;
 				object.frameIndex = 3;
 			}
 			break;
@@ -1328,6 +1328,7 @@ public class MoveObjectFactory implements Common{
 		object.picId = playerParam[grade-1][12];
 		object.wingplaneMaxNums = StateGame.wingplaneMaxNums;
 		object.wingplaneNums = StateGame.wingplaneNums;
+		object.missileGrade = StateGame.missileGrade;
 		object.scores = StateGame.scores;
 		System.out.println("totoro revive");
 		return object;

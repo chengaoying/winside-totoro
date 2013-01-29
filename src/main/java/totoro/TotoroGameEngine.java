@@ -58,7 +58,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}
 
 	public int state;
-	public int mainIndex, playingIndex;
+	//public int playingIndex;
 	private int cursorFrame;
 	public PlayerProp[] props;
 	public GameRanking[] rankList;
@@ -106,7 +106,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 			stateMain.handleKey(keyState);
 			break;
 		case STATUS_SELECT_TOTORO:
-			stateSelect.handle(keyState);
+			stateSelect.handle(keyState, StateMain.mainIndex);
 			break;
 		case STATUS_GAME_PLAYING:
 			stateGame.handleKey(keyState);
@@ -292,7 +292,11 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		//dout.write(StateGame.wingplaneMaxNums);
 		dout.write(StateGame.wingplaneNums);
 		dout.write(StateGame.missileGrade);
+		dout.write(StateGame.laserNums);
 		dout.write(StateGame.batchIndex);
+		dout.write(StateGame.levelInterval);
+		dout.writeInt(StateGame.bossBlood);
+		dout.writeBoolean(StateGame.level_over);
 		//dout.write(StateGame.ventoseNum);
 		//dout.writeBoolean(StateGame.hasTotoro3);
 		//dout.writeBoolean(StateGame.hasTotoro4);
@@ -309,8 +313,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		ByteArrayInputStream bin = new ByteArrayInputStream(gameRecord.getData());
 		DataInputStream din = new DataInputStream(bin);
 		try {
-			initRecordInfo(din);
 			StateGame.scores = gameRecord.getScores();
+			initRecordInfo(din);
 			return result = true;
 		} catch (Exception e) {
 			System.out.println("读取游戏失败，原因："+e.getMessage());
@@ -340,7 +344,11 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.bombGrade = din.read();
 		StateGame.wingplaneNums = din.read();
 		StateGame.missileGrade = din.read();
+		StateGame.laserNums = din.read();
 		StateGame.batchIndex = din.read();
+		StateGame.levelInterval = din.read();
+		StateGame.bossBlood = din.readInt();
+		StateGame.level_over = din.readBoolean();
 		
 		printInfo();
 	}
@@ -354,10 +362,14 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		System.out.println("StateGame.wingplaneMaxNums:"+StateGame.wingplaneMaxNums);
 		System.out.println("StateGame.wingplaneNums:"+StateGame.wingplaneNums);
 		System.out.println("StateGame.missileGrade:"+StateGame.missileGrade);
+		System.out.println("StateGame.laserNums:"+StateGame.laserNums);
 		System.out.println("StateGame.batchIndex:"+StateGame.batchIndex);
 		System.out.println("StateGame.ventoseNum:"+StateGame.ventoseNum);
 		System.out.println("StateGame.hasTotoro3:"+StateGame.hasTotoro3);
 		System.out.println("StateGame.hasTotoro4:"+StateGame.hasTotoro4);
 		System.out.println("StateGame.scores:"+StateGame.scores);
+		System.out.println("StateGame.levelInterval:"+(StateGame.levelInterval));
+		System.out.println("StateGame.bossBlood:"+(StateGame.bossBlood));
+		System.out.println("StateGame.level_over:"+(StateGame.level_over));
 	}
 }

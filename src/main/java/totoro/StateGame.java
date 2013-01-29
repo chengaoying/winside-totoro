@@ -24,6 +24,7 @@ public class StateGame implements Common{
 	
 	public static long level_start_time;
 	public static long level_end_time;
+	public static int levelInterval;
 	public static boolean level_over;
 	
 	private int level = 1;
@@ -59,10 +60,14 @@ public class StateGame implements Common{
 	public static int wingplaneMaxNums = 1;
 	public static int wingplaneNums;
 	public static int missileGrade;
+	public static int laserNums;
 	public static int ventoseNum;
 	public static boolean hasTotoro3;
 	public static boolean hasTotoro4;
 	public static int batchIndex;
+	
+	//boss info
+	public static int bossBlood;
 	
 	public void handleKey(KeyState keyState){
 		if(keyState.containsMoveEventAndRemove(KeyCode.UP) 
@@ -89,9 +94,11 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
 			game_status = GAME_PAUSE;
 		}else if(keyState.containsAndRemove(KeyCode.NUM2)){
-			if(player.missileGrade<2){
-				player.missileGrade ++;
-				missileGrade = player.missileGrade;
+			if(engine.isDebugMode()){
+				if(player.missileGrade<2 ){
+					player.missileGrade ++;
+					missileGrade = player.missileGrade;
+				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM3)){
 			if(engine.isDebugMode()){
@@ -150,7 +157,7 @@ public class StateGame implements Common{
 		judgeNextLevel();
 		
 		level_end_time = getTime()/1000;
-		System.out.println("time:"+(level_end_time - level_start_time));
+		//System.out.println("time:"+(level_end_time - level_start_time));
 		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
 			level_over = true;
 		}
@@ -241,6 +248,11 @@ public class StateGame implements Common{
 			int index = menu.processSubMenu();
 			if(index == 1){
 				//返回主界面
+				levelInterval = (int) (level_end_time-level_start_time);
+				if(factory.boss.size()>0){
+					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
+					bossBlood = object.blood;
+				}
 				engine.saveRecord();
 				engine.sysProps();
 				engine.saveAttainment();
@@ -312,9 +324,14 @@ public class StateGame implements Common{
 			player.mapx += player.speedX;
 			if(player.mapx >= ScrW){
 				player.speedX = playerParam[player.grade-1][9];
-				engine.saveRecord();
+				levelInterval = (int) (level_end_time-level_start_time);
+				if(factory.boss.size()>0){
+					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
+					bossBlood = object.blood;
+				}
+				//engine.saveRecord();
 				engine.sysProps();
-				engine.saveAttainment();
+				//engine.saveAttainment();
 				changeDatePass();
 			}
 		}
@@ -1051,8 +1068,10 @@ public class StateGame implements Common{
 		case id_laser:
 			if(factory.lasers.size()<1){
 				factory.createLaster(player);
+				laserNums = 1;
 				factory.missile.removeAllElements();
 				player.missileGrade = 0;
+				missileGrade = player.missileGrade;
 			}/*else{
 				MoveObject object = (MoveObject) factory.lasers.elementAt(0);
 				if(object.frame>0){
@@ -1066,6 +1085,7 @@ public class StateGame implements Common{
 				player.missileGrade ++;
 				missileGrade = player.missileGrade;
 				factory.lasers.removeAllElements();
+				laserNums = 0;
 				System.out.println("laser.size:"+factory.lasers.size());
 				System.out.println("player.missileGrade:"+player.missileGrade);
 			}

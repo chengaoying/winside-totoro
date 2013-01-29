@@ -14,17 +14,17 @@ import cn.ohyeah.stb.ui.TextView;
 public class StateMain implements Common{
 	
 	public boolean exit;
-	private StateGame stateGame;
+	//private StateGame stateGame;
 	private TotoroGameEngine engine;
 	public StateMain(TotoroGameEngine engine){
 		this.engine = engine;
-		this.stateGame = engine.stateGame;
+		//this.stateGame = engine.stateGame;
 	}
 	
 	public int menuAxis[][] = {{20, 20}, {20, 92}, {20, 164}, {20, 236}};
 	public int menuAxis2[][] = {{517, 342}, {517, 428}};
 	
-	private int mainIndex;
+	public static int mainIndex;
 	private boolean isRight;
 	
 	public void handleKey(KeyState keyState){
@@ -173,12 +173,14 @@ public class StateMain implements Common{
 				pt.popup();
 				mainIndex = 0;
 			}else{
-				stateGame.factory = MoveObjectFactory.getInstance();
+				engine.state = STATUS_SELECT_TOTORO;
+				Resource.clearMain();
+				/*stateGame.factory = MoveObjectFactory.getInstance();
 				stateGame.objectShow = MoveObjectShow.getInstance();
 				StateGame.player = stateGame.factory.createPlayer(StateGame.grade);
 				engine.state = STATUS_GAME_PLAYING;
 				StateGame.game_status = GAME_PLAY;
-				StateGame.level_start_time = System.currentTimeMillis()/1000;
+				StateGame.level_start_time = System.currentTimeMillis()/1000;*/
 			}
 		} else if (mainIndex == 2) {	//充值
 			Recharge recharge = new Recharge(engine);
@@ -189,17 +191,22 @@ public class StateMain implements Common{
 			exit = true;
 		} else if (mainIndex == 4) {	//龙猫升级
 			if(StateGame.wingplaneMaxNums<4){
-				if(StateGame.wingplaneMaxNums==1){
-					if(engine.pm.buyProp(63, 1)){
-						StateGame.wingplaneMaxNums ++;
-					}
-				}else if(StateGame.wingplaneMaxNums==2){
-					if(engine.pm.buyProp(64, 1)){
-						StateGame.wingplaneMaxNums ++;
-					}
-				}else {
-					if(engine.pm.buyProp(65, 1)){
-						StateGame.wingplaneMaxNums ++;
+				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+				pc.setText("是否要购买守护精灵?");
+				int index = pc.popup();
+				if(index==0){
+					if(StateGame.wingplaneMaxNums==1){
+						if(engine.pm.buyProp(63, 1)){
+							StateGame.wingplaneMaxNums ++;
+						}
+					}else if(StateGame.wingplaneMaxNums==2){
+						if(engine.pm.buyProp(64, 1)){
+							StateGame.wingplaneMaxNums ++;
+						}
+					}else {
+						if(engine.pm.buyProp(65, 1)){
+							StateGame.wingplaneMaxNums ++;
+						}
 					}
 				}
 			}else{
