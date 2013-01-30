@@ -187,14 +187,14 @@ public interface Common {
 	/*关卡等级信息*/
 	public static final int levelInfo[][] = {
 		/*0-关卡, 1-关卡时间(秒), 2-出怪时间间隔, 3-battery interval*/
-		{1, 120, 5000, 10000},
-		{2, 120, 5000, 10000},
-		{3, 120, 5000, 10000},
-		{4, 120, 5000, 10000},
-		{5, 120, 5000, 10000},
-		{6, 120, 5000, 10000},
-		{7, 120, 5000, 60000},
-		{8, 120, 5000, 60000},
+		{1, 5, 5000, 10000},
+		{2, 5, 5000, 10000},
+		{3, 5, 5000, 10000},
+		{4, 5, 5000, 10000},
+		{5, 5, 5000, 10000},
+		{6, 5, 5000, 10000},
+		{7, 5, 5000, 60000},
+		{8, 5, 5000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -294,16 +294,16 @@ public interface Common {
 	};
 	
 	/*boss属性*/
-	public int bossParam[][] = {
+	public int bossParam[][] = {  
 			/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标
 			 * 9-图片id, 10-帧数间隔, 11-图片总帧数, 12-伤害, 13-技能一时间间隔, 14-技能二时间间隔, 15-方向, 16-初始位置,17-技能1伤害, 18-技能2伤害*/
-			{200, 186, 266, 9000, 100, 5, 5, 0, 0, boss_1, 300, 5, 50, 10, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{201, 162, 210, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,50},
-			{202, 192, 204, 18000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{203, 196, 213, 18000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{204, 102, 160, 27000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{205, 103, 148, 27000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 10, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{200, 186, 266, 9000, 100, 10, 10, 0, 0, boss_1, 300, 5, 50, 7, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{201, 162, 210, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,50},
+			{202, 192, 204, 18000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{203, 196, 213, 18000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{204, 102, 160, 27000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{205, 103, 148, 27000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{207, 260, 299, 36000, 100, 5, 5, 0, 0, boss_8, 300, 5, 50, 3, 5,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 	};
 	

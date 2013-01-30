@@ -73,7 +73,7 @@ public class MoveObjectFactory implements Common{
 		int value = RandomValue.getRandInt(10);
 		for(int i=0;i<count;i++){
 			MoveObject mo = new MoveObject();
-			mo.status = ROLE_STATUS_ALIVE;
+			mo.status = ROLE_STATUS_PROTECTED;
 			mo.status2 = ROLE_STATUS2_MOVE;
 			mo.id = spiritId;
 			mo.directionValue = value;
@@ -647,6 +647,7 @@ public class MoveObjectFactory implements Common{
 		mo.startTime = System.currentTimeMillis()/1000;
 		mo.skill1STime = System.currentTimeMillis()/1000;
 		mo.skill2STime = System.currentTimeMillis()/1000;
+		mo.runTime1 = System.currentTimeMillis()/1000;
 		mo.mapx = ScrW;
 		mo.mapy = ScrH/2 - mo.height/2;
 		//System.out.println("---create boss---");

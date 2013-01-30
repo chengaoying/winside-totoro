@@ -46,6 +46,10 @@ public class MoveObject {
 	long skill2ETime;
 	int skill2Interval;
 	int skill2Damage;
+	long runTime1;		//boss run time1
+	long runTime2;		//boss run time2
+	int stopInterval;
+	int skillStatue;	//1-技能1, 2-技能2
 	
 	int bombNum;
 	int wingplaneNums;

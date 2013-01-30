@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public static int levelInterval;
 	public static boolean level_over;
 	
-	private int level = 1;
+	private int level = 5;
 	public boolean isNextLevel;
 	public static boolean isCeateBoss;
 	
@@ -355,6 +355,8 @@ public class StateGame implements Common{
 						|| object.id == 205){
 					factory.createBossSkill(object, null);
 					object.status2 = ROLE_STATUS2_MOVE;
+					object.skillStatue = 0;
+					object.skill2STime = System.currentTimeMillis();
 				}else if(object.id == 206){
 					object.bombETime = System.currentTimeMillis();
 					if(object.bombNum<8){
@@ -468,7 +470,8 @@ public class StateGame implements Common{
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
 				if((mo.mapy<=laser.mapy+laser.height && mo.mapy+mo.height>=laser.mapy)
-						&& laser.mapx<mo.mapx && laser.status2 == ROLE_STATUS2_ATTACK){
+						&& laser.mapx<mo.mapx && laser.status2 == ROLE_STATUS2_ATTACK
+						&& mo.status == ROLE_STATUS_ALIVE){
 					mo.blood -= laser.damage;
 					//laser.width = mo.mapx+mo.width/2 - laser.mapx;
 					Exploder exploder = new Exploder(mo.mapx,mo.mapy+mo.height/2);
@@ -584,13 +587,13 @@ public class StateGame implements Common{
 	private void bossSkill2Collision() {
 		for(int k=0;k<factory.boss8Skill.size();k++){
 			MoveObject mo = (MoveObject) factory.boss8Skill.elementAt(k);
-			if(Collision.checkSquareCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
+			if(Collision.checkSquareToCircularCollision(mo.mapx, mo.mapy, mo.width, mo.height, player.mapx, player.mapy, player.width, player.height)
 					 && player.status == ROLE_STATUS_ALIVE){
 				bombHitPlayer(mo);
 			}
 			for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
-				if(Collision.checkSquareCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				if(Collision.checkSquareToCircularCollision(mo.mapx, mo.mapy, mo.width, mo.height, wing.mapx, wing.mapy, wing.width, wing.height)){
 					hitWingplane(wing, mo);
 				}
 			}
@@ -730,7 +733,8 @@ public class StateGame implements Common{
 			MoveObject bomb = (MoveObject) factory.bombs.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-				if(Collision.checkSquareToCircularCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				if(Collision.checkSquareToCircularCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)
+						&& mo.status == ROLE_STATUS_ALIVE){
 					if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
 						bomb.status = ROLE_STATUS_DEAD;
 					}
@@ -845,7 +849,8 @@ public class StateGame implements Common{
 			MoveObject bomb = (MoveObject) factory.missile.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)){
+				if(Collision.checkSquareCollision(bomb.mapx, bomb.mapy, bomb.width, bomb.height, mo.mapx, mo.mapy, mo.width, mo.height)
+						&& mo.status == ROLE_STATUS_ALIVE){
 					//if(player.grade!=TOTORO_GRADE_THREE && player.grade!=TOTORO_GRADE_FOUR){
 						bomb.status = ROLE_STATUS_DEAD;
 					//}
@@ -960,7 +965,8 @@ public class StateGame implements Common{
 			MoveObject bomb = (MoveObject) factory.ventose.elementAt(i);
 			for(int j=0;j<factory.spirits.size();j++){
 				MoveObject mo = (MoveObject) factory.spirits.elementAt(j);
-				if(Collision.checkSquareCollision( mo.mapx, mo.mapy, mo.width, mo.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)){
+				if(Collision.checkSquareCollision( mo.mapx, mo.mapy, mo.width, mo.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)
+						&& mo.status == ROLE_STATUS_ALIVE){
 					mo.blood -= bomb.damage;
 					Exploder exploder = new Exploder(mo.mapx,mo.mapy);
 					missileEffects[mIndex] = exploder;
@@ -1109,6 +1115,7 @@ public class StateGame implements Common{
 	}
 
 	private void createSpirits(){
+		System.out.println("level_over:"+level_over);
 		if(!isNextLevel){
 			spiritEnd = getTime();
 			batteryEnd = getTime();
@@ -1256,7 +1263,6 @@ public class StateGame implements Common{
 	
 	private void quitGameDeleteDate(){
 		lifeNum = 0;
-		currLevel = 0;
 		scores = 0;
 		blood = 0;
 		grade = 0;
@@ -1264,10 +1270,11 @@ public class StateGame implements Common{
 		//wingplaneMaxNums = 1;
 		wingplaneNums = 0;
 		missileGrade = 0;
-		currLevel = level;
+		currLevel = level = 1;
 		bgIndex = 0;
 		hillIndex = 0;
 		wayIndex = 0;
+		batchIndex = 0;
 		isNextLevel = false;
 		level_over = false;
 		isCeateBoss = false;

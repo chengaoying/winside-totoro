@@ -172,7 +172,7 @@ public class StateSelectInterface implements Common{
 		g.setColor(0xffffff);
 		engine.setFont(20, true);
 		//g.drawString(engine.getEngineService().getExpendAmountUnit(), x+text2W/2+70, y, 20);
-		g.drawString(engine.getEngineService().getExpendAmountUnit()+"Êý:"+engine.getEngineService().getBalance(), x+220, y, 20);
+		g.drawString(engine.getEngineService().getExpendAmountUnit()+"Êý:"+engine.getEngineService().getBalance(), x+170, y, 20);
 		g.setColor(col);
 		engine.setDefaultFont();
 		
