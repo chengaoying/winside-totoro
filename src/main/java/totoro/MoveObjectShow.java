@@ -731,7 +731,6 @@ public class MoveObjectShow implements Common{
 		boss.skill1ETime = System.currentTimeMillis();
 		boss.skill2ETime = System.currentTimeMillis();
 		boss.runTime2 = System.currentTimeMillis();
-		System.out.println("status2:"+boss.status2);
 		if(boss.direction == OBJECT_DIRECTION_LEFT){
 			boss.mapx -= boss.speedX;
 			if(boss.mapx <= offX3){
@@ -862,7 +861,77 @@ public class MoveObjectShow implements Common{
 		
 	}
 
-	private void showBoss6(SGraphics g, MoveObject boss) {
+	private void showBoss6(SGraphics g, MoveObject boss){
+		Image bossImg = Resource.loadImage(boss.picId);
+		int offX3 = ScrW/2 + ScrW/4-boss.width/2;
+		boss.skill1ETime = System.currentTimeMillis();
+		boss.skill2ETime = System.currentTimeMillis();
+		boss.runTime2 = System.currentTimeMillis();
+		
+		if(boss.direction == OBJECT_DIRECTION_LEFT){
+			boss.mapx -= boss.speedX;
+			if(boss.mapx <= offX3){
+				int r = RandomValue.getRandInt(2);
+				boss.direction = r==0?OBJECT_DIRECTION_UP:OBJECT_DIRECTION_DOWN;
+				boss.skill1STime = System.currentTimeMillis();
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}else if(boss.direction == OBJECT_DIRECTION_UP){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
+					boss.mapy -= boss.speedY;
+				}else{
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}
+
+			if(boss.mapy <= startP-30){
+				boss.direction = OBJECT_DIRECTION_DOWN;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}else if(boss.direction == OBJECT_DIRECTION_DOWN){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
+					boss.mapy += boss.speedY;
+				}else{
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}
+			
+			if(boss.mapy+boss.height >= endP+30){
+				boss.direction = OBJECT_DIRECTION_UP;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}
+		if(boss.status2 == ROLE_STATUS2_MOVE){
+			boss.frame = (boss.frame+1)%3;
+		}else{
+			boss.frame = (boss.frame+1)%boss.frameNum;
+			if(boss.frame==1){
+				boss.frame=3;
+			}
+		}
+		g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
+	}
+	/*private void showBoss6(SGraphics g, MoveObject boss) {
 		Image bossImg = Resource.loadImage(boss.picId);
 		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
 			boss.skill1ETime = System.currentTimeMillis()/1000;
@@ -905,7 +974,7 @@ public class MoveObjectShow implements Common{
 			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
 		//}
 	}
-
+*/
 	private void showBoss7(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		Image bossImg = Resource.loadImage(boss.picId);
 		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
