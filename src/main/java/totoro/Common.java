@@ -8,7 +8,7 @@ public interface Common {
 	public final static int STATUS_INIT = 0;			//初始
 	public final static int STATUS_MAIN_MENU = 1;		//游戏主菜单 
 	public final static int STATUS_SELECT_TOTORO = 2;	//选择龙猫
-	public final static int STATUS_GAME_PLAYING = 3;	//游戏中
+	public final static int STATUS_GAME_PLAYING = 3;	//游戏中    
 	
 	public final static int GAME_PLAY = 2;
 	public final static int GAME_FAIL = 3;
@@ -188,13 +188,13 @@ public interface Common {
 	public static final int levelInfo[][] = {
 		/*0-关卡, 1-关卡时间(秒), 2-出怪时间间隔, 3-battery interval*/
 		{1, 5, 5000, 10000},
-		{2, 5, 5000, 10000},
+		{2, 2, 5000, 10000},
 		{3, 5, 5000, 10000},
-		{4, 5, 5000, 10000},
-		{5, 5, 5000, 10000},
-		{6, 5, 5000, 10000},
-		{7, 5, 5000, 60000},
-		{8, 5, 5000, 60000},
+		{4, 4, 5000, 10000},
+		{5, 4, 5000, 10000},
+		{6, 3, 5000, 10000},
+		{7, 3, 5000, 60000},
+		{8, 3, 5000, 60000},
 	};
 	
 	/*玩家属性*/
@@ -237,10 +237,10 @@ public interface Common {
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
-				{10, 27, 21, 15, 20, 6, pinkBombPicId},
-				{11, 27, 21, 15, 20, 6, pinkBombPicId},
-				{12, 27, 21, 15, 20, 6, pinkBombPicId},
-				{13, 27, 21, 15, 20, 6, pinkBombPicId},
+				{10, 27, 21, 25, 20, 6, pinkBombPicId},
+				{11, 27, 21, 25, 20, 6, pinkBombPicId},
+				{12, 27, 21, 25, 20, 6, pinkBombPicId},
+				{13, 27, 21, 25, 20, 6, pinkBombPicId},
 			},
 			{
 				/*子弹等级*/
@@ -264,10 +264,10 @@ public interface Common {
 			{0, 600, 11, 5, 5, 5, 4, laserPic},
 			{1, 42, 21, 70, 20, 20, 1, missilePic},
 			
-			{2, 164, 159, 50, 60, 60, 8, yellowVentose},
-			{3, 164, 159, 50, 60, 60, 8, yellowVentose},
-			{4, 158, 454, 50, 60, 60, 5, pinkVentose},
-			{5, 158, 454, 50, 60, 60, 5, pinkVentose},
+			{2, 164, 159, 30, 60, 60, 8, yellowVentose},
+			{3, 164, 159, 30, 60, 60, 8, yellowVentose},
+			{4, 158, 454, 70, 60, 60, 5, pinkVentose},
+			{5, 158, 454, 70, 60, 60, 5, pinkVentose},
 	};
 	
 	/*道具属性*/
@@ -304,7 +304,7 @@ public interface Common {
 			{204, 102, 160, 27000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{205, 103, 148, 27000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{207, 260, 299, 36000, 100, 5, 5, 0, 0, boss_8, 300, 5, 50, 3, 5,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{207, 260, 299, 36000, 100, 5, 5, 0, 0, boss_8, 150, 5, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 	};
 	
 	/*boss技能属性*/
@@ -317,9 +317,9 @@ public interface Common {
 			{204, 50, 23, 10, 10, 0, boss5SkillPicId, 25, 25, 3, 3},
 			{205, 49, 52, 30, 10, 0, batteryBomb2PicId, 30, 80, 1, 4},
 			{206, 24, 22, 10, 10, 0, boss7SkillPicId_1, 15, 15, 1, 8},
-			{207, 38, 37, 10, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
+			{207, 38, 37, 20, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
 			
-			{0, 50, 140, 50, 10, 0, boss8Skill2_1_PicId, 60, 60, 3, 1},
+			{0, 50, 140, 100, 10, 0, boss8Skill2_1_PicId, 60, 60, 3, 1},
 	};
 	
 	/*第6,7关boss技能一图片属性*/
@@ -351,14 +351,14 @@ public interface Common {
 			/*0-id, 1-width, 2-height, 3-blood, 4-scores, 5-speedX, 6-speedY, 7-coorX, 8-coorY
 			 * 9-position, 10-attackpermission, 11-picId, 12-frameNum, 13-damage, 14-bombInterval, 15-picInterval, 16-prize*/
 			
-			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 2, 500,SPIRITI_PRIZE_NO},
-			{301, 131, 146, 350, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{301, 131, 146, 350, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
-			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 2, 500,SPIRITI_PRIZE_YES},
+			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 1, 500,SPIRITI_PRIZE_NO},
+			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 1, 500,SPIRITI_PRIZE_NO},
+			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 1, 500,SPIRITI_PRIZE_NO},
+			{300, 70, 69, 300, 30, 3, 0, ScrW, 415, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_1, 3, 10, 1, 500,SPIRITI_PRIZE_NO},
+			{301, 131, 146, 350, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 1, 500,SPIRITI_PRIZE_YES},
+			{301, 131, 146, 350, 30, 3, 0, ScrW, 355, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_2, 4, 10, 1, 500,SPIRITI_PRIZE_YES},
+			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 1, 500,SPIRITI_PRIZE_YES},
+			{302, 92, 97, 200, 30, 3, 0, ScrW, 378, OBJECT_POSITION_LEFT, ATTACK_PERMISSION_YES, battery_3, 1, 10, 1, 500,SPIRITI_PRIZE_YES},
 	};
 	
 	/*精灵普通攻击属性*/
@@ -367,19 +367,24 @@ public interface Common {
 			{100, 15, 15, 14, 10, 20, 20, spiritBomb1PicId, 1},
 			{101, 15, 15, 14, 10, 20, 5, spiritBomb1PicId, 3},
 			{102, 15, 15, 14, 10, 20, 5, spiritBomb1PicId, 1},
-			{103, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 3},
+			{103, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
 			{104, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
 			{105, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
 			{106, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
 			{107, 17, 14, 15, 10, 20, 20, spiritBomb3PicId, 1},
-			{108, 18, 15, 15, 10, 20, 20, spiritBomb4PicId, 3},
+			{108, 18, 15, 15, 10, 20, 5, spiritBomb4PicId, 3},
 			{109, 19, 24, 15, 10, 20, 20, spiritBomb5PicId, 1},
-			{110, 14, 24, 15, 10, 20, 20, spiritBomb5PicId, 3},
+			{110, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
 			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId, 1},
-			/*{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
-			{201, 21, 85, 50, 25, 20, 20, bossBomb2PicId},
-			{202, 22, 85, 50, 25, 20, 20, bossBomb2PicId},
-			{203, 23, 85, 50, 25, 20, 20, bossBomb2PicId},
+			//{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
+			{201, 15, 15, 14, 10, 20, 5, spiritBomb1PicId, 3},
+			{202, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
+			{203, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
+			{204, 17, 14, 15, 10, 20, 5, spiritBomb3PicId, 3},
+			{205, 18, 15, 15, 10, 20, 5, spiritBomb4PicId, 3},
+			{206, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
+			{207, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
+			/*{203, 23, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{204, 24, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{205, 25, 85, 50, 25, 20, 20, bossBomb2PicId},
 			{206, 27, 32, 20, 25, 20, 20, spiritBomb5PicId},
@@ -394,23 +399,23 @@ public interface Common {
 	/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标, 9-初始位置, 
 	 * 10-是否会攻击, 11-图片id, 12-是否会掉落奖品, 13-帧数间隔, 14-图片总帧数 , 15-精灵伤害
 	 * 16-发射子弹间隔*/
-		{100, 47, 62, 10, 15, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_1, SPIRITI_PRIZE_YES, 500, 5, 10, 5},
-		{101, 84, 76, 30, 10, 8, 8, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_2, SPIRITI_PRIZE_YES, 500, 3, 10, 5},
-		{102, 80, 62, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
+		{100, 47, 62, 10, 15, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_1, SPIRITI_PRIZE_YES, 500, 5, 10, 3},
+		{101, 84, 76, 30, 10, 8, 8, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_2, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
+		{102, 80, 62, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 2},
 		
-		{103, 50, 69, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 3},
-		{104, 63, 89, 45, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
-		{105, 93, 114, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 3},
-		{106, 79, 104, 30, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_7, SPIRITI_PRIZE_YES, 500, 2, 10, 3},
+		{103, 50, 69, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 2},
+		{104, 63, 89, 45, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
+		{105, 93, 114, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 2},
+		{106, 79, 104, 30, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_7, SPIRITI_PRIZE_YES, 500, 2, 10, 2},
 		
-		{107, 60, 75, 50, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
-		{108, 75, 66, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 3},
+		{107, 60, 75, 50, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
+		{108, 75, 66, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
 		
-		{109, 105, 79, 50, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 3},
-		{110, 45, 97, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 3},
+		{109, 105, 79, 50, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 2},
+		{110, 45, 97, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 2},
 		
 		//幽灵boss出的小怪
-		{111, 22, 32, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 3},
+		{111, 22, 32, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 2},
 		
 		/*巨魔boss出的小怪*/
 		{112, 68, 66, 100, 25, 20, 6, 640, 200, 0, ATTACK_PERMISSION_NO, boss7SkillPicId_8, SPIRITI_PRIZE_NO, 500, 1, 10, 2},

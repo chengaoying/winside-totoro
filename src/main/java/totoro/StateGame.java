@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public static int levelInterval;
 	public static boolean level_over;
 	
-	private int level = 5;
+	public int level = 2;
 	public boolean isNextLevel;
 	public static boolean isCeateBoss;
 	
@@ -256,11 +256,17 @@ public class StateGame implements Common{
 				engine.saveRecord();
 				engine.sysProps();
 				engine.saveAttainment();
+				engine.queryList();
 				engine.state = STATUS_MAIN_MENU;
 				quitGameDeleteDate();
 			}else{
 				venSTime = getTime()-(venETime-venSTime); //调整必杀技时间
 				level_start_time = getTime()/1000-(level_end_time - level_start_time);
+				for(int i=factory.boss.size()-1;i>=0;i--){
+					MoveObject boss = (MoveObject) factory.boss.elementAt(i);
+					boss.skill1STime = getTime()-(boss.skill1ETime-boss.skill1STime);
+					boss.skill2STime = getTime()-(boss.skill2ETime-boss.skill2STime);
+				}
 			}
 			game_status = GAME_PLAY;
 			break;
@@ -290,6 +296,8 @@ public class StateGame implements Common{
 			}else{
 				//退出游戏
 				//engine.saveRecord();
+				engine.saveAttainment();
+				engine.sysProps();
 				quitGameDeleteDate();
 				engine.state = STATUS_MAIN_MENU;
 				game_status = GAME_PLAY;
@@ -304,6 +312,7 @@ public class StateGame implements Common{
 		engine.state = STATUS_MAIN_MENU;
 		game_status = GAME_PLAY;
 		engine.saveAttainment();
+		engine.sysProps();
 		quitGameDeleteDate();
 	}
 
@@ -322,7 +331,7 @@ public class StateGame implements Common{
 		
 		if(player.status == ROLE_STATUS_PASS){
 			player.mapx += player.speedX;
-			if(player.mapx >= ScrW){
+			if(player.mapx > ScrW){
 				player.speedX = playerParam[player.grade-1][9];
 				levelInterval = (int) (level_end_time-level_start_time);
 				if(factory.boss.size()>0){
@@ -330,7 +339,7 @@ public class StateGame implements Common{
 					bossBlood = object.blood;
 				}
 				//engine.saveRecord();
-				engine.sysProps();
+				//engine.sysProps();
 				//engine.saveAttainment();
 				changeDatePass();
 			}
@@ -989,7 +998,7 @@ public class StateGame implements Common{
 				MoveObject boss = (MoveObject) factory.boss.elementAt(k);
 				if(Collision.checkSquareCollision(boss.mapx, boss.mapy, boss.width, boss.height, bomb.mapx, bomb.mapy, bomb.width, bomb.height)){
 					boss.blood -= bomb.damage;
-					bomb.status = ROLE_STATUS_DEAD;
+					//bomb.status = ROLE_STATUS_DEAD;
 					Exploder exploder = new Exploder(boss.mapx,boss.mapy);
 					missileEffects[mIndex] = exploder;
 					if(mIndex < missileEffects.length-1){
@@ -1115,7 +1124,6 @@ public class StateGame implements Common{
 	}
 
 	private void createSpirits(){
-		System.out.println("level_over:"+level_over);
 		if(!isNextLevel){
 			spiritEnd = getTime();
 			batteryEnd = getTime();

@@ -1320,6 +1320,9 @@ public class MoveObjectFactory implements Common{
 		object.width = playerParam[grade-1][3];
 		object.height = playerParam[grade-1][4];
 		object.lifeNum = StateGame.lifeNum;
+		if(StateGame.blood > playerParam[grade-1][6]){
+			StateGame.blood = playerParam[grade-1][6];
+		}
 		object.blood = StateGame.blood;
 		object.damage = playerParam[grade-1][7];
 		object.grade = StateGame.grade;

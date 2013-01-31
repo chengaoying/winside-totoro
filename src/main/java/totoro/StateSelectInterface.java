@@ -81,8 +81,13 @@ public class StateSelectInterface implements Common{
 				StateGame.bombGrade = StateGame.player.bombGrade;
 				StateGame.lifeNum = StateGame.player.lifeNum;
 				StateGame.blood = StateGame.player.blood;
-				StateGame.currLevel = 1;
+				/*StateGame.currLevel = 1;
+				stateGame.level = 1;*/
 				StateGame.batchIndex = 0;
+				StateGame.level_over = false;
+				StateGame.wingplaneNums = 0;
+				StateGame.missileGrade = 0;
+				StateGame.laserNums = 0;
 				//StateGame.scores = stateGame.player.scores;
 				engine.state = STATUS_GAME_PLAYING;
 				StateGame.game_status = GAME_PLAY;
@@ -107,6 +112,7 @@ public class StateSelectInterface implements Common{
 					mo.blood = StateGame.bossBlood;
 					StateGame.isCeateBoss = true;
 				}
+				stateGame.level = StateGame.currLevel;
 				engine.state = STATUS_GAME_PLAYING;
 				StateGame.game_status = GAME_PLAY;
 				StateGame.level_start_time = System.currentTimeMillis()/1000 - StateGame.levelInterval;

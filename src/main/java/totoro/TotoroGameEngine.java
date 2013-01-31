@@ -143,7 +143,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		readRecord();
 	}
 	
-	private void queryList() {
+	public void queryList() {
 		ServiceWrapper sw = getServiceWrapper();
 		rankList = sw.queryRankingList(0, 10);
 	}
@@ -204,8 +204,6 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	public void saveRecord(){
-		
-		queryList();
 		
 		if(StateGame.lifeNum<1 || StateGame.scores<=0){
 			return;

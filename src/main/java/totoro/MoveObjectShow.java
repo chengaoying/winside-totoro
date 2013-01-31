@@ -370,22 +370,22 @@ public class MoveObjectShow implements Common{
 	private void drawBoss(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		switch(boss.id){
 		case 200:
-			showBoss(g, boss);
+			showBoss(g, boss, factory);
 			break;
 		case 201:
-			showBoss(g, boss);
+			showBoss(g, boss, factory);
 			break;
 		case 202:
 			showBoss2(g, boss, factory);
 			break;
 		case 203:
-			showBoss3(g, boss);
+			showBoss3(g, boss, factory);
 			break;
 		case 204:
 			showBoss4(g, boss, factory);
 			break;
 		case 205:
-			showBoss5(g, boss);
+			showBoss5(g, boss, factory);
 			break;
 		case 206:
 			showBoss6(g, boss);
@@ -396,7 +396,7 @@ public class MoveObjectShow implements Common{
 		}
 	}
 	
-	private void showBoss(SGraphics g, MoveObject boss) {
+	private void showBoss(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		Image bossImg = Resource.loadImage(boss.picId);
 		//int offX1 = ScrW/2-boss.width/2;
 		int offX2 = ScrW-boss.width+20;
@@ -404,8 +404,9 @@ public class MoveObjectShow implements Common{
 		boss.skill1ETime = System.currentTimeMillis();
 		boss.skill2ETime = System.currentTimeMillis();
 		boss.runTime2 = System.currentTimeMillis();
+		//System.out.println("skill1Time£º"+(boss.skill1ETime-boss.skill1STime));
+		//System.out.println("skill2Time£º"+(boss.skill2ETime-boss.skill2STime));
 		/*System.out.println("runTime£º"+(boss.runTime2-boss.runTime1));
-		System.out.println("skill1ETime£º"+(boss.skill1ETime-boss.skill1STime));
 		System.out.println("status2:"+boss.status2);
 		System.out.println("speedX:"+boss.speedX);*/
 		if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
@@ -432,6 +433,14 @@ public class MoveObjectShow implements Common{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
 					}
+				}else{
+					if(boss.id == 201){
+						boss.bombETime = System.currentTimeMillis();
+						if(boss.bombETime-boss.bombSTime>300){
+							factory.createSpiritBomb(boss);
+							boss.bombSTime = System.currentTimeMillis();
+						}
+					}
 				}
 
 				if(boss.mapy <= startP-30){
@@ -453,6 +462,14 @@ public class MoveObjectShow implements Common{
 					}else{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
+					}
+				}else{
+					if(boss.id == 201){
+						boss.bombETime = System.currentTimeMillis();
+						if(boss.bombETime-boss.bombSTime>300){
+							factory.createSpiritBomb(boss);
+							boss.bombSTime = System.currentTimeMillis();
+						}
 					}
 				}
 				
@@ -531,6 +548,12 @@ public class MoveObjectShow implements Common{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
 					}
+				}else{
+					boss.bombETime = System.currentTimeMillis();
+					if(boss.bombETime-boss.bombSTime>300){
+						factory.createSpiritBomb(boss);
+						boss.bombSTime = System.currentTimeMillis();
+					}
 				}
 
 				if(boss.mapy <= startP-30){
@@ -554,6 +577,12 @@ public class MoveObjectShow implements Common{
 					}else{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
+					}
+				}else{
+					boss.bombETime = System.currentTimeMillis();
+					if(boss.bombETime-boss.bombSTime>300){
+						factory.createSpiritBomb(boss);
+						boss.bombSTime = System.currentTimeMillis();
 					}
 				}
 				
@@ -610,7 +639,7 @@ public class MoveObjectShow implements Common{
 		}
 	}
 
-	private void showBoss3(SGraphics g, MoveObject boss) {
+	private void showBoss3(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		Image bossImg = Resource.loadImage(boss.picId);
 		//int offX1 = ScrW/2-boss.width/2;
 		int offX2 = ScrW-boss.width+20;
@@ -646,6 +675,12 @@ public class MoveObjectShow implements Common{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
 					}
+				}else{
+					boss.bombETime = System.currentTimeMillis();
+					if(boss.bombETime-boss.bombSTime>300){
+						factory.createSpiritBomb(boss);
+						boss.bombSTime = System.currentTimeMillis();
+					}
 				}
 
 				if(boss.mapy <= startP-30){
@@ -667,6 +702,12 @@ public class MoveObjectShow implements Common{
 					}else{
 						boss.stopInterval = 0;
 						boss.runTime1 = System.currentTimeMillis();
+					}
+				}else{
+					boss.bombETime = System.currentTimeMillis();
+					if(boss.bombETime-boss.bombSTime>300){
+						factory.createSpiritBomb(boss);
+						boss.bombSTime = System.currentTimeMillis();
 					}
 				}
 				
@@ -819,46 +860,84 @@ public class MoveObjectShow implements Common{
 		}
 	}
 
-	private void showBoss5(SGraphics g, MoveObject boss) {
+	private void showBoss5(SGraphics g, MoveObject boss, MoveObjectFactory factory){
 		Image bossImg = Resource.loadImage(boss.picId);
-		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-			boss.skill1ETime = System.currentTimeMillis()/1000;
-			boss.skill2ETime = System.currentTimeMillis()/1000;
-			
-			if(boss.skill1ETime-boss.skill1STime>boss.skill1Interval && boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
-				boss.skill1STime = System.currentTimeMillis()/1000;
-			}
-			
-			if(boss.skill2ETime-boss.skill2STime>boss.skill2Interval && boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
-				boss.skill2STime = System.currentTimeMillis()/1000;
-			}
-			
-			if(boss.direction == OBJECT_DIRECTION_LEFT){
-				boss.mapx -= boss.speedX;
-				if(boss.mapx < (ScrW-boss.width-20)){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_UP){
-				boss.mapy -= boss.speedY;
-				if(boss.mapy <= startP-10){
-					boss.direction = OBJECT_DIRECTION_DOWN;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_DOWN){
-				boss.mapy += boss.speedY;
-				if(boss.mapy+boss.height >= endP+10){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}
-			if(boss.status2 == ROLE_STATUS2_MOVE){
-				boss.frame = 0;
-			}else{
-				boss.frame = (boss.frame+1)%boss.frameNum;
-			}
-			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
-		//}
+		int offX3 = ScrW/2 + ScrW/4-boss.width/2;
+		boss.skill1ETime = System.currentTimeMillis();
+		boss.skill2ETime = System.currentTimeMillis();
+		boss.runTime2 = System.currentTimeMillis();
 		
+		if(boss.direction == OBJECT_DIRECTION_LEFT){
+			boss.mapx -= boss.speedX;
+			if(boss.mapx <= offX3){
+				int r = RandomValue.getRandInt(2);
+				boss.direction = r==0?OBJECT_DIRECTION_UP:OBJECT_DIRECTION_DOWN;
+				boss.skill1STime = System.currentTimeMillis();
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}else if(boss.direction == OBJECT_DIRECTION_UP){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
+					boss.mapy -= boss.speedY;
+				}else{
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}else{
+				boss.bombETime = System.currentTimeMillis();
+				if(boss.bombETime-boss.bombSTime>300){
+					factory.createSpiritBomb(boss);
+					boss.bombSTime = System.currentTimeMillis();
+				}
+			}
+
+			if(boss.mapy <= startP-30){
+				boss.direction = OBJECT_DIRECTION_DOWN;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}else if(boss.direction == OBJECT_DIRECTION_DOWN){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
+					boss.mapy += boss.speedY;
+				}else{
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}else{
+				boss.bombETime = System.currentTimeMillis();
+				if(boss.bombETime-boss.bombSTime>300){
+					factory.createSpiritBomb(boss);
+					boss.bombSTime = System.currentTimeMillis();
+				}
+			}
+			
+			if(boss.mapy+boss.height >= endP+30){
+				boss.direction = OBJECT_DIRECTION_UP;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}
+		if(boss.status2 == ROLE_STATUS2_MOVE){
+			boss.frame = 0;
+		}else{
+			boss.frame = (boss.frame+1)%boss.frameNum;
+		}
+		g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
 	}
 
 	private void showBoss6(SGraphics g, MoveObject boss){
@@ -922,7 +1001,11 @@ public class MoveObjectShow implements Common{
 			}
 		}
 		if(boss.status2 == ROLE_STATUS2_MOVE){
-			boss.frame = (boss.frame+1)%3;
+			boss.endTime = System.currentTimeMillis();
+			if(boss.endTime - boss.startTime >= boss.timeInterval){
+				boss.frame = (boss.frame+1)%3;
+				boss.startTime = System.currentTimeMillis();
+			}
 		}else{
 			boss.frame = (boss.frame+1)%boss.frameNum;
 			if(boss.frame==1){
@@ -931,102 +1014,98 @@ public class MoveObjectShow implements Common{
 		}
 		g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
 	}
-	/*private void showBoss6(SGraphics g, MoveObject boss) {
-		Image bossImg = Resource.loadImage(boss.picId);
-		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-			boss.skill1ETime = System.currentTimeMillis()/1000;
-			boss.skill2ETime = System.currentTimeMillis()/1000;
-			
-			if(boss.skill1ETime-boss.skill1STime>boss.skill1Interval && boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
-				boss.skill1STime = System.currentTimeMillis()/1000;
-			}
-			
-			if(boss.skill2ETime-boss.skill2STime>boss.skill2Interval && boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
-				boss.skill2STime = System.currentTimeMillis()/1000;
-			}
-			
-			if(boss.direction == OBJECT_DIRECTION_LEFT){
-				boss.mapx -= boss.speedX;
-				if(boss.mapx < (ScrW-boss.width-20)){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_UP){
-				boss.mapy -= boss.speedY;
-				if(boss.mapy <= startP-10){
-					boss.direction = OBJECT_DIRECTION_DOWN;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_DOWN){
-				boss.mapy += boss.speedY;
-				if(boss.mapy+boss.height >= endP+10){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}
-			if(boss.status2 == ROLE_STATUS2_MOVE){
-				boss.frame = (boss.frame+1)%3;
-			}else{
-				boss.frame = (boss.frame+1)%boss.frameNum;
-				if(boss.frame==1){
-					boss.frame=3;
-				}
-			}
-			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
-		//}
-	}
-*/
+
 	private void showBoss7(SGraphics g, MoveObject boss, MoveObjectFactory factory) {
 		Image bossImg = Resource.loadImage(boss.picId);
-		//if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-			boss.skill1ETime = System.currentTimeMillis()/1000;
-			boss.skill2ETime = System.currentTimeMillis()/1000;
-			
-			if(boss.skill1ETime-boss.skill1STime>boss.skill1Interval 
-					&& boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
-				boss.skill1STime = System.currentTimeMillis()/1000;
+		int offX3 = ScrW/2 + ScrW/4-boss.width/2;
+		boss.skill1ETime = System.currentTimeMillis();
+		boss.skill2ETime = System.currentTimeMillis();
+		boss.runTime2 = System.currentTimeMillis();
+		
+		if(boss.direction == OBJECT_DIRECTION_LEFT){
+			boss.mapx -= boss.speedX;
+			if(boss.mapx <= offX3){
+				int r = RandomValue.getRandInt(2);
+				boss.direction = r==0?OBJECT_DIRECTION_UP:OBJECT_DIRECTION_DOWN;
+				boss.skill1STime = System.currentTimeMillis();
+				boss.skill2STime = System.currentTimeMillis();
 			}
-			
-			if(boss.skill2ETime-boss.skill2STime>boss.skill2Interval && boss.status2 == ROLE_STATUS2_MOVE){
-				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
-				boss.skill2STime = System.currentTimeMillis()/1000;
-			}
-			
-			if(boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
-				drawSkill2(g, boss, factory);
-			}
-			
-			if(boss.direction == OBJECT_DIRECTION_LEFT){
-				boss.mapx -= boss.speedX;
-				if(boss.mapx < (ScrW-boss.width-20)){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_UP){
-				if(boss.status2 == ROLE_STATUS2_MOVE){
+		}else if(boss.direction == OBJECT_DIRECTION_UP){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
 					boss.mapy -= boss.speedY;
-				}
-				if(boss.mapy <= startP-10){
-					boss.direction = OBJECT_DIRECTION_DOWN;
-				}
-			}else if(boss.direction == OBJECT_DIRECTION_DOWN){
-				if(boss.status2 == ROLE_STATUS2_MOVE){
-					boss.mapy += boss.speedY;
-				}
-				if(boss.mapy+boss.height >= endP+10){
-					boss.direction = OBJECT_DIRECTION_UP;
-				}
-			}
-			if(boss.status2 == ROLE_STATUS2_MOVE){
-				boss.frame = (boss.frame+1)%3;
-			}else{
-				if(boss.frame==3){
-					boss.frame=4;
 				}else{
-					boss.frame = (boss.frame+1)%boss.frameNum;
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}else{
+				boss.bombETime = System.currentTimeMillis();
+				if(boss.bombETime-boss.bombSTime>300){
+					factory.createSpiritBomb(boss);
+					boss.bombSTime = System.currentTimeMillis();
 				}
 			}
-			g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
-		//}
+
+			if(boss.mapy <= startP-30){
+				boss.direction = OBJECT_DIRECTION_DOWN;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}else if(boss.direction == OBJECT_DIRECTION_DOWN){
+			if(boss.runTime2-boss.runTime1 >= 3*1000){
+				if(boss.stopInterval < 150){
+					boss.stopInterval++;
+					boss.mapy += boss.speedY;
+				}else{
+					boss.stopInterval = 0;
+					boss.runTime1 = System.currentTimeMillis();
+				}
+			}else{
+				boss.bombETime = System.currentTimeMillis();
+				if(boss.bombETime-boss.bombSTime>300){
+					factory.createSpiritBomb(boss);
+					boss.bombSTime = System.currentTimeMillis();
+				}
+			}
+			
+			if(boss.mapy+boss.height >= endP+30){
+				boss.direction = OBJECT_DIRECTION_UP;
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill1ETime - boss.skill1STime > boss.skill1Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL_ATTACK;
+				boss.skill1STime = System.currentTimeMillis();
+			}
+			if(boss.status2 == ROLE_STATUS2_MOVE && (boss.skill2ETime - boss.skill2STime > boss.skill2Interval*1000)){
+				boss.status2 = ROLE_STATUS2_SKILL2_ATTACK;
+				boss.skill2STime = System.currentTimeMillis();
+			}
+		}
+		
+		if(boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
+			drawSkill2(g, boss, factory);
+		}
+		
+		if(boss.status2 == ROLE_STATUS2_MOVE || boss.status2 == ROLE_STATUS2_SKILL2_ATTACK){
+			boss.endTime = System.currentTimeMillis();
+			if(boss.endTime - boss.startTime >= boss.timeInterval){
+				boss.frame = (boss.frame+1)%3;
+				boss.startTime = System.currentTimeMillis();
+			}
+		}else{
+			if(boss.frame==3){
+				boss.frame=4;
+			}else{
+				boss.frame = (boss.frame+1)%boss.frameNum;
+			}
+		}
+		g.drawRegion(bossImg, boss.frame*boss.width, 0, boss.width, boss.height, 0, boss.mapx, boss.mapy, 20);
 	}
 	
 	int x = 250, y = 250;
