@@ -264,8 +264,8 @@ public interface Common {
 			{0, 600, 11, 5, 5, 5, 4, laserPic},
 			{1, 42, 21, 70, 20, 20, 1, missilePic},
 			
-			{2, 164, 159, 30, 60, 60, 8, yellowVentose},
-			{3, 164, 159, 30, 60, 60, 8, yellowVentose},
+			{2, 164, 159, 35, 60, 60, 8, yellowVentose},
+			{3, 164, 159, 35, 60, 60, 8, yellowVentose},
 			{4, 180, 454, 80, 60, 60, 5, pinkVentose},
 			{5, 180, 454, 80, 60, 60, 5, pinkVentose},
 	};
@@ -283,13 +283,13 @@ public interface Common {
 	
 	/*每个关卡所掉落的奖品*/
 	public int levelProps[][] = {
-			{id_laser,id_missile, id_upgrade,id_wingplane,id_wingplane},
-			{id_blood,id_laser, id_upgrade,id_wingplane,id_wingplane},
+			{id_laser,id_laser, id_upgrade,id_wingplane,id_wingplane},
+			{id_blood,id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane,id_wingplane},
+			{id_missile, id_upgrade,id_wingplane,id_wingplane},
+			{id_blood,id_laser,id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_blood,id_missile, id_upgrade,id_wingplane,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_wingplane,id_wingplane},
-			{id_blood,id_laser,id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_blood,id_laser,id_missile, id_upgrade,id_wingplane,id_wingplane},
 	};
 	

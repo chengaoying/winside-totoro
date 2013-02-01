@@ -238,7 +238,7 @@ public class MoveObjectFactory implements Common{
 	public void createProps(MoveObject object, int level){
 		int ran = RandomValue.getRandInt(100);
 		//System.out.println("ran:"+ran);
-		if(ran>25 || object.status==ROLE_STATUS_DEAD){
+		if(ran>20 || object.status==ROLE_STATUS_DEAD){
 			return;
 		}
 		int r = RandomValue.getRandInt(levelProps[level-1].length);
