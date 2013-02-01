@@ -93,12 +93,12 @@ public class MoveObjectFactory implements Common{
 			mo.damage = spiritParam[mo.id-spirit_id][15];
 			mo.bombInterval = spiritParam[mo.id-spirit_id][16];
 			mo.startTime = System.currentTimeMillis();
-			if(mo.pirze == SPIRITI_PRIZE_YES){
+			/*if(mo.pirze == SPIRITI_PRIZE_YES){
 				int r = RandomValue.getRandInt(100);
 				if(r>40){
 					mo.pirze = SPIRITI_PRIZE_NO;
 				}
-			}
+			}*/
 			spiritPosition(mo, i, count);
 			spirits.addElement(mo);
 		}
@@ -206,8 +206,16 @@ public class MoveObjectFactory implements Common{
 		case OBJECT_POSITION_RIGHT:
 			if(count < 4){
 				if(mo.direction == OBJECT_DIRECTION_LEFT){
-					mo.mapx = ScrW + (i*(mo.width+10));
-					mo.mapy = RandomValue.getRandInt(50, 400);
+					if(count==1){
+						mo.mapx = ScrW + (i*(mo.width+10));
+						mo.mapy = RandomValue.getRandInt(50, 400);
+					}else if(count==2){
+						mo.mapx = ScrW + (i*(mo.width+10));
+						mo.mapy = 200;
+					}else {
+						mo.mapx = ScrW + (i*(mo.width+10));
+						mo.mapy = 350;
+					}
 				}
 			}else{
 				if(i<5){
@@ -278,10 +286,9 @@ public class MoveObjectFactory implements Common{
 		}
 	}
 	
-	public void createMissile(MoveObject player, Vector objects){
-		int num;
+	public void createMissile(MoveObject player, Vector spirits, Vector boss, Vector battery){
 		if(player.missileGrade == 1){
-			MoveObject object = queryNearestObject(player, objects);
+			MoveObject object = queryNearestObject(player, spirits, boss, battery);
 			MoveObject mo = new MoveObject();
 			mo.id = playerSkillParam[1][0];
 			mo.width = playerSkillParam[1][1];
@@ -292,15 +299,14 @@ public class MoveObjectFactory implements Common{
 			mo.frameNum = playerSkillParam[1][6];
 			mo.picId = playerSkillParam[1][7];
 			mo.mapx = player.mapx + player.width;
-			mo.mapy = player.mapy+5;
+			mo.mapy = player.mapy+(player.height/2-mo.height/2);
 			if(object!=null){
 				mo.mo = object;
 			}
 			missile.addElement(mo);
 		}else if(player.missileGrade == 2){
-			num = 2;
-			for(int i=0;i<num;i++){
-				MoveObject object = queryNearestObject(player, objects);
+			for(int i=0;i<2;i++){
+				MoveObject object = queryNearestObject(player, spirits, boss, battery);
 				MoveObject mo = new MoveObject();
 				mo.id = playerSkillParam[1][0];
 				mo.width = playerSkillParam[1][1];
@@ -311,7 +317,7 @@ public class MoveObjectFactory implements Common{
 				mo.frameNum = playerSkillParam[1][6];
 				mo.picId = playerSkillParam[1][7];
 				mo.mapx = player.mapx + player.width;
-				mo.mapy = player.mapy+5;
+				mo.mapy = player.mapy+(player.height/3-mo.height/2)+(player.height/3)*i;
 				if(object!=null){
 					mo.mo = object;
 				}
@@ -320,14 +326,67 @@ public class MoveObjectFactory implements Common{
 		}
 	}
 	
-	public MoveObject queryNearestObject(MoveObject player, Vector objects){
+	public MoveObject queryNearestObject(MoveObject player, Vector spirits, Vector boss, Vector battery){
+		MoveObject mo1 = queryNearestObject(player, spirits);
+		MoveObject mo2 = queryNearestObject(player, boss);
+		MoveObject mo3 = queryNearestObject(player, battery);
+		int len1=0, len2=0, len3=0;
+		if(mo1==null && mo2==null && mo3==null){
+			return null;
+		}else if(mo1!=null && mo2==null && mo3==null){
+			return mo1;
+		}else if(mo1!=null && mo2!=null && mo3==null){
+			len1 = (mo1.mapx-player.mapx)*(mo1.mapx-player.mapx)+(mo1.mapy-player.mapy)*(mo1.mapy-player.mapy);
+			len2 = (mo2.mapx-player.mapx)*(mo2.mapx-player.mapx)+(mo2.mapy-player.mapy)*(mo2.mapy-player.mapy);
+			if(len1<len2){
+				return mo1;
+			}else {
+				return mo2;
+			}
+		}else if(mo1!=null && mo2==null && mo3!=null){
+			len1 = (mo1.mapx-player.mapx)*(mo1.mapx-player.mapx)+(mo1.mapy-player.mapy)*(mo1.mapy-player.mapy);
+			len3 = (mo3.mapx-player.mapx)*(mo3.mapx-player.mapx)+(mo3.mapy-player.mapy)*(mo3.mapy-player.mapy);
+			if(len1<len3){
+				return mo1;
+			}else {
+				return mo3;
+			}
+		}else if(mo1!=null && mo2!=null && mo3!=null){
+			len1 = (mo1.mapx-player.mapx)*(mo1.mapx-player.mapx)+(mo1.mapy-player.mapy)*(mo1.mapy-player.mapy);
+			len2 = (mo2.mapx-player.mapx)*(mo2.mapx-player.mapx)+(mo2.mapy-player.mapy)*(mo2.mapy-player.mapy);
+			len3 = (mo3.mapx-player.mapx)*(mo3.mapx-player.mapx)+(mo3.mapy-player.mapy)*(mo3.mapy-player.mapy);
+			if(len1<len2 && len1<len2){
+				return mo1;
+			}else if(len2<len1 && len2<len3){
+				return mo2;
+			}else{
+				return mo3;
+			}
+		}else if(mo1==null && mo2!=null && mo3!=null){
+			len2 = (mo2.mapx-player.mapx)*(mo2.mapx-player.mapx)+(mo2.mapy-player.mapy)*(mo2.mapy-player.mapy);
+			len3 = (mo3.mapx-player.mapx)*(mo3.mapx-player.mapx)+(mo3.mapy-player.mapy)*(mo3.mapy-player.mapy);
+			if(len2<len3){
+				return mo2;
+			}else {
+				return mo3;
+			}
+		}else if(mo1==null && mo2==null && mo3!=null){
+			return mo3;
+		}else if(mo1==null && mo2!=null && mo3==null){
+			return mo2;
+		}else{
+			return null;
+		}
+	}
+	
+	private MoveObject queryNearestObject(MoveObject player, Vector objects){
 		if(objects.size()<1){
 			return null;
 		}
 		MoveObject object = (MoveObject) objects.elementAt(0);
 		int len = (object.mapx-player.mapx)*(object.mapx-player.mapx)+(object.mapy-player.mapy)*(object.mapy-player.mapy);
-		for(int i=objects.size()-1;i>=0;i--){
-			MoveObject mo = (MoveObject) objects.elementAt(i);
+		for(int i=spirits.size()-1;i>=0;i--){
+			MoveObject mo = (MoveObject) spirits.elementAt(i);
 			if(mo.mapy+mo.height>startP && mo.mapy+mo.height<=490 && mo.mapx<ScrW && mo.mapx+mo.width>0){
 				int len2 = (mo.mapx-player.mapx)*(mo.mapx-player.mapx)+(mo.mapy-player.mapy)*(mo.mapy-player.mapy);
 				if(len>len2){
@@ -482,19 +541,19 @@ public class MoveObjectFactory implements Common{
 		case 1:
 			mo.speedX = -spiritBombParam[index][5];
 			mo.speedY = 0/*spiritBombParam[index][6]*/;
-			mo.mapx = object.mapx+3;
+			mo.mapx = object.mapx+object.width/2;
 			mo.mapy = object.mapy+object.height/2 - mo.height/2;
 			break;
 		case 2:
 			mo.speedX = -spiritBombParam[index][5];
 			mo.speedY = -spiritBombParam[index][6]+i*spiritBombParam[index][6];
-			mo.mapx = object.mapx+3;
+			mo.mapx = object.mapx+object.width/2;
 			mo.mapy = object.mapy+object.height/2 - mo.height/2;
 			break;
 		case 3:
 			mo.speedX = -spiritBombParam[index][5];
 			mo.speedY = -spiritBombParam[index][6]+i*spiritBombParam[index][6];
-			mo.mapx = object.mapx+3;
+			mo.mapx = object.mapx+object.width/2;
 			mo.mapy = object.mapy+object.height/2 - mo.height/2;
 			break;
 		}

@@ -88,6 +88,7 @@ public class StateSelectInterface implements Common{
 				StateGame.wingplaneNums = 0;
 				StateGame.missileGrade = 0;
 				StateGame.laserNums = 0;
+				StateGame.startGameVentoseNums = 3; //开始游戏送3个保险
 				//StateGame.scores = stateGame.player.scores;
 				engine.state = STATUS_GAME_PLAYING;
 				StateGame.game_status = GAME_PLAY;
@@ -108,12 +109,16 @@ public class StateSelectInterface implements Common{
 				}
 				if(StateGame.level_over){
 					stateGame.factory.createBoss(StateGame.currLevel);
-					MoveObject mo = (MoveObject) stateGame.factory.boss.elementAt(0);
-					mo.blood = StateGame.bossBlood;
-					StateGame.isCeateBoss = true;
+					for(int i=stateGame.factory.boss.size()-1;i>=0;i--){
+						MoveObject mo = (MoveObject) stateGame.factory.boss.elementAt(i);
+						mo.blood = StateGame.bossBlood;
+						StateGame.isCeateBoss = true;
+					}
 				}
+				StateGame.startGameVentoseNums = 0;
 				stateGame.level = StateGame.currLevel;
 				engine.state = STATUS_GAME_PLAYING;
+				Resource.clearSelectInterface();
 				StateGame.game_status = GAME_PLAY;
 				StateGame.level_start_time = System.currentTimeMillis()/1000 - StateGame.levelInterval;
 			}

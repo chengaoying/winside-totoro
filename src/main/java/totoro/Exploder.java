@@ -11,7 +11,7 @@ import cn.ohyeah.stb.game.SGraphics;
 public class Exploder implements Common {
 	private int mapx;
 	private int mapy;
-	private int[] frame={0,1,2};
+	//private int[] frame={0,1,2};
 	private int[] missileFrame={0,1,2,3};
 	private int i;
 	
@@ -22,7 +22,7 @@ public class Exploder implements Common {
 	
 	/*±¬Õ¨Ð§¹û*/
 	public void drawExplode(SGraphics g, StateGame stateGame) {
-		if (i < 3) {	
+		/*if (i < 3) {	
 			try {
 				Image burstImage = Resource.loadImage(Resource.id_game_explosion);
 				int w = burstImage.getWidth() / 3, h = burstImage.getHeight();
@@ -31,7 +31,8 @@ public class Exploder implements Common {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
+		drawMissileExplode(g, stateGame);
 	}
 	
 	public void drawMissileExplode(SGraphics g, StateGame stateGame){

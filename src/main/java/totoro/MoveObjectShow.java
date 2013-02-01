@@ -51,6 +51,9 @@ public class MoveObjectShow implements Common{
 	}
 	
 	public void showLasers(SGraphics g, Vector lasers, MoveObject player){
+		if(player.status == ROLE_STATUS_DEAD){
+			return;
+		}
 		for(int i=0;i<lasers.size();i++){
 			MoveObject mo = (MoveObject) lasers.elementAt(i);
 			Image laserDevice = Resource.loadImage(Resource.id_prop_laser_device);
@@ -75,11 +78,11 @@ public class MoveObjectShow implements Common{
 			Image moPic = Resource.loadImage(mo.picId);
 			g.drawImage(moPic, mo.mapx, mo.mapy, 20);
 			if(mo.mo == null || mo.mo.status == ROLE_STATUS_DEAD){
-				mo.mo = factory.queryNearestObject(mo, factory.spirits);
+				mo.mo = factory.queryNearestObject(mo, factory.spirits, factory.boss, factory.battery);
 			}
 			if(mo.mo != null){
-				float distanceX = getAbsValue(mo.mo.mapx-mo.mapx);
-				float distanceY = getAbsValue(mo.mo.mapy-mo.mapy);
+				float distanceX = getAbsValue((mo.mo.mapx+mo.mo.width/2)-(mo.mapx+mo.width/2));
+				float distanceY = getAbsValue((mo.mo.mapy+mo.mo.height/2)-(mo.mapy+mo.height/2));
 				float speedY = distanceY/distanceX*mo.speedX;
 				mo.speedY = (int) speedY;
 				if(mo.speedY>mo.speedX){
@@ -107,6 +110,9 @@ public class MoveObjectShow implements Common{
 	}
 	
 	public void showWingplane(SGraphics g, Vector wingplane, MoveObject player){
+		if(player.status == ROLE_STATUS_DEAD){
+			return;
+		}
 		for(int i=0;i<wingplane.size();i++){
 			MoveObject mo = (MoveObject)wingplane.elementAt(i);
 			Image moPic = Resource.loadImage(mo.picId);

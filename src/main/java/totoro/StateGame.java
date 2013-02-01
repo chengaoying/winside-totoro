@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public static int levelInterval;
 	public static boolean level_over;
 	
-	public int level = 2;
+	public int level = 1;
 	public boolean isNextLevel;
 	public static boolean isCeateBoss;
 	
@@ -42,13 +42,15 @@ public class StateGame implements Common{
 	private int bombInterval = 400;
 	
 	private long missileStart;
-	private int missileInterval = 1000;
+	private int missileInterval = 1500;
 	
 	private long spiritStart, spiritEnd;
 	private long batteryStart, batteryEnd;
 	private long reviveStime, reviveEtime;
 	public static boolean isUserVentose;
 	private long venSTime, venETime, venSTime2;
+	
+	public static int startGameVentoseNums;
 	
 	//存档数据
 	public static int lifeNum;
@@ -83,12 +85,16 @@ public class StateGame implements Common{
 				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(3);
 		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
-			if(StateGame.ventoseNum > 0 || engine.isDebugMode()){
+			if(ventoseNum+startGameVentoseNums > 0 || engine.isDebugMode()){
 				venSTime = getTime();
 				isUserVentose = true;
 				player.status = ROLE_STATUS_PROTECTED;
 				if(!engine.isDebugMode()){
-					StateGame.ventoseNum--;
+					if(startGameVentoseNums>0){
+						startGameVentoseNums--;
+					}else{
+						ventoseNum--;
+					}
 				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
@@ -140,7 +146,7 @@ public class StateGame implements Common{
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM7)){
 			if(engine.isDebugMode()){
-				factory.createMissile(player, factory.spirits);
+				factory.createMissile(player, factory.spirits, factory.boss, factory.battery);
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM8)){
 			if(engine.isDebugMode()){
@@ -183,6 +189,7 @@ public class StateGame implements Common{
 			//System.out.println("time:"+(reviveEtime-reviveStime));
 			if(reviveEtime-reviveStime > 1000){
 				player = factory.revivePlayer(grade);
+				blood = player.blood;
 			}
 		}else if(player.lifeNum <= 0){
 			System.out.println("game over");
@@ -224,7 +231,7 @@ public class StateGame implements Common{
 		
 		if(player != null && bombEnd - missileStart>missileInterval){
 			if(player.missileGrade>0 && factory.lasers.size()<1){
-				factory.createMissile(player, factory.spirits);
+				factory.createMissile(player, factory.spirits, factory.boss, factory.battery);
 				missileStart = getTime();
 			}
 		}
@@ -448,6 +455,12 @@ public class StateGame implements Common{
 		/*必杀技*/
 		ventoseCollision();
 		
+		/*玩家死亡*/
+		playerDeath();
+		
+	}
+	
+	private void playerDeath() {
 		if(player.blood <= 0 && player.status == ROLE_STATUS_ALIVE){
 			player.status = ROLE_STATUS_DEAD;
 			player.lifeNum --;
@@ -456,12 +469,18 @@ public class StateGame implements Common{
 				player.bombGrade--;
 				bombGrade = player.bombGrade;
 			}
+			player.missileGrade = 0;
+			missileGrade = 0;
 			reviveStime = getTime();
 			factory.lasers.removeAllElements();
 			factory.missile.removeAllElements();
+			if(factory.wingplane.size()>0){
+				MoveObject mo = (MoveObject) factory.wingplane.elementAt(factory.wingplane.size()-1);
+				mo.status = ROLE_STATUS_DEAD;
+			}
 		}
 	}
-	
+
 	private void propCollision() {
 		for(int i=0;i<factory.props.size();i++){
 			MoveObject mo = (MoveObject)factory.props.elementAt(i);
@@ -584,12 +603,12 @@ public class StateGame implements Common{
 					 && player.status == ROLE_STATUS_ALIVE){
 				hitPlayer(mo);
 			}
-			for(int m=0;m<factory.wingplane.size();m++){
+			/*for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
 				if(Collision.checkCircularCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
 					hitWingplane(wing, mo);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -600,12 +619,12 @@ public class StateGame implements Common{
 					 && player.status == ROLE_STATUS_ALIVE){
 				bombHitPlayer(mo);
 			}
-			for(int m=0;m<factory.wingplane.size();m++){
+			/*for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
 				if(Collision.checkSquareToCircularCollision(mo.mapx, mo.mapy, mo.width, mo.height, wing.mapx, wing.mapy, wing.width, wing.height)){
 					hitWingplane(wing, mo);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -617,12 +636,12 @@ public class StateGame implements Common{
 				//mo.status = ROLE_STATUS_DEAD;
 				bombHitPlayer(mo);
 			}
-			for(int m=0;m<factory.wingplane.size();m++){
+			/*for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
 				if(Collision.checkCircularCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
 					hitWingplane(wing, mo);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -639,13 +658,13 @@ public class StateGame implements Common{
 				mo.status = ROLE_STATUS_DEAD;
 				bombHitPlayer(mo);
 			}
-			for(int m=0;m<factory.wingplane.size();m++){
+			/*for(int m=0;m<factory.wingplane.size();m++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(m);
 				if(Collision.checkCircularCollision(mo.mapx, mo.mapy, mo.width, mo.height, wing.mapx, wing.mapy, wing.width, wing.height)){
 					mo.status = ROLE_STATUS_DEAD;
 					hitWingplane(wing, mo);
 				}
-			}
+			}*/
 		}
 	}
 
@@ -674,12 +693,12 @@ public class StateGame implements Common{
 					 && player.status == ROLE_STATUS_ALIVE){
 				hitPlayer(mo);
 			}
-			for(int k=0;k<factory.wingplane.size();k++){
+			/*for(int k=0;k<factory.wingplane.size();k++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(k);
 				if(Collision.checkCircularCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
 					hitWingplane(wing,mo);
 				}
-			}
+			}*/
 			if(mo.blood <= 0){
 				mo.status = ROLE_STATUS_DEAD;
 			}
@@ -690,19 +709,19 @@ public class StateGame implements Common{
 					 && player.status == ROLE_STATUS_ALIVE){
 				hitPlayer(mo);
 			}
-			for(int k=0;k<factory.wingplane.size();k++){
+			/*for(int k=0;k<factory.wingplane.size();k++){
 				MoveObject wing = (MoveObject) factory.wingplane.elementAt(k);
 				if(Collision.checkCircularCollision(wing.mapx, wing.mapy, wing.width, wing.height, mo.mapx, mo.mapy, mo.width, mo.height)){
 					hitWingplane(wing,mo);
 				}
-			}
+			}*/
 			if(mo.blood <= 0){
 				mo.status = ROLE_STATUS_DEAD;
 			}
 		}
 	}
 
-	private void hitWingplane(MoveObject wing, MoveObject mo) {
+	/*private void hitWingplane(MoveObject wing, MoveObject mo) {
 		if(wing.blood - mo.damage >0){
 			wing.blood -= mo.damage;
 		}else{
@@ -716,7 +735,7 @@ public class StateGame implements Common{
 		}else{
 			eIndex=0;
 		}
-	}
+	}*/
 
 	private void hitPlayer(MoveObject mo) {
 		if(player.status != ROLE_STATUS_PROTECTED){
@@ -1101,7 +1120,7 @@ public class StateGame implements Common{
 				missileGrade = player.missileGrade;
 				factory.lasers.removeAllElements();
 				laserNums = 0;
-				System.out.println("laser.size:"+factory.lasers.size());
+				//System.out.println("laser.size:"+factory.lasers.size());
 				System.out.println("player.missileGrade:"+player.missileGrade);
 			}
 			break;
@@ -1317,7 +1336,9 @@ public class StateGame implements Common{
 		objectShow.showLasers(g, factory.lasers, player);
 		objectShow.showMissile(g, factory.missile, factory);
 		objectShow.showWingplane(g, factory.wingplane, player);
-		objectShow.showVentose(g, factory.ventose);
+		if(game_status == GAME_PLAY || game_status == GAME_PAUSE){
+			objectShow.showVentose(g, factory.ventose);
+		}
 		drawExploders(g);
 		drawInfo(g);
 		if(isNextLevel){
@@ -1391,11 +1412,19 @@ public class StateGame implements Common{
 		int lavaW = lava.getWidth(), lavaH = lava.getHeight();
 		int downW = down.getWidth(), downH = down.getHeight();
 		int upW = up.getWidth(), upH = up.getHeight();
-		centerIndex = (centerIndex+1)%centerW;
-		center2Index = (center2Index+1)%center2W;
-		donwIndex = (donwIndex+1)%downW;
-		lavaIndex = (lavaIndex+3)%lavaW;
-		upIndex = (upIndex+2)%upW;
+		if(factory.boss.size()>0){
+			centerIndex = (centerIndex+4)%centerW;
+			center2Index = (center2Index+4)%center2W;
+			donwIndex = (donwIndex+4)%downW;
+			lavaIndex = (lavaIndex+12)%lavaW;
+			upIndex = (upIndex+8)%upW;
+		}else{
+			centerIndex = (centerIndex+1)%centerW;
+			center2Index = (center2Index+1)%center2W;
+			donwIndex = (donwIndex+1)%downW;
+			lavaIndex = (lavaIndex+3)%lavaW;
+			upIndex = (upIndex+2)%upW;
+		}
 		
 		int mapy = 73;
 		g.drawRegion(center2, center2Index, 0, center2W-center2Index, center2H, 0, 0, mapy, 20);
@@ -1424,23 +1453,37 @@ public class StateGame implements Common{
 		int upW = up.getWidth(), upH = up.getHeight();
 		int netW = net.getWidth(), netH = net.getHeight();
 		int bubbleW = bubble.getWidth(), bubbleH = bubble.getHeight();
-		bgIndex = (bgIndex+1)%centerW;
-		hillIndex = (hillIndex+2)%upW;
-		wayIndex = (wayIndex+3)%downW;
+		if(factory.boss.size()>0){
+			bgIndex = (bgIndex+4)%centerW;
+			hillIndex = (hillIndex+8)%upW;
+			wayIndex = (wayIndex+12)%downW;
+		}else{
+			bgIndex = (bgIndex+1)%centerW;
+			hillIndex = (hillIndex+2)%upW;
+			wayIndex = (wayIndex+3)%downW;
+		}
 		g.drawRegion(center, bgIndex, 0, centerW-bgIndex, centerH, 0, 0, 73+35, 20);
 		g.drawRegion(center, 0, 0, bgIndex, centerH, 0, centerW-bgIndex, 73+35, 20);
 		g.drawRegion(up, hillIndex, 0, upW-hillIndex, upH, 0, 0, 73, 20);
 		g.drawRegion(up, 0, 0, hillIndex, upH, 0, upW-hillIndex, 73, 20);
 		
 		if(mapx+netW>0){
-			mapx -= 1;
+			if(factory.boss.size()>0){
+				mapx -= 4;
+			}else{
+				mapx -= 1;
+			}
 		}else{
 			mapx = ScrW;
 		}
 		g.drawRegion(net, 0, 0, netW, netH, 0, mapx, 360, 20);
 		
 		if(mapx2+bubbleW>0){
-			mapx2 -= 1;
+			if(factory.boss.size()>0){
+				mapx2 -= 4;
+			}else{
+				mapx2 -= 1;
+			}
 		}else{
 			mapx2 = ScrW;
 		}
@@ -1459,13 +1502,22 @@ public class StateGame implements Common{
 		int bgW =  game_bg.getWidth(), bgH = game_bg.getHeight();
 		int hillW = hill.getWidth(), hillH = hill.getHeight();
 		int wayW = way.getWidth(), wayH = way.getHeight();
-		bgIndex = (bgIndex+1)%bgW;
-		wayIndex = (wayIndex+3)%wayW;
+		if(factory.boss.size()>0){
+			bgIndex = (bgIndex+4)%bgW;
+			wayIndex = (wayIndex+12)%wayW;
+		}else{
+			bgIndex = (bgIndex+1)%bgW;
+			wayIndex = (wayIndex+3)%wayW;
+		}
 		g.drawRegion(game_bg, bgIndex, 0, bgW-bgIndex, bgH, 0, 0, 0, 20);
 		g.drawRegion(game_bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex, 0, 20);
 		
 		if(mapx+hillW>0){
-			mapx -= 2;
+			if(factory.boss.size()>0){
+				mapx -= 8;
+			}else{
+				mapx -= 2;
+			}
 		}else{
 			mapx = ScrW;
 		}
@@ -1484,9 +1536,18 @@ public class StateGame implements Common{
 		int bgW =  game_bg.getWidth(), bgH = game_bg.getHeight();
 		int hillW = hill.getWidth(), hillH = hill.getHeight();
 		int wayW = way.getWidth(), wayH = way.getHeight();
-		bgIndex = (bgIndex+1)%bgW;
+		/*bgIndex = (bgIndex+1)%bgW;
 		hillIndex = (hillIndex+2)%hillW;
-		wayIndex = (wayIndex+3)%wayW;
+		wayIndex = (wayIndex+3)%wayW;*/
+		if(factory.boss.size()>0){
+			bgIndex = (bgIndex+4)%bgW;
+			hillIndex = (hillIndex+8)%hillW;
+			wayIndex = (wayIndex+12)%wayW;
+		}else{
+			bgIndex = (bgIndex+1)%bgW;
+			hillIndex = (hillIndex+2)%hillW;
+			wayIndex = (wayIndex+3)%wayW;
+		}
 		g.drawRegion(game_bg, bgIndex, 0, bgW-bgIndex, bgH, 0, 0, 73, 20);
 		g.drawRegion(game_bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex, 73, 20);
 		g.drawRegion(hill, hillIndex, 0, hillW-hillIndex, hillH, 0, 0, 283, 20);
@@ -1537,7 +1598,7 @@ public class StateGame implements Common{
 		int key0W = key0.getWidth(), key0H = key0.getHeight();
 		int x = 20, y = ScrH-venH;
 		g.drawImage(ventose_icon, x, y, 20);
-		TextView.showSingleLineText(g, String.valueOf(StateGame.ventoseNum), x+33, y+25, 20, 20, 1);
+		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+33, y+25, 20, 20, 1);
 		y = y + venH/2-key0H/2;
 		g.drawImage(key1, x+venW+10, y, 20);
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
