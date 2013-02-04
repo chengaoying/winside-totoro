@@ -201,7 +201,7 @@ public interface Common {
 	public int playerParam[][] = {
 			/*0-id, 1-x坐标, 2-y坐标, 3-宽度, 4-高度, 5-生命数, 6-血量, 7-伤害, 8-等级, 9-x速度, 10-y速度
 			 * ,11-玩家子弹等级, 12-玩家图片id, 13-体力, 14-威力, 15-效果*/
-			{0, 20, 250, 48, 100, 3, 150, 15, TOTORO_GRADE_ONE, 12, 10, TOTORO_BOMB_GRADE_ONE, yellowTotoroPicId, 6, 4, 6},
+			{0, 20, 250, 48, 100, 3, 100, 15, TOTORO_GRADE_ONE, 12, 10, TOTORO_BOMB_GRADE_ONE, yellowTotoroPicId, 6, 4, 6},
 			{1, 20, 250, 35, 53, 3, 100, 10, TOTORO_GRADE_TWO, 10, 12, TOTORO_BOMB_GRADE_ONE, pinkTotoroPicId, 4, 3, 6},
 			{2, 20, 250, 63, 97, 3, 200, 5, TOTORO_GRADE_THREE, 15, 15, TOTORO_BOMB_GRADE_ONE, blueTotoroPicId, 8, 6, 7},
 			{3, 20, 250, 53, 97, 3, 150, 7, TOTORO_GRADE_FOUR, 15, 15, TOTORO_BOMB_GRADE_ONE, blackTotoroPicId, 6, 8, 8},
@@ -317,7 +317,7 @@ public interface Common {
 			{204, 50, 23, 10, 10, 0, boss5SkillPicId, 25, 25, 3, 3},
 			{205, 49, 52, 30, 10, 0, batteryBomb2PicId, 30, 80, 1, 4},
 			{206, 24, 22, 10, 10, 0, boss7SkillPicId_1, 15, 15, 1, 8},
-			{207, 38, 37, 20, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
+			{207, 38, 37, 50, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
 			
 			{0, 50, 140, 100, 10, 0, boss8Skill2_1_PicId, 60, 60, 3, 1},
 	};
@@ -378,11 +378,11 @@ public interface Common {
 			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId, 1},
 			//{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
 			{201, 15, 15, 14, 10, 20, 5, spiritBomb1PicId, 3},
-			{202, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 1},
-			{203, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 1},
+			{202, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
+			{203, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
 			{204, 17, 14, 15, 10, 20, 5, spiritBomb3PicId, 3},
 			{205, 18, 15, 15, 10, 20, 5, spiritBomb4PicId, 3},
-			{206, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 1},
+			{206, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
 			{207, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
 			{300, 30, 15, 14, 10, 20, 15, spiritBomb1PicId, 1},
 			{301, 31, 49, 52, 10, 20, 20, batteryBomb2PicId, 1},

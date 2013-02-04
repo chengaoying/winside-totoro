@@ -36,7 +36,8 @@ public class StateGame implements Common{
 	public static MoveObject player;
 	public Exploder[] exploders = new Exploder[12];
 	public Exploder[] missileEffects = new Exploder[12];
-	private int eIndex, mIndex;
+	public Exploder[] scoresEffects = new Exploder[12];
+	private int eIndex, mIndex, sIndex;
 	
 	private long bombStart, bombEnd;
 	private int bombInterval = 400;
@@ -51,6 +52,8 @@ public class StateGame implements Common{
 	private long venSTime, venETime, venSTime2;
 	
 	public static int startGameVentoseNums;
+	private boolean isVentosePrompt;
+	private long ventoseTime1, ventoseTime2;
 	
 	//存档数据
 	public static int lifeNum;
@@ -85,16 +88,23 @@ public class StateGame implements Common{
 				&& player.status != ROLE_STATUS_PASS && game_status != GAME_SUCCESS){
 			move(3);
 		}else if(keyState.containsAndRemove(KeyCode.NUM1) && player.status != ROLE_STATUS_PASS){
-			if(ventoseNum+startGameVentoseNums > 0 || engine.isDebugMode()){
+			if(engine.isDebugMode()){
 				venSTime = getTime();
 				isUserVentose = true;
 				player.status = ROLE_STATUS_PROTECTED;
-				if(!engine.isDebugMode()){
+			}else{
+				if(ventoseNum+startGameVentoseNums > 0){
+					venSTime = getTime();
+					isUserVentose = true;
+					player.status = ROLE_STATUS_PROTECTED;
 					if(startGameVentoseNums>0){
 						startGameVentoseNums--;
 					}else{
 						ventoseNum--;
 					}
+				}else{
+					isVentosePrompt = true;
+					ventoseTime1 = getTime();
 				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
@@ -290,6 +300,7 @@ public class StateGame implements Common{
 					sw.expend(level*10, "购买复活");
 					player.lifeNum = 3;
 					lifeNum = player.lifeNum;
+					startGameVentoseNums = 3;
 				}else{
 					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 					pc.setText(engine.getEngineService().getExpendAmountUnit()+"不足,是否去充值?");
@@ -315,7 +326,7 @@ public class StateGame implements Common{
 
 	private void drawPassInterface() {
 		StateGameSuccess success = new StateGameSuccess(engine, this);
-		success.processGameSuccess();
+		success.processGameSuccess(scores);
 		engine.state = STATUS_MAIN_MENU;
 		game_status = GAME_PLAY;
 		engine.saveAttainment();
@@ -488,6 +499,15 @@ public class StateGame implements Common{
 					 && player.status != ROLE_STATUS_DEAD){
 				mo.status = ROLE_STATUS_DEAD;
 				eatProp(mo);
+				player.scores += 1000;
+				scores = player.scores;
+				Exploder exploder = new Exploder(mo.mapx,mo.mapy);
+				scoresEffects[sIndex] = exploder;
+				if(sIndex < scoresEffects.length-1){
+					sIndex ++;
+				}else{
+					sIndex=0;
+				}
 			}
 		} 
 	}
@@ -798,7 +818,7 @@ public class StateGame implements Common{
 					}else{
 						eIndex=0;
 					}
-				}
+				}     
 				if(boss.blood<=0){
 					boss.status = ROLE_STATUS_DEAD;
 					player.scores += boss.scores;
@@ -1121,7 +1141,7 @@ public class StateGame implements Common{
 				factory.lasers.removeAllElements();
 				laserNums = 0;
 				//System.out.println("laser.size:"+factory.lasers.size());
-				System.out.println("player.missileGrade:"+player.missileGrade);
+				//System.out.println("player.missileGrade:"+player.missileGrade);
 			}
 			break;
 		case id_upgrade:
@@ -1286,6 +1306,9 @@ public class StateGame implements Common{
 		for(int i=0;i<missileEffects.length;i++){
 			missileEffects[i]=null;
 		}
+		for(int i=0;i<scoresEffects.length;i++){
+			scoresEffects[i]=null;
+		}
 	}
 	
 	private void quitGameDeleteDate(){
@@ -1312,6 +1335,9 @@ public class StateGame implements Common{
 		}
 		for(int i=0;i<missileEffects.length;i++){
 			missileEffects[i]=null;
+		}
+		for(int i=0;i<scoresEffects.length;i++){
+			scoresEffects[i]=null;
 		}
 	}
 
@@ -1349,6 +1375,14 @@ public class StateGame implements Common{
 			String str = "无敌时间:"+(3-(player.endTime-player.startTime)/1000)+"秒";
 			drawPrompt(g, str);
 		}
+		ventoseTime2 = getTime();
+		if(isVentosePrompt && ventoseTime2-ventoseTime1>2000){
+			isVentosePrompt = false;
+		}
+		if(isVentosePrompt){
+			String str = "必杀技已用光,请按9键进入商城购买";
+			drawPrompt(g, str);
+		}
 		if(engine.isDebugMode()){
 			String str = "1键:必杀技, 3键:过关, 4键:子弹升级";
 			engine.addDebugUserMessage(str);
@@ -1368,6 +1402,13 @@ public class StateGame implements Common{
 			if(missileEffects[i] != null){
 				exploder1 = missileEffects[i];
 				exploder1.drawMissileExplode(g, this);
+			}
+		}
+		Exploder exploder3 = null;
+		for(int i=0;i<scoresEffects.length;i++){
+			if(scoresEffects[i] != null){
+				exploder3 = scoresEffects[i];
+				exploder3.showScore(engine, g, 1000);
 			}
 		}
 	}
@@ -1391,7 +1432,7 @@ public class StateGame implements Common{
 		int h = 30;
 		int x = ScrW/2-w/2;
 		int y = ScrH/2-h/2;
-		g.setColor(0x000000);
+		g.setColor(0x1e6094);
 		DrawUtil.drawRect(g, x, y, w, h);
 		x += w/2 - textW/2;
 		y += 4;
@@ -1584,7 +1625,7 @@ public class StateGame implements Common{
 		g.drawImage(headShadow, offX+3, offY, 20);
 		g.drawImage(infoHead, offX, offY, 20);
 		StateMain.drawNum(g, level, 50, 8);
-		StateMain.drawNum(g, player.lifeNum, offX+70, offY+15);
+		StateMain.drawNum(g, player.lifeNum, offX+80, offY+12);
 		offX += infoBgW - bloodBgW - 25;
 		offY += infoBgH/2 - bloodBgH/2;
 		g.drawImage(bloodBg, offX, offY, 20);

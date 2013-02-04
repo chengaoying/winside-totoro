@@ -490,12 +490,14 @@ public class Resource implements Common {
 		images[id_sky_game_bg] = null;
 		images[id_yellow_totoro] = null;
 		images[id_yellow_totoro_bomb1] = null;
+		images[id_yellow_totoro_bomb2] = null;
+		images[id_yellow_totoro_bomb3] = null;
 		images[id_pink_totoro] = null;
 		images[id_pink_totoro_bomb] = null;
 		images[id_blue_totoro] = null;
-		images[id_blue_totoro_bomb1] = null;
+		images[id_blue_totoro_bomb4] = null;
 		images[id_black_totoro] = null;
-		images[id_black_totoro_bomb1] = null;
+		images[id_black_totoro_bomb3] = null;
 	}
 	
 }

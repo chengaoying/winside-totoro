@@ -19,7 +19,7 @@ public class StateGameSuccess implements Common{
 		this.stateGame = stateGame;
 	}
 	
-	public int processGameSuccess(){
+	public int processGameSuccess(int scores){
 		running = true;
 		try {
 			KeyState keyState = engine.getKeyState();
@@ -28,7 +28,7 @@ public class StateGameSuccess implements Common{
 				handleGameSuccess(keyState);
 				if (running) {
 					long t1 = System.currentTimeMillis();
-					showGameSuccess(g);
+					showGameSuccess(g, scores);
 					engine.flushGraphics();
 					System.gc();
 					int sleepTime = (int)(125-(System.currentTimeMillis()-t1));
@@ -49,9 +49,9 @@ public class StateGameSuccess implements Common{
 		return failIndex;
 	}
 
-	private void showGameSuccess(SGraphics g) {
+	private void showGameSuccess(SGraphics g, int scores) {
 		stateGame.show(g);
-		String str = "恭喜你通关成功,按确认键返回主界面";
+		String str = "你获得了"+scores+"得分,快去主界面看看自己的排名吧,按确认返回主界面";
 		Font font = g.getFont();
 		int textW = font.stringWidth(str);
 		int w = textW+30;
@@ -62,7 +62,7 @@ public class StateGameSuccess implements Common{
 		DrawUtil.drawRect(g, x, y, w, h);
 		x += w/2 - textW/2;
 		y += 4;
-		g.setColor(0xffffff);
+		g.setColor(0xffff00);
 		g.drawString(str, x, y, 20);
 	}
 	

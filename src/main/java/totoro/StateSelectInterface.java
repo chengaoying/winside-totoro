@@ -126,7 +126,11 @@ public class StateSelectInterface implements Common{
 	}
 	
 	int bgIndex ;
-	int bombX = 66, bombY = 396;
+	int bombX = 66, bombY = 396, bombIndex;
+	int pinkBombY = 376;
+	int pinkBombY2 = 376+21;
+	int pinkBombY3 = 376+42;
+	int pinkBombY4 = 376+63;
 	public void show(SGraphics g){
 		Image button = Resource.loadImage(Resource.id_main_button);
 		Image infoBg = Resource.loadImage(Resource.id_selectInterface_info_bg);
@@ -212,41 +216,70 @@ public class StateSelectInterface implements Common{
 		g.drawRegion(bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex+bgX, bgY, 20);
 		
 		Image totoro ;
-		Image bomb;
 		int totoroW, totoroH, totoroX, totoroY;
-		int bombW, bombH;
 		if(menuIndex==0){
+			Image bomb, bomb2, bomb3;
 			totoro = Resource.loadImage(Resource.id_yellow_totoro);
 			bomb = Resource.loadImage(Resource.id_yellow_totoro_bomb1);
-			bombW = bomb.getWidth();
+			bomb2 = Resource.loadImage(Resource.id_yellow_totoro_bomb2);
+			bomb3 = Resource.loadImage(Resource.id_yellow_totoro_bomb3);
+			int bombW = bomb.getWidth(), bombH = bomb.getHeight();
+			int bomb2W = bomb2.getWidth(), bomb2H = bomb2.getHeight();
+			int bomb3W = bomb3.getWidth(), bomb3H = bomb3.getHeight();
+			g.drawRegion(bomb3, 0, 0, bomb3W, bomb3H, 0, bombX+10, bombY+12, 20);
+			g.drawRegion(bomb, 0, 0, bombW, bombH, 0, bombX+13, bombY+50, 20);
+			g.drawRegion(bomb2, 0, 0, bomb2W, bomb2H, 0, bombX, bombY, 20);
 		}else if(menuIndex==1){
+			Image bomb;
 			totoro = Resource.loadImage(Resource.id_pink_totoro);
 			bomb = Resource.loadImage(Resource.id_pink_totoro_bomb);
-			bombW = bomb.getWidth()/5;
+			int bombW = bomb.getWidth()/5;
+			int bombH = bomb.getHeight();
+			g.drawRegion(bomb, bombW*3, 0, bombW, bombH, 0, bombX, pinkBombY, 20);
+			g.drawRegion(bomb, bombW*2, 0, bombW, bombH, 0, bombX, pinkBombY2, 20);
+			g.drawRegion(bomb, bombW, 0, bombW, bombH, 0, bombX, pinkBombY3, 20);
+			g.drawRegion(bomb, bombW*4, 0, bombW, bombH, 0, bombX, pinkBombY4, 20);
 		}else if(menuIndex==2){
+			Image bomb;
 			totoro = Resource.loadImage(Resource.id_blue_totoro);
-			bomb = Resource.loadImage(Resource.id_blue_totoro_bomb1);
-			bombW = bomb.getWidth();
+			bomb = Resource.loadImage(Resource.id_blue_totoro_bomb4);
+			int bombW = bomb.getWidth();
+			int bombH = bomb.getHeight();
+			g.drawRegion(bomb, 0, 0, bombW, bombH, 0, bombX, bombY, 20);
+			g.setClip(0, 0, ScrW, ScrH);
 		}else{
+			Image bomb;
 			totoro = Resource.loadImage(Resource.id_black_totoro);
-			bomb = Resource.loadImage(Resource.id_black_totoro_bomb1);
-			bombW = bomb.getWidth();
+			bomb = Resource.loadImage(Resource.id_black_totoro_bomb3);
+			int bombW = bomb.getWidth()/3;
+			int bombH = bomb.getHeight();
+			bombIndex = (bombIndex+1)%3;
+			g.drawRegion(bomb, bombIndex*bombW, 0, bombW, bombH, 0, bombX, bombY, 20);
 		}
 		totoroW = totoro.getWidth()/3;
 		totoroH = totoro.getHeight();
 		totoroX = bgX;
 		totoroY = bgY+95-totoroH/2;
-		bombH = bomb.getHeight();
-		bombY = totoroY+totoroH/2-bombH/2;
-		g.drawRegion(bomb, 0, 0, bombW, bombH, 0, bombX, bombY, 20);
 		g.drawRegion(totoro, 0, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
 		g.setClip(0, 0, ScrW, ScrH);
 	}
 	
 	public void execute(){
 		bombX += 35;
+		if(menuIndex==1){
+			pinkBombY -= 4;
+			pinkBombY2 -= 3;
+			pinkBombY3 += 3;
+			pinkBombY4 += 4;
+		}
 		if(bombX+50>=610){
 			bombX = 66;
+			if(menuIndex==1){
+				pinkBombY = 376;
+				pinkBombY2 = 376+21;
+				pinkBombY3 = 376+42;
+				pinkBombY4 = 376+63;
+			}
 		}
 	}
 

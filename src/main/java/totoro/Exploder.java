@@ -14,12 +14,14 @@ public class Exploder implements Common {
 	//private int[] frame={0,1,2};
 	private int[] missileFrame={0,1,2,3};
 	private int i;
+	public int score, tempy;
 	
 	public Exploder(int mapx, int mapy){
 		this.mapx = mapx;
 		this.mapy = mapy;
+		this.tempy = mapy;
 	}
-	
+
 	/*爆炸效果*/
 	public void drawExplode(SGraphics g, StateGame stateGame) {
 		/*if (i < 3) {	
@@ -45,6 +47,19 @@ public class Exploder implements Common {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	/*动态得分效果*/
+	public void showScore(TotoroGameEngine engine, SGraphics g, int score) {
+		if(tempy-mapy<50){
+			engine.setFont(25, true);
+			int col = g.getColor();
+			g.setColor(0xff0000);
+			g.drawString("+"+String.valueOf(score), mapx, mapy, 20);
+			g.setColor(col);
+			mapy -= 10;
+			engine.setDefaultFont();
 		}
 	}
 }
