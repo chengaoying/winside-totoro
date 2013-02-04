@@ -7,7 +7,6 @@ import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
-import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.ui.TextView;
 
@@ -21,18 +20,18 @@ public class StateMain implements Common{
 		//this.stateGame = engine.stateGame;
 	}
 	
-	public int menuAxis[][] = {{20, 20}, {20, 92}, {20, 164}, {20, 236}};
+	public int menuAxis[][] = {{20, 20}, {20, 92}, {20, 164}, {20, 236}, {20, 308}};
 	public int menuAxis2[][] = {{517, 342}, {517, 428}};
 	
 	public static int mainIndex;
-	private boolean isRight;
+	//private boolean isRight;
 	
 	public void handleKey(KeyState keyState){
 		if (keyState.containsAndRemove(KeyCode.BACK)) {
 			exit = true;
 			Resource.clearMain();
 		}else if (keyState.containsAndRemove(KeyCode.UP)) {
-			if(!isRight){
+			/*if(!isRight){
 				if(mainIndex>0){
 					mainIndex --;
 				}
@@ -41,9 +40,10 @@ public class StateMain implements Common{
 					isRight = false;
 				}
 				mainIndex--;
-			}
+			}*/
+			mainIndex = (mainIndex + 5 - 1) % 5;
 		} else if (keyState.containsAndRemove(KeyCode.DOWN)) {
-			if(!isRight){
+			/*if(!isRight){
 				mainIndex++;
 				if(mainIndex>3){
 					isRight = true;
@@ -52,8 +52,9 @@ public class StateMain implements Common{
 				if(mainIndex<5){
 					mainIndex++;
 				}
-			}
-		} else if (keyState.containsAndRemove(KeyCode.LEFT)) {
+			}*/
+			mainIndex = (mainIndex + 1) % 5;
+		} /*else if (keyState.containsAndRemove(KeyCode.LEFT)) {
 			if(isRight){
 				mainIndex = 0;
 				isRight = false;
@@ -63,7 +64,7 @@ public class StateMain implements Common{
 				mainIndex = 4;
 				isRight = true;
 			}
-		} else if (keyState.containsAndRemove(KeyCode.OK)) {
+		}*/ else if (keyState.containsAndRemove(KeyCode.OK)) {
 			processSubMenu();
 		}
 	}
@@ -71,18 +72,12 @@ public class StateMain implements Common{
 	public void show(SGraphics g) {
 		Image bg = Resource.loadImage(Resource.id_main_bg);
 		Image button = Resource.loadImage(Resource.id_main_button);
-		Image button2 = Resource.loadImage(Resource.id_main_button2);
 		Image text = Resource.loadImage(Resource.id_main_text);
-		Image upgrade = Resource.loadImage(Resource.id_main_upgrade);
-		Image buy = Resource.loadImage(Resource.id_main_buy);
-		Image totoro = Resource.loadImage(Resource.id_main_totoro);
-		Image coin = Resource.loadImage(Resource.id_main_coin);
 		
 		g.drawImage(bg, 0, 0, 20);
 		int buttonW = button.getWidth(), buttonH = button.getHeight()/2;
-		int button2W = button2.getWidth(), button2H = button2.getHeight()/2;
-		int textW = text.getWidth(), textH = text.getHeight()/4;
-		for(int i=0;i<4;i++){
+		int textW = text.getWidth(), textH = text.getHeight()/5;
+		for(int i=0;i<5;i++){
 			if (mainIndex == i){
 				g.drawRegion(button, 0, 0, buttonW, buttonH, 0, menuAxis[i][0], menuAxis[i][1], 20);
 				g.drawRegion(text, 0, textH*i, textW, textH, 0, menuAxis[i][0]+36, menuAxis[i][1]+15, 20);
@@ -92,7 +87,7 @@ public class StateMain implements Common{
 			}
 		}
 		
-		int price;
+		/*int price;
 		if(StateGame.wingplaneMaxNums==1){
 			price = engine.pm.getPriceById(63);
 		}else if(StateGame.wingplaneMaxNums==2){
@@ -125,9 +120,10 @@ public class StateMain implements Common{
 		}else if(mainIndex==5){
 			TextView.showMultiLineText(g, descInfo[mainIndex-4]+",价格为:"+engine.pm.getPriceById(66), 2, 33, 330, 220, 145);
 		}
-		g.drawString("当前游戏币:"+engine.getEngineService().getBalance(), 33, 475, 20);
+		g.drawString("当前游戏币:"+engine.getEngineService().getBalance(), 33, 475, 20);*/
 		
 		/*排行数据*/
+		g.setColor(0xffffff);
 		if(engine.rankList!=null){
 			int x = 340, y = 65, w = 160, h = 26, w1 = 125;
 			int myRanking = 0;
@@ -142,11 +138,11 @@ public class StateMain implements Common{
 					myRanking = rank.getRanking();
 				}
 			}
-			drawNum(g, myRanking, 450, 272);
+			drawNum(g, myRanking, 450, 490);
 		}
 		g.setColor(0);
 		
-		drawNum(g, StateGame.ventoseNum, 450, 448);
+		//drawNum(g, StateGame.ventoseNum, 450, 448);
 	}
 	
 	public static void drawNum(SGraphics g, int n, int x, int y) {
@@ -175,22 +171,17 @@ public class StateMain implements Common{
 			}else{
 				engine.state = STATUS_SELECT_TOTORO;
 				Resource.clearMain();
-				/*stateGame.factory = MoveObjectFactory.getInstance();
-				stateGame.objectShow = MoveObjectShow.getInstance();
-				StateGame.player = stateGame.factory.createPlayer(StateGame.grade);
-				engine.state = STATUS_GAME_PLAYING;
-				StateGame.game_status = GAME_PLAY;
-				StateGame.level_start_time = System.currentTimeMillis()/1000;*/
 			}
 		} else if (mainIndex == 2) {	//充值
 			Recharge recharge = new Recharge(engine);
 			recharge.recharge();
-		} else if (mainIndex == 3){ 	//退出游戏
+		} else if (mainIndex == 3){ 	//游戏帮助
+			
+		} else if (mainIndex == 4) {	//龙猫升级
 			Resource.clearMain();
 			engine.saveRecord();
 			exit = true;
-		} else if (mainIndex == 4) {	//龙猫升级
-			if(StateGame.wingplaneMaxNums<4){
+			/*if(StateGame.wingplaneMaxNums<4){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 				pc.setText("是否要购买守护精灵?");
 				int index = pc.popup();
@@ -213,8 +204,8 @@ public class StateMain implements Common{
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("守护精灵个数已达上线");
 				pt.popup();
-			}
-		} else if (mainIndex == 5) {	//购买
+			}*/
+		} /*else if (mainIndex == 5) {	//购买
 			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 			pc.setText("是否要购买道具必杀技?");
 			int index = pc.popup();
@@ -223,6 +214,6 @@ public class StateMain implements Common{
 					StateGame.ventoseNum ++;
 				}
 			}
-		}
+		}*/
 	}
 }

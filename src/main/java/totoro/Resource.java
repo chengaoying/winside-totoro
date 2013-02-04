@@ -19,12 +19,15 @@ public class Resource implements Common {
 	public static short id_main_bg = NUMS++;
 	public static short id_main_button = NUMS++;
 	public static short id_main_button2 = NUMS++;
-	public static short id_main_buy = NUMS++;
-	public static short id_main_coin = NUMS++;
 	public static short id_main_num = NUMS++;
 	public static short id_main_text = NUMS++;
-	public static short id_main_totoro = NUMS++;
-	public static short id_main_upgrade = NUMS++;
+	
+	public static short id_shop_bg = NUMS++;
+	public static short id_shop_button = NUMS++;
+	public static short id_shop_buy = NUMS++;
+	public static short id_shop_coin = NUMS++;
+	public static short id_shop_totoro = NUMS++;
+	public static short id_shop_upgrade = NUMS++;
 	
 	public static short id_selectInterface_head = NUMS++;
 	public static short id_selectInterface_head2 = NUMS++;
@@ -81,6 +84,7 @@ public class Resource implements Common {
 	public static short id_game_explosion = NUMS++;
 	public static short id_game_key_0 = NUMS++;
 	public static short id_game_key_1 = NUMS++;
+	public static short id_game_key_9 = NUMS++;
 	public static short id_game_ventose_icon = NUMS++;
 	
 	public static short id_sky_spirits_1 = NUMS++;
@@ -167,12 +171,15 @@ public class Resource implements Common {
 		"/main/main_bg.jpg",
 		"/main/main_button.png",
 		"/main/main_button2.png",
-		"/main/main_buy.png",
-		"/main/main_coin.png",
 		"/main/main_num.png",
 		"/main/main_text.png",
-		"/main/main_totoro.png",
-		"/main/main_upgrade.png",
+		
+		"/shop/shop_bg.png",
+		"/shop/shop_button.png",
+		"/shop/shop_buy.png",
+		"/shop/shop_coin.png",
+		"/shop/shop_totoro.png",
+		"/shop/shop_upgrade.png",
 		
 		"/selectInterface/head.png",
 		"/selectInterface/head2.png",
@@ -229,6 +236,7 @@ public class Resource implements Common {
 		"/game/explosion.png",
 		"/game/key_0.png",
 		"/game/key_1.png",
+		"/game/key_9.png",
 		"/game/ventose_icon.png",
 		
 		"/spirit/sky/spirit_1.png",
@@ -337,12 +345,8 @@ public class Resource implements Common {
 		images[id_main_bg] = null;
 		images[id_main_button] = null;
 		images[id_main_button2] = null;
-		images[id_main_buy] = null;
-		images[id_main_coin] = null;
 		images[id_main_num] = null;
 		images[id_main_text] = null;
-		images[id_main_totoro] = null;
-		images[id_main_upgrade] = null;
 	}
 	
 	/*释放游戏中的图片*/
@@ -394,6 +398,7 @@ public class Resource implements Common {
 		images[id_game_explosion] = null;
 		images[id_game_key_0] = null;
 		images[id_game_key_1] = null;
+		images[id_game_key_9] = null;
 		images[id_game_ventose_icon] = null;
 		
 		images[id_sky_spirits_1] = null;
@@ -498,6 +503,15 @@ public class Resource implements Common {
 		images[id_blue_totoro_bomb4] = null;
 		images[id_black_totoro] = null;
 		images[id_black_totoro_bomb3] = null;
+	}
+
+	public static void clearShopPic() {
+		images[id_shop_bg] = null;
+		images[id_shop_button] = null;
+		images[id_shop_buy] = null;
+		images[id_shop_coin] = null;
+		images[id_shop_totoro] = null;
+		images[id_shop_upgrade] = null;
 	}
 	
 }

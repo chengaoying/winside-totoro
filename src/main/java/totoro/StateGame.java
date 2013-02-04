@@ -1605,6 +1605,7 @@ public class StateGame implements Common{
 		Image bgUp = Resource.loadImage(Resource.id_game_bg_up);
 		Image key0 = Resource.loadImage(Resource.id_game_key_0);
 		Image key1 = Resource.loadImage(Resource.id_game_key_1);
+		Image key9 = Resource.loadImage(Resource.id_game_key_9);
 		Image ventose_icon = Resource.loadImage(Resource.id_game_ventose_icon);
 		
 		int infoBgW = 349, infoBgH = 46;
@@ -1637,11 +1638,12 @@ public class StateGame implements Common{
 		
 		int venW = ventose_icon.getWidth(), venH = ventose_icon.getHeight();
 		int key0W = key0.getWidth(), key0H = key0.getHeight();
-		int x = 20, y = ScrH-venH;
+		int x = 195, y = ScrH-venH;
 		g.drawImage(ventose_icon, x, y, 20);
 		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+33, y+25, 20, 20, 1);
 		y = y + venH/2-key0H/2;
 		g.drawImage(key1, x+venW+10, y, 20);
+		g.drawImage(key9, ScrW-key0W-40-key9.getWidth(), y, 20);
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
 		
 		//boss blood
