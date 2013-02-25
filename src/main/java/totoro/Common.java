@@ -303,7 +303,7 @@ public interface Common {
 			{203, 196, 213, 18000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{204, 102, 160, 27000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{205, 103, 148, 27000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 5, 12,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 			{207, 260, 299, 36000, 100, 5, 5, 0, 0, boss_8, 150, 5, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 	};
 	
@@ -566,5 +566,9 @@ public interface Common {
 	public String descInfo[] = {
 			"购买守护精灵,数量越多,您在游戏中就能携带更多的守护精灵,最多只能携带4只",
 			"购买必杀技,可在游戏中使用,使用威力极大,并且是无敌状态",
+	};
+	
+	public String helpInfo[][] = {
+			{"龙猫勇士是一款横版闯关射击游戏,龙猫会自动发射子弹,使用方向键控制龙猫移动.击落敌人有几率掉落附加武器,武器升级,血瓶，和守护精灵.此外,玩家还可以花费游戏币解锁龙猫,升级龙猫,复活龙猫,购买必杀"},
 	};
 }

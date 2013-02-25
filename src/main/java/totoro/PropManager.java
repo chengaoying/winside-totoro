@@ -2,6 +2,7 @@ package totoro;
 
 import cn.ohyeah.itvgame.model.OwnProp;
 import cn.ohyeah.itvgame.model.Prop;
+import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.game.StateRecharge;
 import cn.ohyeah.stb.res.UIResource;
@@ -101,7 +102,7 @@ public class PropManager implements Common{
 		return 0;
 	}
 	
-	public boolean buyProp(int propId, int propCount){
+	public boolean buyProp(int propId, int propCount, SGraphics g){
 		PlayerProp pp = getPropById(propId);
 		if (engine.getEngineService().getBalance() >= pp.getPrice()) {
 			ServiceWrapper sw = engine.getServiceWrapper();
@@ -122,6 +123,9 @@ public class PropManager implements Common{
 			if (pc.popup() == 0) {
 				StateRecharge recharge = new StateRecharge(engine);
 				recharge.recharge();
+				if(g != null){
+					engine.stateGame.show(g);
+				}
 			}
 			return false;
 		}

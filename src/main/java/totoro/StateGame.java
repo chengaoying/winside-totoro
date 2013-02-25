@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public static int levelInterval;
 	public static boolean level_over;
 	
-	public int level = 1;
+	public int level = 7;
 	public boolean isNextLevel;
 	public static boolean isCeateBoss;
 	
@@ -161,6 +161,18 @@ public class StateGame implements Common{
 		}else if(keyState.containsAndRemove(KeyCode.NUM8)){
 			if(engine.isDebugMode()){
 				//factory.createWingplane(player);
+			}
+		}else if(keyState.containsAndRemove(KeyCode.NUM9)){
+			StateShop ss = new StateShop(engine);
+			ss.processShop();
+			
+			//调整时间
+			venSTime = getTime()-(venETime-venSTime); //调整必杀技时间
+			level_start_time = getTime()/1000-(level_end_time - level_start_time);
+			for(int i=factory.boss.size()-1;i>=0;i--){
+				MoveObject boss = (MoveObject) factory.boss.elementAt(i);
+				boss.skill1STime = getTime()-(boss.skill1ETime-boss.skill1STime);
+				boss.skill2STime = getTime()-(boss.skill2ETime-boss.skill2STime);
 			}
 		}
 		
@@ -1388,7 +1400,7 @@ public class StateGame implements Common{
 			engine.addDebugUserMessage(str);
 		}
 	}
-	
+
 	private void drawExploders(SGraphics g) {
 		Exploder exploder = null;
 		for(int i=0;i<exploders.length;i++){
@@ -1607,6 +1619,7 @@ public class StateGame implements Common{
 		Image key1 = Resource.loadImage(Resource.id_game_key_1);
 		Image key9 = Resource.loadImage(Resource.id_game_key_9);
 		Image ventose_icon = Resource.loadImage(Resource.id_game_ventose_icon);
+		Image totoro = Resource.loadImage(Resource.id_shop_totoro);
 		
 		int infoBgW = 349, infoBgH = 46;
 		//int infoHeadW = infoHead.getWidth(), infoHeadH = infoHead.getHeight();
@@ -1645,6 +1658,17 @@ public class StateGame implements Common{
 		g.drawImage(key1, x+venW+10, y, 20);
 		g.drawImage(key9, ScrW-key0W-40-key9.getWidth(), y, 20);
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
+		
+		int totoroW = totoro.getWidth()/2, totoroH = totoro.getHeight();
+		int totoroX = 10, totoroY = ScrH-totoroH;
+		for(int i=0;i<StateGame.wingplaneMaxNums;i++){
+			g.drawRegion(totoro, totoroW, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
+			totoroX += totoroW+1;
+		}
+		for(int i=0;i<4-StateGame.wingplaneMaxNums;i++){
+			g.drawRegion(totoro, 0, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
+			totoroX += totoroW+1;
+		}
 		
 		//boss blood
 		if(factory.boss.size()>0){

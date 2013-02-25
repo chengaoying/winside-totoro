@@ -59,7 +59,7 @@ public class StateGameFail implements Common{
 		Image bg = Resource.loadImage(Resource.id_fail_bg);
 		Image text = Resource.loadImage(Resource.id_fail_text);
 		//Image fail = Resource.loadImage(Resource.id_fail);
-		Image button = Resource.loadImage(Resource.id_main_button2);
+		Image button = Resource.loadImage(Resource.id_shop_button);
 		
 		int bgW = bg.getWidth(), bgH = bg.getHeight();
 		int textW = text.getWidth(), textH = text.getHeight()/2;

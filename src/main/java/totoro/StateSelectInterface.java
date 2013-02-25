@@ -60,14 +60,14 @@ public class StateSelectInterface implements Common{
 			if(menuIndex==2){
 				int index = pc.popup();
 				if(index==0){
-					if(engine.pm.buyProp(61, 1)){
+					if(engine.pm.buyProp(61, 1, null)){
 						StateGame.hasTotoro3 = true;
 					}
 				}
 			}else{
 				int index = pc.popup();
 				if(index==0){
-					if(engine.pm.buyProp(62, 1)){
+					if(engine.pm.buyProp(62, 1, null)){
 						StateGame.hasTotoro4 = true;
 					}
 				}

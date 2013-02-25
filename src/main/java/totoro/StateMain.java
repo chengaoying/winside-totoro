@@ -87,41 +87,6 @@ public class StateMain implements Common{
 			}
 		}
 		
-		/*int price;
-		if(StateGame.wingplaneMaxNums==1){
-			price = engine.pm.getPriceById(63);
-		}else if(StateGame.wingplaneMaxNums==2){
-			price = engine.pm.getPriceById(64);
-		}else {
-			price = engine.pm.getPriceById(65);
-		}
-		
-		g.drawRegion(button2, 0, mainIndex==4?0:button2H, button2W, button2H, 0, menuAxis2[0][0], menuAxis2[0][1], 20);
-		g.drawImage(upgrade, menuAxis2[0][0]+20, menuAxis2[0][1]+33, 20);
-		g.drawImage(coin, menuAxis2[0][0]+20, menuAxis2[0][1]+8, 20);
-		drawNum(g, price, menuAxis2[0][0]+36, menuAxis2[0][1]+10);
-		
-		g.drawRegion(button2, 0, mainIndex==5?0:button2H, button2W, button2H, 0, menuAxis2[1][0], menuAxis2[1][1], 20);
-		g.drawImage(buy, menuAxis2[1][0]+15, menuAxis2[1][1]+20, 20);
-		
-		int totoroW = totoro.getWidth()/2, totoroH = totoro.getHeight();
-		int totoroX = 372, totoroY = 364;
-		for(int i=0;i<StateGame.wingplaneMaxNums;i++){
-			g.drawRegion(totoro, totoroW, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
-			totoroX += totoroW+1;
-		}
-		for(int i=0;i<4-StateGame.wingplaneMaxNums;i++){
-			g.drawRegion(totoro, 0, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
-			totoroX += totoroW+1;
-		}
-		g.setColor(0xffffff);
-		if(mainIndex==4){
-			TextView.showMultiLineText(g, descInfo[mainIndex-4]+",价格为:"+price, 2, 33, 330, 220, 145);
-		}else if(mainIndex==5){
-			TextView.showMultiLineText(g, descInfo[mainIndex-4]+",价格为:"+engine.pm.getPriceById(66), 2, 33, 330, 220, 145);
-		}
-		g.drawString("当前游戏币:"+engine.getEngineService().getBalance(), 33, 475, 20);*/
-		
 		/*排行数据*/
 		g.setColor(0xffffff);
 		if(engine.rankList!=null){
@@ -176,7 +141,8 @@ public class StateMain implements Common{
 			Recharge recharge = new Recharge(engine);
 			recharge.recharge();
 		} else if (mainIndex == 3){ 	//游戏帮助
-			
+			StateHelp sh = new StateHelp(engine);
+			sh.processHelp();
 		} else if (mainIndex == 4) {	//龙猫升级
 			Resource.clearMain();
 			engine.saveRecord();

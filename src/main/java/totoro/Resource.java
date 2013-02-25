@@ -18,7 +18,6 @@ public class Resource implements Common {
 	
 	public static short id_main_bg = NUMS++;
 	public static short id_main_button = NUMS++;
-	public static short id_main_button2 = NUMS++;
 	public static short id_main_num = NUMS++;
 	public static short id_main_text = NUMS++;
 	
@@ -27,6 +26,7 @@ public class Resource implements Common {
 	public static short id_shop_buy = NUMS++;
 	public static short id_shop_coin = NUMS++;
 	public static short id_shop_totoro = NUMS++;
+	public static short id_shop_totoro2 = NUMS++;
 	public static short id_shop_upgrade = NUMS++;
 	
 	public static short id_selectInterface_head = NUMS++;
@@ -170,7 +170,6 @@ public class Resource implements Common {
 		
 		"/main/main_bg.jpg",
 		"/main/main_button.png",
-		"/main/main_button2.png",
 		"/main/main_num.png",
 		"/main/main_text.png",
 		
@@ -179,6 +178,7 @@ public class Resource implements Common {
 		"/shop/shop_buy.png",
 		"/shop/shop_coin.png",
 		"/shop/shop_totoro.png",
+		"/shop/shop_totoro_2.png",
 		"/shop/shop_upgrade.png",
 		
 		"/selectInterface/head.png",
@@ -344,7 +344,6 @@ public class Resource implements Common {
 	public static void clearMain(){
 		images[id_main_bg] = null;
 		images[id_main_button] = null;
-		images[id_main_button2] = null;
 		images[id_main_num] = null;
 		images[id_main_text] = null;
 	}
@@ -466,6 +465,7 @@ public class Resource implements Common {
 		images[id_prop_laser_device] = null;
 		images[id_prop_missile] = null;
 		images[id_prop_missile_effect] = null;
+		images[id_shop_totoro] = null;
 	}
 	
 	public static void clearSubMenuPic(){
@@ -479,7 +479,7 @@ public class Resource implements Common {
 		images[id_fail_num] = null;
 		images[id_fail_text] = null;
 		images[id_fail] = null;
-		images[id_main_button2] = null;
+		images[id_shop_button] = null;
 	}
 	
 	public static void clearSelectInterface(){
@@ -511,6 +511,7 @@ public class Resource implements Common {
 		images[id_shop_buy] = null;
 		images[id_shop_coin] = null;
 		images[id_shop_totoro] = null;
+		images[id_shop_totoro2] = null;
 		images[id_shop_upgrade] = null;
 	}
 	
