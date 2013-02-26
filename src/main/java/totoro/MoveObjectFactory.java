@@ -744,7 +744,7 @@ public class MoveObjectFactory implements Common{
 		mo.width = bossSkillParam[8][1];
 		mo.height = bossSkillParam[8][2];
 		mo.picId = bossSkillParam[8][6];
-		mo.damage = bossSkillParam[8][3];
+		mo.damage = 50/*bossSkillParam[8][3]*/;
 		mo.frameNum = bossSkillParam[8][9];
 		mo.mapx = x;
 		mo.mapy = y;
@@ -761,6 +761,7 @@ public class MoveObjectFactory implements Common{
 			setBossSkillInfo(boss, mo, index, i, num, o);
 			boss1Skill.addElement(mo);
 		}
+		boss.skillNums++;
 	}
 	
 	private void setBossSkillInfo(MoveObject boss, MoveObject mo, int index, int i, int num, MoveObject o) {
@@ -845,10 +846,17 @@ public class MoveObjectFactory implements Common{
 				mo.picId = bossSkillParam[index][6];
 				mo.damage = bossSkillParam[index][3];
 				mo.frameNum = bossSkillParam[index][9];
-				mo.mapx = 150+i*(mo.width+90);
-				mo.mapy = 40;
-				mo.speedX = bossSkillParam[index][7];
-				mo.speedY = bossSkillParam[index][8];
+				if(boss.skillNums%2 == 0){
+					mo.mapx = 120+i*(mo.width+90);
+					mo.mapy = 40;
+					mo.speedX = bossSkillParam[index][7];
+					mo.speedY = bossSkillParam[index][8];
+				}else{
+					mo.mapx = i*(mo.width+90);
+					mo.mapy = 40;
+					mo.speedX = -bossSkillParam[index][7];
+					mo.speedY = bossSkillParam[index][8];
+				}
 			}
 			break;
 		case 206:

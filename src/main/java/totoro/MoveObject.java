@@ -55,6 +55,7 @@ public class MoveObject {
 	int wingplaneNums;
 	int wingplaneMaxNums;
 	int missileGrade;  //1,2 等级
+	int skillNums;		//技能数
 	
 	MoveObject mo;			//跟踪导弹跟踪对象
 }

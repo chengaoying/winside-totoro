@@ -15,6 +15,7 @@ public interface Common {
 	public final static int GAME_SUCCESS = 4;
 	public final static int GAME_PAUSE = 5;
 
+	public final static TotoroGameEngine engine = TotoroGameEngine.instance;
 	public final static int ScrW = TotoroGameEngine.ScrW;
 	public final static int ScrH = TotoroGameEngine.ScrH;
 	public final static int gameH = 457;
@@ -245,17 +246,17 @@ public interface Common {
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
-				{17, 34, 14, 15, 20, 6, blueBomb1PicId},
+				{17, 34, 14, 20, 20, 6, blueBomb1PicId},
 				{18, 67, 14, 12, 20, 6, blueBomb2PicId},
-				{19, 93, 33, 10, 20, 6, blueBomb3PicId},
-				{20, 114, 51, 12, 20, 6, blueBomb4PicId},
+				{19, 93, 33, 8, 20, 6, blueBomb3PicId},
+				{20, 114, 51, 8, 20, 6, blueBomb4PicId},
 			},
 			{
 				/*子弹等级*/
 				/*0-id, 1-宽度, 2-高度, 3-伤害, 4-x速度, 5-Y速度, 6-子弹图片id*/
-				{21, 22, 23, 15, 30, 6, blackBomb1PicId},
-				{22, 86, 29, 6, 20, 6, blackBomb2PicId},
-				{23, 65, 65, 20, 30, 6, blackBomb3PicId},
+				{21, 22, 23, 20, 30, 6, blackBomb1PicId},
+				{22, 86, 29, 12, 20, 6, blackBomb2PicId},
+				{23, 65, 65, 30, 30, 6, blackBomb3PicId},
 			},
 	};
 	
@@ -264,10 +265,10 @@ public interface Common {
 			{0, 600, 11, 5, 5, 5, 4, laserPic},
 			{1, 42, 21, 70, 20, 20, 1, missilePic},
 			
-			{2, 164, 159, 35, 60, 60, 8, yellowVentose},
-			{3, 164, 159, 35, 60, 60, 8, yellowVentose},
-			{4, 180, 454, 80, 60, 60, 5, pinkVentose},
-			{5, 180, 454, 80, 60, 60, 5, pinkVentose},
+			{2, 164, 159, 40, 60, 60, 8, yellowVentose},
+			{3, 164, 159, 40, 60, 60, 8, yellowVentose},
+			{4, 180, 454, 70, 60, 60, 5, pinkVentose},
+			{5, 180, 454, 70, 60, 60, 5, pinkVentose},
 	};
 	
 	/*道具属性*/
@@ -297,14 +298,14 @@ public interface Common {
 	public int bossParam[][] = {  
 			/*0-id, 1-宽度, 2-高度, 3-血量, 4-积分, 5-x速度, 6-y速度, 7-x坐标, 8-y坐标
 			 * 9-图片id, 10-帧数间隔, 11-图片总帧数, 12-伤害, 13-技能一时间间隔, 14-技能二时间间隔, 15-方向, 16-初始位置,17-技能1伤害, 18-技能2伤害*/
-			{200, 186, 266, 9000, 100, 10, 10, 0, 0, boss_1, 300, 5, 50, 7, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{201, 162, 210, 9000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,50},
-			{202, 192, 204, 18000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{203, 196, 213, 18000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{204, 102, 160, 27000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{205, 103, 148, 27000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{206, 275, 353, 36000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 5, 12,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
-			{207, 260, 299, 36000, 100, 5, 5, 0, 0, boss_8, 150, 5, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{200, 186, 266, 12000, 100, 10, 10, 0, 0, boss_1, 300, 5, 50, 7, 3, OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{201, 162, 210, 12000, 100, 5, 5, 0, 0, boss_2, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,50},
+			{202, 192, 204, 24000, 100, 5, 5, 0, 0, boss_3, 300, 1, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{203, 196, 213, 24000, 100, 5, 5, 0, 0, boss_4, 300, 5, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{204, 102, 160, 36000, 100, 5, 5, 0, 0, boss_5, 300, 3, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{205, 103, 148, 36000, 100, 5, 5, 0, 0, boss_6, 300, 3, 50, 7, 3,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{206, 275, 353, 48000, 100, 5, 5, 0, 0, boss_7, 300, 5, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
+			{207, 260, 299, 48000, 100, 5, 5, 0, 0, boss_8, 150, 5, 50, 3, 7,OBJECT_DIRECTION_LEFT, OBJECT_POSITION_RIGHT,50,30},
 	};
 	
 	/*boss技能属性*/
@@ -317,7 +318,7 @@ public interface Common {
 			{204, 50, 23, 10, 10, 0, boss5SkillPicId, 25, 25, 3, 3},
 			{205, 49, 52, 30, 10, 0, batteryBomb2PicId, 30, 80, 1, 4},
 			{206, 24, 22, 10, 10, 0, boss7SkillPicId_1, 15, 15, 1, 8},
-			{207, 38, 37, 50, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
+			{207, 38, 37, 30, 10, 0, boss7SkillPicId_4, 60, 60, 1, 12},
 			
 			{0, 50, 140, 100, 10, 0, boss8Skill2_1_PicId, 60, 60, 3, 1},
 	};
@@ -371,22 +372,22 @@ public interface Common {
 			{104, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
 			{105, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
 			{106, 16, 21, 24, 10, 20, 20, spiritBomb2PicId, 1},
-			{107, 17, 14, 15, 10, 20, 20, spiritBomb3PicId, 1},
-			{108, 18, 15, 15, 10, 20, 5, spiritBomb4PicId, 3},
-			{109, 19, 24, 15, 10, 20, 20, spiritBomb5PicId, 1},
-			{110, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
-			{111, 13, 50, 23, 10, 20, 20, spiritBomb6PicId, 1},
+			{107, 17, 14, 15, 15, 20, 20, spiritBomb3PicId, 1},
+			{108, 18, 15, 15, 15, 20, 5, spiritBomb4PicId, 3},
+			{109, 19, 24, 15, 15, 20, 20, spiritBomb5PicId, 1},
+			{110, 14, 24, 15, 15, 20, 5, spiritBomb5PicId, 3},
+			{111, 13, 50, 23, 15, 20, 20, spiritBomb6PicId, 1},
 			//{200, 20, 85, 50, 25, 20, 20, bossBomb1PicId},
-			{201, 15, 15, 14, 10, 20, 5, spiritBomb1PicId, 3},
-			{202, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
-			{203, 16, 21, 24, 10, 20, 5, spiritBomb2PicId, 3},
-			{204, 17, 14, 15, 10, 20, 5, spiritBomb3PicId, 3},
-			{205, 18, 15, 15, 10, 20, 5, spiritBomb4PicId, 3},
-			{206, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
-			{207, 14, 24, 15, 10, 20, 5, spiritBomb5PicId, 3},
-			{300, 30, 15, 14, 10, 20, 15, spiritBomb1PicId, 1},
-			{301, 31, 49, 52, 10, 20, 20, batteryBomb2PicId, 1},
-			{302, 32, 31, 31, 10, 20, 30, batteryBomb3PicId, 3},
+			{201, 15, 15, 14, 15, 20, 5, spiritBomb1PicId, 3},
+			{202, 16, 21, 24, 15, 20, 5, spiritBomb2PicId, 3},
+			{203, 16, 21, 24, 15, 20, 5, spiritBomb2PicId, 3},
+			{204, 17, 14, 15, 15, 20, 5, spiritBomb3PicId, 3},
+			{205, 18, 15, 15, 15, 20, 5, spiritBomb4PicId, 3},
+			{206, 14, 24, 15, 15, 20, 5, spiritBomb5PicId, 3},
+			{207, 14, 24, 15, 15, 20, 5, spiritBomb5PicId, 3},
+			{300, 30, 15, 14, 15, 20, 15, spiritBomb1PicId, 1},
+			{301, 31, 49, 52, 15, 20, 20, batteryBomb2PicId, 1},
+			{302, 32, 31, 31, 15, 20, 30, batteryBomb3PicId, 3},
 	};
 	
 	/*精灵属性*/
@@ -399,18 +400,18 @@ public interface Common {
 		{102, 80, 62, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_3, SPIRITI_PRIZE_NO, 500, 3, 10, 2},
 		
 		{103, 50, 69, 45, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_4, SPIRITI_PRIZE_NO, 500, 3, 10, 2},
-		{104, 63, 89, 45, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
+		{104, 63, 89, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_5, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
 		{105, 93, 114, 20, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_6, SPIRITI_PRIZE_NO, 500, 6, 10, 2},
-		{106, 79, 104, 30, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_7, SPIRITI_PRIZE_YES, 500, 2, 10, 2},
+		{106, 79, 104, 100, 10, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_7, SPIRITI_PRIZE_YES, 500, 2, 10, 2},
 		
-		{107, 60, 75, 50, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
-		{108, 75, 66, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
+		{107, 60, 75, 100, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_8, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
+		{108, 75, 66, 50, 20, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_9, SPIRITI_PRIZE_YES, 500, 3, 10, 2},
 		
-		{109, 105, 79, 50, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 2},
-		{110, 45, 97, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 2},
+		{109, 105, 79, 150, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_10, SPIRITI_PRIZE_YES, 500, 5, 10, 2},
+		{110, 45, 97, 200, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_YES, spirits_11, SPIRITI_PRIZE_YES, 500, 4, 10, 2},
 		
 		//幽灵boss出的小怪
-		{111, 22, 32, 100, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 2},
+		{111, 22, 32, 200, 25, 6, 6, 640, 200, 0, ATTACK_PERMISSION_NO, spirits_12, SPIRITI_PRIZE_NO, 500, 3, 5, 2},
 		
 		/*巨魔boss出的小怪*/
 		{112, 68, 66, 100, 25, 20, 6, 640, 200, 0, ATTACK_PERMISSION_NO, boss7SkillPicId_8, SPIRITI_PRIZE_NO, 500, 1, 10, 2},
@@ -568,7 +569,19 @@ public interface Common {
 			"购买必杀技,可在游戏中使用,使用威力极大,并且是无敌状态",
 	};
 	
-	public String helpInfo[][] = {
-			{"龙猫勇士是一款横版闯关射击游戏,龙猫会自动发射子弹,使用方向键控制龙猫移动.击落敌人有几率掉落附加武器,武器升级,血瓶，和守护精灵.此外,玩家还可以花费游戏币解锁龙猫,升级龙猫,复活龙猫,购买必杀"},
-	};
+	public String helpInfo = "龙猫勇士是一款横版闯关射击游戏,龙猫会自动发射子弹,使用方向键控制龙猫移动.击落敌人有几率掉落附加武器,武器升级,血瓶,和守护精灵.此外,玩家还可以花费游戏币解锁龙猫,升级龙猫,复活龙猫,购买必杀#r#r";
+	
+	public String helpInfo2 = 
+			"附加武器：附加武器可以给龙猫增添火力.游戏中一共有2种附加武器,跟踪导弹和激光#r"+
+			"武器升级：武器升级可以增加龙猫本身火力威力,每种龙猫武器升级后的效果都不一样#r"+
+			"血瓶：血瓶可以恢复龙猫一定的血量#r"+
+			"守护精灵：守护精灵可以帮助你一起作战,初始龙猫只能携带1个守护精灵,每升一级增加一只,最多增加到4只.玩家每死一条命守护精灵也会损失1个#r#r"
+	;
+	
+	public String helpInfo3 = 
+			"解锁龙猫：点击开始游戏进入龙猫选择界面,其中2只龙猫是未解锁的,需要玩家使用游戏币解锁.未解锁的龙猫拥有更强的体力和攻击力.每只龙猫的解锁费用为100"+engine.getEngineService().getExpendAmountUnit()+"#r"+
+			"升级龙猫：在战斗场景中点击数字键9可以升级龙猫.升级后可以增加携带守护精灵的数量.升级的费用依次为：20,40,80"+engine.getEngineService().getExpendAmountUnit()+"#r"+
+			"复活龙猫：当玩家失去所有的生命可以选择复活龙猫.每关复活的花费不同,分别为10,20,30,40,50,60,70,80"+engine.getEngineService().getExpendAmountUnit()+"#r"+
+			"购买必杀：在战斗场景中点击数字键9可以购买必杀.必杀能让玩家持续一段时间的无敌并对敌人找出很大的伤害.每个必杀需要20"+engine.getEngineService().getExpendAmountUnit()+"#r"
+	;
 }

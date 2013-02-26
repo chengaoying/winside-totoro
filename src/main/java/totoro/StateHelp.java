@@ -4,6 +4,7 @@ package totoro;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.ui.TextView;
 
 public class StateHelp implements Common{
 	private TotoroGameEngine engine;
@@ -47,10 +48,13 @@ public class StateHelp implements Common{
 	private void showHelp(SGraphics g) {
 		g.setColor(0x4b4b4b);
 		g.fillRect(0, 0, ScrW, ScrH);
-		g.setColor(0x666666);
-		int w = 525, h = 380;
+		g.setColor(0x1e6094);
+		int w = 565, h = 420;
 		int x = ScrW/2 - w/2, y = ScrH/2 - h/2;
 		g.fillRect(x, y, w, h);
+		g.setColor(0xffffff);
+		String str = helpInfo+helpInfo2+helpInfo3;
+		TextView.showMultiLineText(g, str, 3, x, y, w, h);
 	}
 	
 	private void handleHelp(KeyState keyState, SGraphics g) {

@@ -27,7 +27,7 @@ public class StateGame implements Common{
 	public static int levelInterval;
 	public static boolean level_over;
 	
-	public int level = 7;
+	public int level = 1;
 	public boolean isNextLevel;
 	public static boolean isCeateBoss;
 	
@@ -494,6 +494,7 @@ public class StateGame implements Common{
 			}
 			player.missileGrade = 0;
 			missileGrade = 0;
+			laserNums = 0;
 			reviveStime = getTime();
 			factory.lasers.removeAllElements();
 			factory.missile.removeAllElements();
@@ -1651,7 +1652,7 @@ public class StateGame implements Common{
 		
 		int venW = ventose_icon.getWidth(), venH = ventose_icon.getHeight();
 		int key0W = key0.getWidth(), key0H = key0.getHeight();
-		int x = 195, y = ScrH-venH;
+		int x = 195, y = ScrH-venH-5;
 		g.drawImage(ventose_icon, x, y, 20);
 		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+33, y+25, 20, 20, 1);
 		y = y + venH/2-key0H/2;
@@ -1660,7 +1661,7 @@ public class StateGame implements Common{
 		g.drawImage(key0, ScrW-key0W-10, y, 20);
 		
 		int totoroW = totoro.getWidth()/2, totoroH = totoro.getHeight();
-		int totoroX = 10, totoroY = ScrH-totoroH;
+		int totoroX = 10, totoroY = ScrH-totoroH-5;
 		for(int i=0;i<StateGame.wingplaneMaxNums;i++){
 			g.drawRegion(totoro, totoroW, 0, totoroW, totoroH, 0, totoroX, totoroY, 20);
 			totoroX += totoroW+1;

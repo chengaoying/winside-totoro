@@ -1133,10 +1133,14 @@ public class MoveObjectShow implements Common{
 			g.drawRegion(skill, 0, 0, skillW, h, 0, x1, y1, 20);
 		}else{
 			factory.createBoss8Skill2(x1, y1);
-			x1 = 290;
-			y1 = 265;
+			//x1 = 290;
+			//y1 = 265;
 			h = 0;
 			boss.status2 = ROLE_STATUS2_MOVE;
+			x1 = RandomValue.getRandInt(220, 300);
+			y1 = RandomValue.getRandInt(265, 465);
+			x = x1-40;
+			y = y1-15;
 		}
 	}
 
