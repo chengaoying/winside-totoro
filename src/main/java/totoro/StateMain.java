@@ -143,9 +143,9 @@ public class StateMain implements Common{
 		} else if (mainIndex == 3){ 	//游戏帮助
 			StateHelp sh = new StateHelp(engine);
 			sh.processHelp();
-		} else if (mainIndex == 4) {	//龙猫升级
+		} else if (mainIndex == 4) {	//退出游戏
 			Resource.clearMain();
-			engine.saveRecord();
+			//engine.saveRecord();
 			exit = true;
 			/*if(StateGame.wingplaneMaxNums<4){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();

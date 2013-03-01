@@ -51,8 +51,8 @@ public class StateGameSuccess implements Common{
 
 	private void showGameSuccess(SGraphics g, int scores) {
 		stateGame.show(g);
-		String str = "你获得了"+scores+"得分,快去主界面看看自己的排名吧,按确认返回主界面";
-		Font font = g.getFont();
+		String str = "恭喜你成功通关,总分"+scores+"分,按确认返回主界面";
+		Font font = g.getFont();    
 		int textW = font.stringWidth(str);
 		int w = textW+30;
 		int h = 30;

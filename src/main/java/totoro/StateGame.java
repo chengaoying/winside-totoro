@@ -25,11 +25,11 @@ public class StateGame implements Common{
 	public static long level_start_time;
 	public static long level_end_time;
 	public static int levelInterval;
-	public static boolean level_over;
+	public static boolean level_over;	//1:true, -1:false
 	
 	public int level = 1;
 	public boolean isNextLevel;
-	public static boolean isCeateBoss;
+	public static boolean isCeateBoss;	//1:true, -1:false
 	
 	public MoveObjectFactory factory;
 	public MoveObjectShow objectShow;
@@ -57,7 +57,7 @@ public class StateGame implements Common{
 	
 	//´æµµÊý¾Ý
 	public static int lifeNum;
-	public static int currLevel;
+	public static int currLevel=1;
 	public static int scores;
 	public static int blood;
 	public static int grade;
@@ -93,18 +93,20 @@ public class StateGame implements Common{
 				isUserVentose = true;
 				player.status = ROLE_STATUS_PROTECTED;
 			}else{
-				if(ventoseNum+startGameVentoseNums > 0){
-					venSTime = getTime();
-					isUserVentose = true;
-					player.status = ROLE_STATUS_PROTECTED;
-					if(startGameVentoseNums>0){
-						startGameVentoseNums--;
+				if(!isUserVentose){
+					if(ventoseNum+startGameVentoseNums > 0){
+						venSTime = getTime();
+						isUserVentose = true;
+						player.status = ROLE_STATUS_PROTECTED;
+						if(startGameVentoseNums>0){
+							startGameVentoseNums--;
+						}else{
+							ventoseNum--;
+						}
 					}else{
-						ventoseNum--;
+						isVentosePrompt = true;
+						ventoseTime1 = getTime();
 					}
-				}else{
-					isVentosePrompt = true;
-					ventoseTime1 = getTime();
 				}
 			}
 		}else if(keyState.containsAndRemove(KeyCode.NUM0)){
@@ -182,17 +184,18 @@ public class StateGame implements Common{
 		
 		revivePlayer();
 		
-		judgeNextLevel();
-		
 		level_end_time = getTime()/1000;
-		//System.out.println("time:"+(level_end_time - level_start_time));
-		if(level <= 8 && level_end_time - level_start_time > levelInfo[level-1][1]){
-			level_over = true;
+		if(level <= 8 && (level_end_time - level_start_time) > levelInfo[level-1][1]){	
+			//if((level_end_time - level_start_time) > levelInfo[level-1][1]){
+				level_over = true;
+			//}
 		}
 		
-		createPlayerSkill();
+		judgeNextLevel();
 		
 		createSpirits();
+		
+		createPlayerSkill();
 		
 		createSpiritsBombs();
 		
@@ -282,7 +285,7 @@ public class StateGame implements Common{
 					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
 					bossBlood = object.blood;
 				}
-				engine.saveRecord();
+				engine.saveRecord(1);
 				engine.sysProps();
 				engine.saveAttainment();
 				engine.queryList();
@@ -303,13 +306,19 @@ public class StateGame implements Common{
 			drawPassInterface();
 			break;	
 		case GAME_FAIL:		//Ê§°Ü
+			int count = 0;
+			if(level <= 3){
+				count = level*10;
+			}else{
+				count = 30;
+			}
 			StateGameFail fail = new StateGameFail(engine);
-			int i = fail.processGameFail(level);
+			int i = fail.processGameFail(count);
 			if(i == 0){
 				//Âò¸´»î
-				if(engine.getEngineService().getBalance() > level*10){
+				if(engine.getEngineService().getBalance() >= count){
 					ServiceWrapper sw = engine.getServiceWrapper();
-					sw.expend(level*10, "¹ºÂò¸´»î");
+					sw.expend(count, "¹ºÂò¸´»î");
 					player.lifeNum = 3;
 					lifeNum = player.lifeNum;
 					startGameVentoseNums = 3;
@@ -325,9 +334,9 @@ public class StateGame implements Common{
 				game_status = GAME_PLAY;
 			}else{
 				//ÍË³öÓÎÏ·
-				//engine.saveRecord();
 				engine.saveAttainment();
 				engine.sysProps();
+				engine.saveRecord(-1);
 				quitGameDeleteDate();
 				engine.state = STATUS_MAIN_MENU;
 				game_status = GAME_PLAY;
@@ -343,11 +352,14 @@ public class StateGame implements Common{
 		game_status = GAME_PLAY;
 		engine.saveAttainment();
 		engine.sysProps();
+		engine.queryList();
+		engine.saveRecord(-1);
 		quitGameDeleteDate();
 	}
 
 	private void judgeNextLevel() {
-		if(level_over && factory.boss.size()<1 && isCeateBoss == true && player.status != ROLE_STATUS_PASS){
+		
+		if(level_over && factory.boss.size()<1 && isCeateBoss && player.status != ROLE_STATUS_PASS){
 			isNextLevel = true;
 			player.status = ROLE_STATUS_PASS;
 			player.speedX = playerParam[player.grade-1][9]+10;
@@ -363,7 +375,7 @@ public class StateGame implements Common{
 			player.mapx += player.speedX;
 			if(player.mapx > ScrW){
 				player.speedX = playerParam[player.grade-1][9];
-				levelInterval = (int) (level_end_time-level_start_time);
+				levelInterval = (int)(level_end_time-level_start_time);
 				if(factory.boss.size()>0){
 					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
 					bossBlood = object.blood;
@@ -1333,7 +1345,7 @@ public class StateGame implements Common{
 		//wingplaneMaxNums = 1;
 		wingplaneNums = 0;
 		missileGrade = 0;
-		currLevel = level = 1;
+		currLevel = level = 1;  
 		bgIndex = 0;
 		hillIndex = 0;
 		wayIndex = 0;
@@ -1427,7 +1439,7 @@ public class StateGame implements Common{
 	}
 
 	private void drawGameBg(SGraphics g) {
-		if(level == 1 || level == 2){
+		/*if(level == 1 || level == 2){
 			drawGameBg_sky(g);
 		}else if(level == 3 || level == 4){
 			drawGameBg_burrow(g);
@@ -1435,6 +1447,33 @@ public class StateGame implements Common{
 			drawGameBg_ice(g);
 		}else if(level == 7 || level == 8){
 			drawGameBg_lava(g);
+		}*/
+		switch (level){
+		case 1:
+			drawGameBg_sky(g);
+			break;
+		case 2:
+			drawGameBg_sky(g);
+			break;
+		case 3:
+			drawGameBg_burrow(g);
+			break;
+		case 4:
+			drawGameBg_burrow(g);
+			break;
+		case 5:
+			drawGameBg_ice(g);
+			break;
+		case 6:
+			drawGameBg_ice(g);
+			break;
+		case 7:
+			drawGameBg_lava(g);
+			break;
+		case 8:
+			drawGameBg_lava(g);
+			break;
+				
 		}
 	}
 
@@ -1550,11 +1589,11 @@ public class StateGame implements Common{
 	int mapx = 200, mapx2 = 300;
 	public void drawGameBg_sky(SGraphics g){
 		Image game_bg = Resource.loadImage(Resource.id_sky_game_bg);
-		Image hill = Resource.loadImage(Resource.id_sky_game_hill); 
+		//Image hill = Resource.loadImage(Resource.id_sky_game_hill); 
 		Image way = Resource.loadImage(Resource.id_sky_game_way);
 		
 		int bgW =  game_bg.getWidth(), bgH = game_bg.getHeight();
-		int hillW = hill.getWidth(), hillH = hill.getHeight();
+		//int hillW = hill.getWidth(), hillH = hill.getHeight();
 		int wayW = way.getWidth(), wayH = way.getHeight();
 		if(factory.boss.size()>0){
 			bgIndex = (bgIndex+4)%bgW;
@@ -1566,7 +1605,7 @@ public class StateGame implements Common{
 		g.drawRegion(game_bg, bgIndex, 0, bgW-bgIndex, bgH, 0, 0, 0, 20);
 		g.drawRegion(game_bg, 0, 0, bgIndex, bgH, 0, bgW-bgIndex, 0, 20);
 		
-		if(mapx+hillW>0){
+		/*if(mapx+hillW>0){
 			if(factory.boss.size()>0){
 				mapx -= 8;
 			}else{
@@ -1575,7 +1614,7 @@ public class StateGame implements Common{
 		}else{
 			mapx = ScrW;
 		}
-		g.drawRegion(hill, 0, 0, hillW, hillH, 0, mapx, 70, 20);
+		g.drawRegion(hill, 0, 0, hillW, hillH, 0, mapx, 70, 20);*/
 		
 		g.drawRegion(way, wayIndex, 0, wayW-wayIndex, wayH, 0, 0, ScrH-wayH, 20);
 		g.drawRegion(way, 0, 0, wayIndex, wayH, 0, wayW-wayIndex, ScrH-wayH, 20);

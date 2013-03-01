@@ -156,7 +156,6 @@ public class StateShop implements Common{
 					}
 				}
 			}
-			engine.stateGame.show(g);
 		}
 	}
 }

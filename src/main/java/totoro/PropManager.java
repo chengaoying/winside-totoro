@@ -123,9 +123,9 @@ public class PropManager implements Common{
 			if (pc.popup() == 0) {
 				StateRecharge recharge = new StateRecharge(engine);
 				recharge.recharge();
-				if(g != null){
+				/*if(g != null){
 					engine.stateGame.show(g);
-				}
+				}*/
 			}
 			return false;
 		}

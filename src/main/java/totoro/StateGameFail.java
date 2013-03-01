@@ -12,7 +12,7 @@ public class StateGameFail implements Common{
 	
 	private TotoroGameEngine engine;
 	private boolean running;
-	private int failIndex;
+	private int failIndex=1;
 	private long startTime, endTime;
 	private int interval;
 	
@@ -55,7 +55,7 @@ public class StateGameFail implements Common{
 		return failIndex;
 	}
 
-	private void showGameFail(SGraphics g, int level) {
+	private void showGameFail(SGraphics g, int count) {
 		Image bg = Resource.loadImage(Resource.id_fail_bg);
 		Image text = Resource.loadImage(Resource.id_fail_text);
 		//Image fail = Resource.loadImage(Resource.id_fail);
@@ -92,7 +92,7 @@ public class StateGameFail implements Common{
 			textX = buttonX + buttonW/2-textW/2;
 		}
 		
-		StateMain.drawNum(g, level*10, x+235, y+113);
+		StateMain.drawNum(g, count, x+235, y+113);
 		drawNum(g, interval, bgX+25, bgY+50);
 	}
 	

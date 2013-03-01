@@ -203,7 +203,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		pm.sysProps();
 	}
 	
-	public void saveRecord(){
+	public void saveRecord(int i){
 		
 		if(StateGame.lifeNum<1 || StateGame.scores<=0){
 			return;
@@ -219,7 +219,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 			GameRecord gameRecord = new GameRecord();
 			gameRecord.setData(record);
 			gameRecord.setScores(StateGame.scores);
-			//gameRecord.setPlayDuration(StateGame.scores);
+			gameRecord.setPlayDuration(i);
 			gameRecord.setRemark("´æµµ");
 			gameRecord.setRecordId(recordId);
 			sw.saveRecord(gameRecord);
@@ -295,6 +295,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		dout.write(StateGame.levelInterval);
 		dout.writeInt(StateGame.bossBlood);
 		dout.writeBoolean(StateGame.level_over);
+		dout.write(StateGame.startGameVentoseNums);
 		//dout.write(StateGame.ventoseNum);
 		//dout.writeBoolean(StateGame.hasTotoro3);
 		//dout.writeBoolean(StateGame.hasTotoro4);
@@ -306,6 +307,9 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		ServiceWrapper sw = getServiceWrapper();
 		GameRecord gameRecord = sw.readRecord(recordId);
 		if(!sw.isServiceSuccessful() || gameRecord==null){
+			return result = false;
+		}
+		if(gameRecord.getPlayDuration()==-1){
 			return result = false;
 		}
 		ByteArrayInputStream bin = new ByteArrayInputStream(gameRecord.getData());
@@ -347,6 +351,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.levelInterval = din.read();
 		StateGame.bossBlood = din.readInt();
 		StateGame.level_over = din.readBoolean();
+		StateGame.startGameVentoseNums = din.read();
 		
 		printInfo();
 	}
@@ -369,5 +374,6 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		System.out.println("StateGame.levelInterval:"+(StateGame.levelInterval));
 		System.out.println("StateGame.bossBlood:"+(StateGame.bossBlood));
 		System.out.println("StateGame.level_over:"+(StateGame.level_over));
+		System.out.println("StateGame.startGameVentoseNums:"+(StateGame.startGameVentoseNums));
 	}
 }

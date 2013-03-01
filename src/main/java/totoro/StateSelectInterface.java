@@ -110,12 +110,11 @@ public class StateSelectInterface implements Common{
 				if(StateGame.level_over){
 					stateGame.factory.createBoss(StateGame.currLevel);
 					for(int i=stateGame.factory.boss.size()-1;i>=0;i--){
-						MoveObject mo = (MoveObject) stateGame.factory.boss.elementAt(i);
-						mo.blood = StateGame.bossBlood;
+						//MoveObject mo = (MoveObject) stateGame.factory.boss.elementAt(i);
+						//mo.blood = StateGame.bossBlood;
 						StateGame.isCeateBoss = true;
 					}
 				}
-				StateGame.startGameVentoseNums = 0;
 				stateGame.level = StateGame.currLevel;
 				engine.state = STATUS_GAME_PLAYING;
 				Resource.clearSelectInterface();

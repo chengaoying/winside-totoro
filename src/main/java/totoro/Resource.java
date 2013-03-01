@@ -164,6 +164,9 @@ public class Resource implements Common {
 	public static short id_prop_missile = NUMS++;
 	public static short id_prop_missile_effect = NUMS++;
 	
+	public static short id_help_title = NUMS++;
+	public static short id_help_prompt = NUMS++;
+	
 	public static String[] imagesrcs = {
 		"/init/bg.jpg",
 		"/init/text.png",
@@ -315,6 +318,9 @@ public class Resource implements Common {
 		"/prop/laser_device.png",
 		"/prop/missile.png",
 		"/prop/missile_effect.png",
+		
+		"/help/title.png",
+		"/help/prompt.png",
 	};
 	  
 	private static final Image[] images = new Image[NUMS];
@@ -466,6 +472,8 @@ public class Resource implements Common {
 		images[id_prop_missile] = null;
 		images[id_prop_missile_effect] = null;
 		images[id_shop_totoro] = null;
+	
+		images[id_main_num] = null;
 	}
 	
 	public static void clearSubMenuPic(){
@@ -484,6 +492,7 @@ public class Resource implements Common {
 	
 	public static void clearSelectInterface(){
 		images[id_main_button] = null;
+		images[id_main_num] = null;
 		images[id_selectInterface_head] = null;
 		images[id_selectInterface_head2] = null;
 		images[id_selectInterface_info_bg] = null;
@@ -513,6 +522,11 @@ public class Resource implements Common {
 		images[id_shop_totoro] = null;
 		images[id_shop_totoro2] = null;
 		images[id_shop_upgrade] = null;
+	}
+	
+	public static void clearHelp(){
+		images[id_help_title] = null;
+		images[id_help_prompt] = null;
 	}
 	
 }
