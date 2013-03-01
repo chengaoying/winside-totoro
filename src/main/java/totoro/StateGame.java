@@ -193,13 +193,13 @@ public class StateGame implements Common{
 		
 		judgeNextLevel();
 		
-		createSpirits();
+		//createSpirits();
 		
 		createPlayerSkill();
 		
 		createSpiritsBombs();
 		
-		collisionDetection();
+		//collisionDetection();
 		
 		removeOutsideObject();
 		
@@ -359,15 +359,48 @@ public class StateGame implements Common{
 
 	private void judgeNextLevel() {
 		
-		if(level_over && factory.boss.size()<1 && isCeateBoss && player.status != ROLE_STATUS_PASS){
-			isNextLevel = true;
-			player.status = ROLE_STATUS_PASS;
-			player.speedX = playerParam[player.grade-1][9]+10;
-			//factory.removeAllObject();
-			if(level >= 8){
-				//通关
-				game_status = GAME_SUCCESS;
-				factory.removeEnemy();
+		if(level_over){
+			if(factory.boss.size()<1){
+				if(factory.spirits.size()<1 && !isNextLevel){
+					factory.createBoss(level);
+					isCeateBoss = true;
+				}
+				if(/*isCeateBoss && */player.status != ROLE_STATUS_PASS){
+					isNextLevel = true;
+					player.status = ROLE_STATUS_PASS;
+					player.speedX = playerParam[player.grade-1][9]+10;
+					//factory.removeAllObject();
+					if(level >= 8){
+						//通关
+						game_status = GAME_SUCCESS;
+						factory.removeEnemy();
+					}
+				}
+			}
+			/*if(factory.boss.size()<1 && isCeateBoss && player.status != ROLE_STATUS_PASS){
+				isNextLevel = true;
+				player.status = ROLE_STATUS_PASS;
+				player.speedX = playerParam[player.grade-1][9]+10;
+				//factory.removeAllObject();
+				if(level >= 8){
+					//通关
+					game_status = GAME_SUCCESS;
+					factory.removeEnemy();
+				}
+			}*/
+		}else{
+			if(!isNextLevel){
+				spiritEnd = getTime();
+				batteryEnd = getTime();
+				if(spiritEnd - spiritStart >= levelInfo[level-1][2]){
+					factory.cteateBatchSpirits(level, batchIndex);
+					batchIndex = (batchIndex+1)%batchInfo[level-1].length;
+					spiritStart = getTime();
+				}
+				if(batteryEnd - batteryStart >= levelInfo[level-1][3] && level != 1 && level != 2){
+					factory.createBattery(level);
+					batteryStart = getTime();
+				}
 			}
 		}
 		
