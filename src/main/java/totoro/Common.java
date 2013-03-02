@@ -284,7 +284,7 @@ public interface Common {
 	
 	/*每个关卡所掉落的奖品*/
 	public int levelProps[][] = {
-			{id_blood,id_blood,id_laser, id_upgrade,id_wingplane,id_wingplane},
+			{id_blood,id_blood,id_laser, id_upgrade,id_wingplane},
 			{id_blood,id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_blood,id_missile, id_upgrade,id_wingplane,id_wingplane},
 			{id_blood,id_laser,id_missile, id_upgrade,/*id_ventose,*/id_wingplane,id_wingplane},
@@ -569,19 +569,19 @@ public interface Common {
 			"必杀技：全屏攻击,无敌状态,持续5秒",
 	};
 	
-	public String helpInfo = "龙猫勇士是一款横版闯关射击游戏，龙猫会自动发射子弹，使用方向键控制龙猫移动，击落敌人有几率掉落附加武器、武器升级、血瓶、和守护精灵.此外，玩家还可以花费游戏币解锁龙猫、升级龙猫、复活龙猫、购买必杀#r#r";
+	public String helpInfo = "龙猫勇士是一款横版闯关射击游戏，龙猫会自动发射子弹，使用方向键控制龙猫移动，击落敌人有几率掉落附加武器、武器升级、血瓶、和守护精灵。此外，玩家还可以花费游戏币解锁龙猫、升级龙猫、复活龙猫、购买必杀。#r#r";
 	
 	public String helpInfo2 = 
-			"附加武器：附加武器可以给龙猫增添火力.游戏中一共有2种附加武器，跟踪导弹和激光#r"+
-			"武器升级：武器升级可以增加龙猫本身火力威力，每种龙猫武器升级后的效果都不一样#r"+
-			"血瓶：血瓶可以恢复龙猫一定的血量#r"+
-			"守护精灵：守护精灵可以帮助你一起作战，初始龙猫只能携带1个守护精灵，每升一级增加一只，最多增加到4只，玩家每死一条命守护精灵也会损失1个#r#r"
+			"附加武器：附加武器可以给龙猫增添火力.游戏中一共有2种附加武器，跟踪导弹和激光。#r"+
+			"武器升级：武器升级可以增加龙猫本身火力威力，每种龙猫武器升级后的效果都不一样。#r"+
+			"血瓶：血瓶可以恢复龙猫一定的血量。#r"+
+			"守护精灵：守护精灵可以帮助你一起作战，初始龙猫只能携带1个守护精灵，每升一级增加一只，最多增加到4只，玩家每死一条命守护精灵也会损失1个。#r#r"
 	;
 	
 	public String helpInfo3 = 
-			"解锁龙猫：点击开始游戏进入龙猫选择界面，其中2只龙猫是未解锁的，需要玩家使用游戏币解锁.未解锁的龙猫拥有更强的体力和攻击力.每只龙猫的解锁费用为100"+engine.getEngineService().getExpendAmountUnit()+"#r"+
-			"升级龙猫：在战斗场景中点击数字键9进入商城可以升级龙猫.升级后可以增加携带守护精灵的数量.升级的费用依次为：20、40、80"+engine.getEngineService().getExpendAmountUnit()+"#r"+
-			"复活龙猫：当玩家失去所有的生命可以选择复活龙猫.每关复活的花费不同，分别为10、20、30、30、30、30、30、30"+engine.getEngineService().getExpendAmountUnit()+"#r"+
-			"购买必杀：在战斗场景中点击数字键9进入商城可以购买必杀.必杀能让玩家持续一段时间的无敌并对敌人找出很大的伤害.每个必杀需要20"+engine.getEngineService().getExpendAmountUnit()+"#r"
+			"解锁龙猫：点击开始游戏进入龙猫选择界面，其中2只龙猫是未解锁的，需要玩家使用游戏币解锁。未解锁的龙猫拥有更强的体力和攻击力.每只龙猫的解锁费用为100"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"升级龙猫：在战斗场景中点击数字键9进入商城可以升级龙猫.升级后可以增加携带守护精灵的数量.升级的费用依次为：20、40、80"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"复活龙猫：当玩家失去所有的生命可以选择复活龙猫。关复活的花费不同，分别为10、20、30、30、30、30、30、30"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"购买必杀：在战斗场景中点击数字键9进入商城可以购买必杀。必杀能让玩家持续一段时间的无敌并对敌人造成很大的伤害.每个必杀需要20"+engine.getEngineService().getExpendAmountUnit()+"。#r"
 	;
 }

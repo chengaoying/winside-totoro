@@ -28,7 +28,7 @@ public class StateGame implements Common{
 	public static boolean level_over;	//1:true, -1:false
 	
 	public int level = 1;
-	public boolean isNextLevel;
+	//public boolean isNextLevel;
 	public static boolean isCeateBoss;	//1:true, -1:false
 	
 	public MoveObjectFactory factory;
@@ -191,15 +191,11 @@ public class StateGame implements Common{
 			//}
 		}
 		
-		if(factory.boss.size()<1){
-			if(isCeateBoss && player.status != ROLE_STATUS_PASS){
-				//isNextLevel = true;
-			}
-		}
+		//judgeNextLevel();
 		
-		judgeNextLevel();
+		createSpirits();
 		
-		//createSpirits();
+		nextLevel();
 		
 		createPlayerSkill();
 		
@@ -213,6 +209,56 @@ public class StateGame implements Common{
 		
 	}
 	
+	private void createSpirits() {
+		if(level_over){
+			if(factory.boss.size()<1){
+				if(!isCeateBoss){
+					factory.createBoss(level);
+					isCeateBoss = true;
+				}
+			}
+		}else{
+			//if(!isCeateBoss){
+				spiritEnd = getTime();
+				batteryEnd = getTime();
+				if(spiritEnd - spiritStart >= levelInfo[level-1][2]){
+					factory.cteateBatchSpirits(level, batchIndex);
+					batchIndex = (batchIndex+1)%batchInfo[level-1].length;
+					spiritStart = getTime();
+				}
+				if(batteryEnd - batteryStart >= levelInfo[level-1][3] && level != 1 && level != 2){
+					factory.createBattery(level);
+					batteryStart = getTime();
+				}
+			//}
+		}
+	}
+	
+	private void nextLevel() {
+		if(factory.boss.size()<1 && isCeateBoss){
+			player.status = ROLE_STATUS_PASS;
+			player.speedX = playerParam[player.grade-1][9]+10;
+			if(level >= 8){
+				//通关
+				game_status = GAME_SUCCESS;
+				factory.removeEnemy();
+			}
+		}
+		
+		if(player.status == ROLE_STATUS_PASS){
+			player.mapx += player.speedX;
+			if(player.mapx > ScrW){
+				player.speedX = playerParam[player.grade-1][9];
+				levelInterval = (int)(level_end_time-level_start_time);
+				if(factory.boss.size()>0){
+					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
+					bossBlood = object.blood;
+				}
+				changeDatePass();
+			}
+		}
+	}
+
 	private void revivePlayer() {
 		
 		//玩家复活
@@ -364,7 +410,7 @@ public class StateGame implements Common{
 		quitGameDeleteDate();
 	}
 
-	private void judgeNextLevel() {
+	/*private void judgeNextLevel() {
 		
 		if(level_over){
 			if(factory.boss.size()<1){
@@ -412,7 +458,7 @@ public class StateGame implements Common{
 			}
 		}
 		
-	}
+	}*/
 
 	/*创建敌方攻击*/
 	private void createSpiritsBombs() {
@@ -1219,7 +1265,7 @@ public class StateGame implements Common{
 		blood = player.blood;
 		player.lifeNum ++;
 		lifeNum = player.lifeNum;
-		isNextLevel = false;
+		//isNextLevel = false;
 		level_over = false;
 		isCeateBoss = false;
 		level_start_time = getTime()/1000;
@@ -1256,7 +1302,7 @@ public class StateGame implements Common{
 		hillIndex = 0;
 		wayIndex = 0;
 		batchIndex = 0;
-		isNextLevel = false;
+		//isNextLevel = false;
 		level_over = false;
 		isCeateBoss = false;
 		Resource.clearGame();
@@ -1298,10 +1344,10 @@ public class StateGame implements Common{
 		}
 		drawExploders(g);
 		drawInfo(g);
-		if(isNextLevel){
+		/*if(player.status == ROLE_STATUS_PASS){
 			String str = "恭喜你通过本关卡,下一关为第"+(level+1)+"关";
 			drawPrompt(g, str);
-		}
+		}*/
 		if(!isUserVentose && player.status == ROLE_STATUS_PROTECTED){
 			String str = "无敌时间:"+(3-(player.endTime-player.startTime)/1000)+"秒";
 			drawPrompt(g, str);
@@ -1606,7 +1652,7 @@ public class StateGame implements Common{
 		int key0W = key0.getWidth(), key0H = key0.getHeight();
 		int x = 195, y = ScrH-venH-5;
 		g.drawImage(ventose_icon, x, y, 20);
-		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+33, y+25, 20, 20, 1);
+		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+35, y+24, 25, 25, 1);
 		y = y + venH/2-key0H/2;
 		g.drawImage(key1, x+venW+10, y, 20);
 		g.drawImage(key9, ScrW-key0W-40-key9.getWidth(), y, 20);

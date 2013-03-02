@@ -67,9 +67,10 @@ public class StateHelp implements Common{
 		}
 		TextView.showMultiLineText(g, str, 3, x+5, y+15, w-10, h-30);
 		
-		int promptX = ScrW/2 - prompt.getWidth()/2;
+		int promptX = ScrW/2 - prompt.getWidth()/2+15;
 		int promptY = ScrH - prompt.getHeight()-10;
 		g.drawImage(prompt, promptX, promptY, 20);
+		StateMain.drawNum(g, menuIndex+1, promptX-35, promptY+7);
 	}
 	
 	private void handleHelp(KeyState keyState, SGraphics g) {
