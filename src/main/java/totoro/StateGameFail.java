@@ -92,7 +92,7 @@ public class StateGameFail implements Common{
 			textX = buttonX + buttonW/2-textW/2;
 		}
 		
-		StateMain.drawNum(g, count, x+235, y+113);
+		StateMain.drawNum(g, count, x+225, y+113);
 		drawNum(g, interval, bgX+25, bgY+50);
 	}
 	
