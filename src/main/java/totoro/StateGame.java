@@ -1652,7 +1652,14 @@ public class StateGame implements Common{
 		int key0W = key0.getWidth(), key0H = key0.getHeight();
 		int x = 195, y = ScrH-venH-5;
 		g.drawImage(ventose_icon, x, y, 20);
-		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), x+35, y+24, 25, 25, 1);
+		int sx = 0;
+		int sy = y+24;
+		if(ventoseNum+startGameVentoseNums < 10){
+			sx = x+30;
+		}else{
+			sx = x+33;
+		}
+		TextView.showSingleLineText(g, String.valueOf(ventoseNum+startGameVentoseNums), sx, sy, 25, 25, 1);
 		y = y + venH/2-key0H/2;
 		g.drawImage(key1, x+venW+10, y, 20);
 		g.drawImage(key9, ScrW-key0W-40-key9.getWidth(), y, 20);
