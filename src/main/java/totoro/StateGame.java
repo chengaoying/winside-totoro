@@ -1630,7 +1630,7 @@ public class StateGame implements Common{
 		if(player.scores>999999){
 			StateMain.drawNum(g, player.scores, 0, offY+26);
 		}else if(player.scores<100){
-			StateMain.drawNum(g, player.scores, 45, offY+26);
+			StateMain.drawNum(g, player.scores, 35, offY+26);
 		}else{
 			StateMain.drawNum(g, player.scores, 25, offY+26);
 		}
