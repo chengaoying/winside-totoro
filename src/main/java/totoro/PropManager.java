@@ -2,6 +2,7 @@ package totoro;
 
 import cn.ohyeah.itvgame.model.OwnProp;
 import cn.ohyeah.itvgame.model.Prop;
+import cn.ohyeah.stb.game.Configurations;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.game.StateRecharge;
@@ -119,12 +120,28 @@ public class PropManager implements Common{
 			return sw.isServiceSuccessful();
 		}else {
 			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-			pc.setText("游戏币不足,是否充值");
-			if (pc.popup() == 0) {
-				StateRecharge recharge = new StateRecharge(engine);
-				recharge.recharge();
-				if(g != null){
-					engine.stateGame.show(g);
+			if(Configurations.getInstance().isTelcomOperatorsTelcomfj()){
+				pc.setText("是否退出游戏并跳转至大厅充值界面?");
+				if (pc.popup() == 0) {
+					ServiceWrapper sw = engine.getServiceWrapper();
+					sw.gotoRechargePage();
+					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+					if (sw.isServiceSuccessful()) {
+						engine.stateMain.exit = true;
+					} 
+					else {
+						pt.setText("跳转至大厅充值界面失败, 原因: "+sw.getServiceMessage());
+						pt.popup();
+					}
+				}
+			}else{
+				pc.setText("游戏币不足,是否充值");
+				if (pc.popup() == 0) {
+					StateRecharge recharge = new StateRecharge(engine);
+					recharge.recharge();
+					if(g != null){
+						engine.stateGame.show(g);
+					}
 				}
 			}
 			return false;

@@ -2,11 +2,14 @@ package totoro;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.itvgame.model.GameRanking;
+import cn.ohyeah.stb.game.Configurations;
 import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
+import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
+import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.ui.TextView;
 
@@ -138,8 +141,25 @@ public class StateMain implements Common{
 				Resource.clearMain();
 			}
 		} else if (mainIndex == 2) {	//充值
-			Recharge recharge = new Recharge(engine);
-			recharge.recharge();
+			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+			if(Configurations.getInstance().isTelcomOperatorsTelcomfj()){
+				pc.setText("是否退出游戏并跳转至大厅充值界面?");
+				if (pc.popup() == 0) {
+					ServiceWrapper sw = engine.getServiceWrapper();
+					sw.gotoRechargePage();
+					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+					if (sw.isServiceSuccessful()) {
+						exit = true;
+					} 
+					else {
+						pt.setText("跳转至大厅充值界面失败, 原因: "+sw.getServiceMessage());
+						pt.popup();
+					}
+				}
+			}else{
+				Recharge recharge = new Recharge(engine);
+				recharge.recharge();
+			}
 		} else if (mainIndex == 3){ 	//游戏帮助
 			StateHelp sh = new StateHelp(engine);
 			sh.processHelp();
