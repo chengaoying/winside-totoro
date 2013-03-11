@@ -126,11 +126,22 @@ public class StateMain implements Common{
 	public void execute(){}
 	
 	private void processSubMenu() {
+		boolean result = engine.readRecord();
 		if (mainIndex == 0) { 			//新游戏
-			engine.state = STATUS_SELECT_TOTORO;
-			Resource.clearMain();
+			if(result){
+				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
+				pc.setText("你有存档是否覆盖重新开始?");
+				if(pc.popup()==0){
+					engine.state = STATUS_SELECT_TOTORO;
+					Resource.clearMain();
+				}else{
+					mainIndex = 1;
+				}
+			}else{
+				engine.state = STATUS_SELECT_TOTORO;
+				Resource.clearMain();
+			}
 		} else if(mainIndex == 1){		//继续游戏
-			boolean result = engine.readRecord();
 			if(!result){
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录,请重新开始游戏");

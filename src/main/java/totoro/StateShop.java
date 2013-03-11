@@ -53,7 +53,7 @@ public class StateShop implements Common{
 		Image bg = Resource.loadImage(Resource.id_shop_bg);
 		Image button = Resource.loadImage(Resource.id_shop_button);
 		Image buy = Resource.loadImage(Resource.id_shop_buy);
-		Image coin = Resource.loadImage(Resource.id_shop_coin);
+		//Image coin = Resource.loadImage(Resource.id_shop_coin);
 		Image totoro = Resource.loadImage(Resource.id_shop_totoro);
 		Image totoro2 = Resource.loadImage(Resource.id_shop_totoro2);
 		Image upgrade = Resource.loadImage(Resource.id_shop_upgrade);
@@ -89,10 +89,10 @@ public class StateShop implements Common{
 		
 		int buttonX = totoroX+5, buttonY = totoro2Y+15;
 		int upgradeX = buttonX+10, upgradeY = buttonY+4;
-		int coinX = buttonX+8, coinY = upgradeY+22;
+		int coinX = buttonX/*+8*/, coinY = upgradeY+22;
 		g.drawRegion(button, 0, menuIndex==0?0:buttonH, buttonW, buttonH, 0, buttonX, buttonY, 20);
 		g.drawImage(upgrade, upgradeX, upgradeY, 20);
-		g.drawImage(coin, coinX, coinY, 20);
+		//g.drawImage(coin, coinX, coinY, 20);
 		StateMain.drawNum(g, price, coinX+16, coinY);
 		
 		buttonY += buttonH+40;
