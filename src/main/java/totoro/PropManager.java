@@ -3,9 +3,9 @@ package totoro;
 import cn.ohyeah.itvgame.model.OwnProp;
 import cn.ohyeah.itvgame.model.Prop;
 import cn.ohyeah.stb.game.Configurations;
+import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
-import cn.ohyeah.stb.game.StateRecharge;
 import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
@@ -137,7 +137,7 @@ public class PropManager implements Common{
 			}else{
 				pc.setText("游戏币不足,是否充值");
 				if (pc.popup() == 0) {
-					StateRecharge recharge = new StateRecharge(engine);
+					Recharge recharge = new Recharge(engine);
 					recharge.recharge();
 					if(g != null){
 						engine.stateGame.show(g);
