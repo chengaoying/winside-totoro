@@ -100,7 +100,7 @@ public class StateShop implements Common{
 		g.drawRegion(button, 0, menuIndex==1?0:buttonH, buttonW, buttonH, 0, buttonX, buttonY, 20);
 		g.drawImage(buy, buyX, buyY, 20);
 		
-		StateMain.drawNum(g, StateGame.ventoseNum, 235, 328);
+		StateMain.drawNum(g, StateGame.ventoseNum+StateGame.startGameVentoseNums, 235, 328);
 		
 		g.setColor(0xffffff);
 		if(menuIndex==0){
