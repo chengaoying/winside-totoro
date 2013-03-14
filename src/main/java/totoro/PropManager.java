@@ -2,12 +2,9 @@ package totoro;
 
 import cn.ohyeah.itvgame.model.OwnProp;
 import cn.ohyeah.itvgame.model.Prop;
-import cn.ohyeah.stb.game.Configurations;
-import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.res.UIResource;
-import cn.ohyeah.stb.ui.PopupConfirm;
 import cn.ohyeah.stb.ui.PopupText;
 
 public class PropManager implements Common{
@@ -105,47 +102,19 @@ public class PropManager implements Common{
 	
 	public boolean buyProp(int propId, int propCount, SGraphics g){
 		PlayerProp pp = getPropById(propId);
-		if (engine.getEngineService().getBalance() >= pp.getPrice()) {
-			ServiceWrapper sw = engine.getServiceWrapper();
-			sw.purchaseProp(propId, 1, "购买"+pp.getName());
-			PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-			if (sw.isServiceSuccessful()) {
-				pt.setText("购买"+pp.getName()+"成功");
-			} 
-			else {
-				pt.setText("购买"+pp.getName()+"失败, 原因: "+sw.getServiceMessage());
-				
-			}
-			pt.popup();
-			return sw.isServiceSuccessful();
-		}else {
-			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-			if(Configurations.getInstance().isTelcomOperatorsTelcomfj()){
-				pc.setText("是否退出游戏并跳转至大厅充值界面?");
-				if (pc.popup() == 0) {
-					ServiceWrapper sw = engine.getServiceWrapper();
-					sw.gotoRechargePage();
-					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-					if (sw.isServiceSuccessful()) {
-						engine.stateMain.exit = true;
-					} 
-					else {
-						pt.setText("跳转至大厅充值界面失败, 原因: "+sw.getServiceMessage());
-						pt.popup();
-					}
-				}
-			}else{
-				pc.setText("游戏币不足,是否充值");
-				if (pc.popup() == 0) {
-					Recharge recharge = new Recharge(engine);
-					recharge.recharge();
-					if(g != null){
-						engine.stateGame.show(g);
-					}
-				}
-			}
-			return false;
+		ServiceWrapper sw = engine.getServiceWrapper();
+		//sw.purchaseProp(propId, propCount, "购买"+propName);
+		sw.expend(pp.getPrice(), propId, "购买"+pp.getName());
+		PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+		if (sw.isServiceSuccessful()) {
+			pt.setText("购买"+pp.getName()+"成功");
 		}
+		else {
+			pt.setText("购买"+pp.getName()+"失败, 原因: "+sw.getServiceMessage());
+			
+		}
+		pt.popup();
+		return sw.isServiceSuccessful();
 	}
 	
 	/*同步道具*/

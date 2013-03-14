@@ -167,6 +167,10 @@ public class StateMain implements Common{
 						pt.popup();
 					}
 				}
+			}else if(Configurations.getInstance().isServiceProviderDijoy()){
+				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+				pt.setText("游戏内不支持充值，请到大厅充值!");
+				pt.popup();
 			}else{
 				Recharge recharge = new Recharge(engine);
 				recharge.recharge();
