@@ -2,14 +2,13 @@ package totoro;
 import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
-import cn.ohyeah.stb.game.Recharge;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
 import cn.ohyeah.stb.ui.DrawUtil;
-import cn.ohyeah.stb.ui.PopupConfirm;
+import cn.ohyeah.stb.ui.PopupText;
 import cn.ohyeah.stb.ui.TextView;
 import cn.ohyeah.stb.util.Collision;
 
@@ -359,17 +358,33 @@ public class StateGame implements Common{
 			drawPassInterface();
 			break;	
 		case GAME_FAIL:		//失败
-			int count = 0;
-			if(level <= 3){
-				count = level*10;
-			}else{
-				count = 30;
+			PlayerProp pp = null;
+			if(level == 1){
+				pp = engine.pm.getPropById(67);
+			}else if(level == 2){
+				pp = engine.pm.getPropById(68);
+			}else if(level > 2){
+				pp = engine.pm.getPropById(69);
 			}
 			StateGameFail fail = new StateGameFail(engine);
-			int i = fail.processGameFail(count);
+			int i = fail.processGameFail(pp.getPrice());
 			if(i == 0){
 				//买复活
-				if(engine.getEngineService().getBalance() >= count){
+				ServiceWrapper sw = engine.getServiceWrapper();
+				sw.expend(pp.getPrice(), pp.getPropId(), "购买"+pp.getName());
+				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+				if (sw.isServiceSuccessful()) {
+					pt.setText("购买"+pp.getName()+"成功");
+					player.lifeNum = 3;
+					lifeNum = player.lifeNum;
+					startGameVentoseNums = 3;
+				}
+				else {
+					pt.setText("购买"+pp.getName()+"失败, 原因: "+sw.getServiceMessage());
+					
+				}
+				pt.popup();
+				/*if(engine.getEngineService().getBalance() >= count){
 					ServiceWrapper sw = engine.getServiceWrapper();
 					sw.expend(count, "购买复活");
 					player.lifeNum = 3;
@@ -383,7 +398,10 @@ public class StateGame implements Common{
 						Recharge recharge = new Recharge(engine);
 						recharge.recharge();
 					}
-				}
+					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
+					pt.setText(engine.getEngineService().getExpendAmountUnit()+"不足，请到大厅充值!");
+					pt.popup();
+				}*/
 				game_status = GAME_PLAY;
 			}else{
 				//退出游戏
