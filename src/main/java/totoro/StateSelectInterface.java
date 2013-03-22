@@ -32,6 +32,7 @@ public class StateSelectInterface implements Common{
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			engine.state = STATUS_MAIN_MENU;
 			menuIndex = 0;
+			engine.queryList();
 			Resource.clearSelectInterface();
 		}else if(keyState.containsAndRemove(KeyCode.UP)){
 			if(menuIndex>0){

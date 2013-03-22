@@ -77,6 +77,7 @@ public class StateHelp implements Common{
 		if (keyState.containsAndRemove(KeyCode.NUM0 | KeyCode.BACK)) {
 			running = false;
 			menuIndex = 0;
+			engine.queryList();
 		}else if(keyState.containsAndRemove(KeyCode.UP)){
 			menuIndex = 0;
 		}else if(keyState.containsAndRemove(KeyCode.DOWN)){
