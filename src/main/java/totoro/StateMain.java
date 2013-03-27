@@ -126,9 +126,9 @@ public class StateMain implements Common{
 	public void execute(){}
 	
 	private void processSubMenu() {
-		boolean result = engine.readRecord();
+		int result = engine.readRecord(2);
 		if (mainIndex == 0) { 			//新游戏
-			if(result){
+			if(result==0){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
 				pc.setText("你有存档是否覆盖重新开始?");
 				if(pc.popup()==0){
@@ -142,7 +142,7 @@ public class StateMain implements Common{
 				Resource.clearMain();
 			}
 		} else if(mainIndex == 1){		//继续游戏
-			if(!result){
+			if(result!=0){
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 				pt.setText("没有游戏记录,请重新开始游戏");
 				pt.popup();
@@ -157,20 +157,16 @@ public class StateMain implements Common{
 				pc.setText("是否退出游戏并跳转至大厅充值界面?");
 				if (pc.popup() == 0) {
 					ServiceWrapper sw = engine.getServiceWrapper();
-					sw.gotoRechargePage();
+					sw.gotoOrderPage();
 					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
 					if (sw.isServiceSuccessful()) {
 						exit = true;
 					} 
 					else {
-						pt.setText("跳转至大厅充值界面失败, 原因: "+sw.getServiceMessage());
+						pt.setText("跳转至大厅充值界面失败, 原因: "+sw.getMessage());
 						pt.popup();
 					}
 				}
-			}else if(Configurations.getInstance().isServiceProviderDijoy()){
-				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-				pt.setText("游戏内不支持充值，请到大厅充值!");
-				pt.popup();
 			}else{
 				Recharge recharge = new Recharge(engine);
 				recharge.recharge();
@@ -181,6 +177,7 @@ public class StateMain implements Common{
 		} else if (mainIndex == 4) {	//退出游戏
 			Resource.clearMain();
 			//engine.saveRecord();
+			engine.pm.sysProps();
 			exit = true;
 			/*if(StateGame.wingplaneMaxNums<4){
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();

@@ -124,7 +124,7 @@ public class StateShop implements Common{
 			if(menuIndex == 0){
 				if(StateGame.wingplaneMaxNums<4){
 					PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-					pc.setText("是否要购买守护精灵?(1金币=1元人民币)");
+					pc.setText("是否要购买守护精灵?");
 					int index = pc.popup();
 					if(index==0){
 						if(StateGame.wingplaneMaxNums==1){
@@ -148,7 +148,7 @@ public class StateShop implements Common{
 				}
 			}else{
 				PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-				pc.setText("是否要购买道具必杀技?(1金币=1元人民币)");
+				pc.setText("是否要购买道具必杀技?");
 				int index = pc.popup();
 				if(index == 0){
 					if(engine.pm.buyProp(66, 1, g)){

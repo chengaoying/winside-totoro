@@ -43,21 +43,21 @@ public class StateSelectInterface implements Common{
 				menuIndex++;
 			}
 		}else if(keyState.containsAndRemove(KeyCode.OK)){
+			if(menuIndex==2){
+				num = engine.pm.getPriceById(61);
+			}else if(menuIndex==3){
+				num = engine.pm.getPriceById(62);
+			}else{
+				num = 0;
+			}
 			processSelectTotoro(mainIndex);
-		}
-		if(menuIndex==2){
-			num = engine.pm.getPriceById(61);
-		}else if(menuIndex==3){
-			num = engine.pm.getPriceById(62);
-		}else{
-			num = 0;
 		}
 	}
 	
 	private void processSelectTotoro(int mainIndex){
 		if((menuIndex==2 && !StateGame.hasTotoro3) || (menuIndex==3 && !StateGame.hasTotoro4)){
 			PopupConfirm pc = UIResource.getInstance().buildDefaultPopupConfirm();
-			pc.setText("龙猫未解锁,解锁需要"+num+engine.getEngineService().getExpendAmountUnit()+",是否解锁?(1金币=1元人民币)");
+			pc.setText("龙猫未解锁,解锁需要"+num+engine.getEngineService().getExpendAmountUnit()+",是否解锁?");
 			if(menuIndex==2){
 				int index = pc.popup();
 				if(index==0){

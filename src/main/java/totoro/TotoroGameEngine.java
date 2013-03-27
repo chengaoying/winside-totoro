@@ -1,23 +1,15 @@
 package totoro;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Date;
-
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
-
-import cn.ohyeah.itvgame.model.GameAttainment;
 import cn.ohyeah.itvgame.model.GameRanking;
-import cn.ohyeah.itvgame.model.GameRecord;
 import cn.ohyeah.stb.game.GameCanvasEngine;
 import cn.ohyeah.stb.game.SGraphics;
 import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
+import cn.ohyeah.stb.util.ConvertUtil;
 import cn.ohyeah.stb.util.DateUtil;
 
 /**
@@ -44,11 +36,12 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	public StateSelectInterface stateSelect;
 	public PropManager pm;
 	private int recordId;
-	public static boolean result;
+	public static int result;
+	private int index; 
 	
 	private TotoroGameEngine(MIDlet midlet) {
 		super(midlet);
-		setRelease(false);
+		setRelease(true);
 		ScrW = screenWidth;
 		ScrH = screenHeight;
 		stateGame = new StateGame(this);
@@ -140,12 +133,13 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.hasTotoro4 = pm.getPropNumsById(62)>0?true:false;
 		
 		/*读取游戏记录*/
-		readRecord();
+		readRecord(2);
 	}
 	
 	public void queryList() {
 		ServiceWrapper sw = getServiceWrapper();
-		rankList = sw.queryRankingList(0, 10);
+		String datas = sw.loadRanking(3);
+		rankList = sw.loadRanking(datas, 0, 10);
 	}
 
 	private void handleInit(KeyState key) {
@@ -203,85 +197,44 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		pm.sysProps();
 	}
 	
-	public void saveRecord(int i){
+	/**
+	 * 存档
+	 * @param i -1覆盖原存档，但没有游戏记录,  1新存档
+	 * @param index 游戏记录序号，取值范围为1-6
+	 * @return
+	 */
+	public int saveRecord(int i, int index){
+		String datas = "";
+		this.index = i;
+		ServiceWrapper sw = engine.getServiceWrapper();
+		datas = "lifeNum:"+StateGame.lifeNum
+				+",currLevel:"+StateGame.currLevel
+				+",blood:"+StateGame.blood
+				+",grade:"+StateGame.grade
+				+",bombGrade:"+StateGame.bombGrade
+				+",wingplaneNums:"+StateGame.wingplaneNums
+				+",missileGrade:"+StateGame.missileGrade
+				+",laserNums:"+StateGame.laserNums
+				+",batchIndex:"+StateGame.batchIndex
+				+",levelInterval:"+StateGame.levelInterval
+				+",bossBlood:"+StateGame.bossBlood
+				+",level_over:"+StateGame.level_over
+				+",startGameVentoseNums:"+StateGame.startGameVentoseNums
+				+",scores:"+StateGame.scores
+				+",index:"+this.index;
 		
-		if(StateGame.lifeNum<1 || StateGame.scores<=0){
-			return;
-		}
-		
-		byte record[];
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		DataOutputStream dout = new DataOutputStream(bout);
-		ServiceWrapper sw = getServiceWrapper();
-		try {
-			setRecordData(dout);
-			record = bout.toByteArray();
-			GameRecord gameRecord = new GameRecord();
-			gameRecord.setData(record);
-			gameRecord.setScores(StateGame.scores);
-			gameRecord.setPlayDuration(i);
-			gameRecord.setRemark("存档");
-			gameRecord.setRecordId(recordId);
-			sw.saveRecord(gameRecord);
-		} catch (Exception e) {
-			System.out.println("保存游戏失败，原因："+e.getMessage());
-			//state = STATUS_MAIN_MENU;
-		} finally{
-			try {
-				dout.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			finally{
-				try {
-					bout.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}
+		sw.saveRecord(index, datas);
+		printInfo();
+		return sw.getResult();
 	}
 	
-	public void saveAttainment(){
-		byte record[];
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		DataOutputStream dout = new DataOutputStream(bout);
-		ServiceWrapper sw = getServiceWrapper();
-		GameAttainment ga = sw.readAttainment(recordId);
-		if(ga!=null && ga.getScores()>=StateGame.scores){
-			return;
-		}
-		try {
-			//setRecordData(dout);
-			record = bout.toByteArray();
-			GameAttainment gameAttainment = new GameAttainment();
-			gameAttainment.setData(record);
-			gameAttainment.setScores(StateGame.scores);
-			gameAttainment.setRemark("存成就");
-			gameAttainment.setAttainmentId(recordId);
-			sw.saveAttainment(gameAttainment);
-		} catch (Exception e) {
-			System.out.println("保存成就失败，原因："+e.getMessage());
-			//state = STATUS_MAIN_MENU;
-		} finally{
-			try {
-				dout.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			finally{
-				try {
-					bout.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-		}
+	public int saveScore(){
+		ServiceWrapper sw = engine.getServiceWrapper();
+		sw.saveScore(StateGame.scores);
+		return sw.getResult();
 	}
 	
-	private void setRecordData(DataOutputStream dout) throws IOException{
+	/*private void setRecordData(DataOutputStream dout) throws IOException{
 		dout.write(StateGame.lifeNum);
 		dout.write(StateGame.currLevel);
 		dout.write(StateGame.blood);
@@ -301,57 +254,47 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		//dout.writeBoolean(StateGame.hasTotoro4);
 		
 		printInfo();
+	}*/
+	
+	public int readRecord(int index){
+		ServiceWrapper sw = engine.getServiceWrapper();
+		String data = sw.loadRecord(index);
+		if(!sw.isServiceSuccessful() || data==null || data.equals("0")){
+			result = -1;
+			return result;
+		}
+		String[] datas = ConvertUtil.split(data, ",");
+		System.out.println("datas:"+datas);
+		System.out.println(datas[0]);
+		String[] d2 = new String[datas.length]; 
+		for(int i=0;i<datas.length;i++){
+			d2[i] = ConvertUtil.split(datas[i], ":")[1];
+		}
+		initRecordInfo(d2);
+		if(index == -1){
+			result = -1;
+		}else{
+			result = sw.getResult();
+		}
+		return result;
 	}
 	
-	public boolean readRecord(){
-		ServiceWrapper sw = getServiceWrapper();
-		GameRecord gameRecord = sw.readRecord(recordId);
-		if(!sw.isServiceSuccessful() || gameRecord==null){
-			return result = false;
-		}
-		if(gameRecord.getPlayDuration()==-1){
-			return result = false;
-		}
-		ByteArrayInputStream bin = new ByteArrayInputStream(gameRecord.getData());
-		DataInputStream din = new DataInputStream(bin);
-		try {
-			StateGame.scores = gameRecord.getScores();
-			initRecordInfo(din);
-			return result = true;
-		} catch (Exception e) {
-			System.out.println("读取游戏失败，原因："+e.getMessage());
-			state = STATUS_MAIN_MENU;
-			return result = false;
-		}finally{
-			try {
-				din.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			finally{
-				try {
-					bin.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	private void initRecordInfo(DataInputStream din) throws IOException {
-		StateGame.lifeNum = din.read();
-		StateGame.currLevel = din.read();
-		StateGame.blood = din.read();
-		StateGame.grade = din.read();
-		StateGame.bombGrade = din.read();
-		StateGame.wingplaneNums = din.read();
-		StateGame.missileGrade = din.read();
-		StateGame.laserNums = din.read();
-		StateGame.batchIndex = din.read();
-		StateGame.levelInterval = din.read();
-		StateGame.bossBlood = din.readInt();
-		StateGame.level_over = din.readBoolean();
-		StateGame.startGameVentoseNums = din.read();
+	private void initRecordInfo(String[] datas){
+		StateGame.lifeNum = Integer.parseInt(datas[0]);
+		StateGame.currLevel = Integer.parseInt(datas[1]);
+		StateGame.blood = Integer.parseInt(datas[2]);
+		StateGame.grade = Integer.parseInt(datas[3]);
+		StateGame.bombGrade = Integer.parseInt(datas[4]);
+		StateGame.wingplaneNums = Integer.parseInt(datas[5]);
+		StateGame.missileGrade = Integer.parseInt(datas[6]);
+		StateGame.laserNums = Integer.parseInt(datas[7]);
+		StateGame.batchIndex = Integer.parseInt(datas[8]);
+		StateGame.levelInterval = Integer.parseInt(datas[9]);
+		StateGame.bossBlood = Integer.parseInt(datas[10]);
+		StateGame.level_over = datas[11].equals("true")?true:false;
+		StateGame.startGameVentoseNums = Integer.parseInt(datas[12]);
+		StateGame.scores = Integer.parseInt(datas[13]);
+		index = Integer.parseInt(datas[14]);
 		
 		printInfo();
 	}
@@ -375,5 +318,6 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		System.out.println("StateGame.bossBlood:"+(StateGame.bossBlood));
 		System.out.println("StateGame.level_over:"+(StateGame.level_over));
 		System.out.println("StateGame.startGameVentoseNums:"+(StateGame.startGameVentoseNums));
+		System.out.println("index:"+index);
 	}
 }

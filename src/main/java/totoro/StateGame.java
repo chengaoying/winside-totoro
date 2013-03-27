@@ -3,7 +3,6 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Image;
 
 import cn.ohyeah.stb.game.SGraphics;
-import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.res.UIResource;
@@ -101,6 +100,7 @@ public class StateGame implements Common{
 							startGameVentoseNums--;
 						}else{
 							ventoseNum--;
+							engine.pm.reducePropNum(66);
 						}
 					}else{
 						isVentosePrompt = true;
@@ -337,9 +337,9 @@ public class StateGame implements Common{
 					MoveObject object =  (MoveObject) factory.boss.elementAt(0);
 					bossBlood = object.blood;
 				}
-				engine.saveRecord(1);
+				engine.saveRecord(1, 2);
 				engine.sysProps();
-				engine.saveAttainment();
+				engine.saveScore();
 				engine.queryList();
 				engine.state = STATUS_MAIN_MENU;
 				quitGameDeleteDate();
@@ -370,17 +370,18 @@ public class StateGame implements Common{
 			int i = fail.processGameFail(pp.getPrice());
 			if(i == 0){
 				//买复活
-				ServiceWrapper sw = engine.getServiceWrapper();
-				sw.expend(pp.getPrice(), pp.getPropId(), "购买"+pp.getName());
+				//ServiceWrapper sw = engine.getServiceWrapper();
+				//sw.expend(pp.getPrice(), pp.getPropId(), "购买"+pp.getName());
+				//sw.consume(1, pp.getPrice());
 				PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-				if (sw.isServiceSuccessful()) {
-					pt.setText("购买"+pp.getName()+"成功");
+				if (engine.pm.buyProp(pp.getPropId(), 1, engine.getSGraphics())) {
+					pt.setText("复活成功");
 					player.lifeNum = 3;
 					lifeNum = player.lifeNum;
 					startGameVentoseNums = 3;
 				}
 				else {
-					pt.setText("购买"+pp.getName()+"失败, 原因: "+sw.getServiceMessage());
+					pt.setText("复活失败");
 					
 				}
 				pt.popup();
@@ -405,9 +406,10 @@ public class StateGame implements Common{
 				game_status = GAME_PLAY;
 			}else{
 				//退出游戏
-				engine.saveAttainment();
+				engine.pm.reducePropNum(pp.getPropId());
+				engine.saveScore();
 				engine.sysProps();
-				engine.saveRecord(-1);
+				engine.saveRecord(-1, 2);
 				quitGameDeleteDate();
 				engine.state = STATUS_MAIN_MENU;
 				game_status = GAME_PLAY;
@@ -421,10 +423,10 @@ public class StateGame implements Common{
 		success.processGameSuccess(scores);
 		engine.state = STATUS_MAIN_MENU;
 		game_status = GAME_PLAY;
-		engine.saveAttainment();
+		engine.saveScore();
 		engine.sysProps();
 		engine.queryList();
-		engine.saveRecord(-1);
+		engine.saveRecord(-1, 2);
 		quitGameDeleteDate();
 	}
 
