@@ -143,7 +143,7 @@ public class StateShop implements Common{
 					}
 				}else{
 					PopupText pt = UIResource.getInstance().buildDefaultPopupText();
-					pt.setText("守护精灵个数已达上线");
+					pt.setText("守护精灵个数已达上限");
 					pt.popup();
 				}
 			}else{

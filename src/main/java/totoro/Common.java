@@ -579,9 +579,9 @@ public interface Common {
 	;
 	
 	public String helpInfo3 = 
-			"解锁龙猫：点击开始游戏进入龙猫选择界面，其中2只龙猫是未解锁的，需要玩家使用游戏币解锁。未解锁的龙猫拥有更强的体力和攻击力.每只龙猫的解锁费用为10"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
-			"升级龙猫：在战斗场景中点击数字键9进入商城可以升级龙猫.升级后可以增加携带守护精灵的数量.升级的费用依次为：2、4、8"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
-			"复活龙猫：当玩家失去所有的生命可以选择复活龙猫。关复活的花费不同，分别为1、2、3、3、3、3、3、3"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"解锁龙猫：点击开始游戏进入龙猫选择界面，其中2只龙猫是未解锁的，需要玩家使用游戏币解锁。未解锁的龙猫拥有更强的体力和攻击力.每只龙猫的解锁费用为50"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"升级龙猫：在战斗场景中点击数字键9进入商城可以升级龙猫.升级后可以增加携带守护精灵的数量.升级的费用依次为：20、30、50"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
+			"复活龙猫：当玩家失去所有的生命可以选择复活龙猫。关复活的花费为10"+engine.getEngineService().getExpendAmountUnit()+"。#r"+
 			"购买必杀：在战斗场景中点击数字键9进入商城可以购买必杀。必杀能让玩家持续一段时间的无敌并对敌人造成很大的伤害.每个必杀需要2"+engine.getEngineService().getExpendAmountUnit()+"。#r"
 	;
 }

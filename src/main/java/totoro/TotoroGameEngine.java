@@ -1,6 +1,5 @@
 package totoro;
 
-import java.util.Date;
 import javax.microedition.lcdui.Image;
 import javax.microedition.midlet.MIDlet;
 import cn.ohyeah.itvgame.model.GameRanking;
@@ -10,7 +9,6 @@ import cn.ohyeah.stb.game.ServiceWrapper;
 import cn.ohyeah.stb.key.KeyCode;
 import cn.ohyeah.stb.key.KeyState;
 import cn.ohyeah.stb.util.ConvertUtil;
-import cn.ohyeah.stb.util.DateUtil;
 
 /**
  * 游戏引擎
@@ -35,7 +33,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	public StateGame stateGame;
 	public StateSelectInterface stateSelect;
 	public PropManager pm;
-	private int recordId;
+	//private int recordId;
 	public static int result;
 	private int index; 
 	
@@ -114,7 +112,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		/*查询道具*/
 		pm.queryProps();
 		
-		setRecordId();
+		//setRecordId();
 		
 		/*查询排行*/
 		queryList();
@@ -164,6 +162,8 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 
 	private void exit(){
 		if(stateMain.exit){
+			ServiceWrapper sw = getServiceWrapper();
+			sw.userQuit();
 			exit = true;
 		}
 	}
@@ -183,7 +183,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		return false;
 	}
 	
-	private void setRecordId(){
+	/*private void setRecordId(){
 		Date date = new Date(getEngineService().getCurrentTime().getTime());
 	    int year = DateUtil.getYear(date);
 		int month = DateUtil.getMonth(date);
@@ -191,7 +191,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	    //attainmentId = year*100+(month+1);
 	    System.out.println("GetServiceDate: Date=" + date);
 	    System.out.println("GetServiceDate: Date=" + recordId);
-	}
+	}*/
 	
 	public void sysProps(){
 		pm.sysProps();
@@ -259,7 +259,7 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	public int readRecord(int index){
 		ServiceWrapper sw = engine.getServiceWrapper();
 		String data = sw.loadRecord(index);
-		if(!sw.isServiceSuccessful() || data==null || data.equals("0")){
+		if(data==null){
 			result = -1;
 			return result;
 		}
