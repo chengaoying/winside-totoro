@@ -14,8 +14,8 @@ public class PropManager implements Common{
 	public PlayerProp[] props ;
 	
 	private int[] ids = {61,62,63,64,65,66,67,68,69};
-	//private int[] prices = {100,100,20,40,80,20,10,20,30};
-	private int[] prices = {50,50,20,30,50,10,10,10,10};  		//江苏地区价格
+	private int[] prices = {100,100,20,40,80,20,10,20,30};
+	//private int[] prices = {50,50,20,30,50,10,10,10,10};  		//江苏地区价格
 	private String[] names = {"寒悯","冥月","守护精2","守护精3","守护精4","必杀技","复活1","复活2","复活3",};
 	
 	public PropManager(TotoroGameEngine engine){

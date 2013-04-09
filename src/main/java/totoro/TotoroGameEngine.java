@@ -109,13 +109,20 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}
 	
 	private void init() {
-		/*查询道具*/
-		pm.queryProps();
+		try {
+			/* 初始化道具信息 */
+			pm.queryProps();
+		} catch (Exception e) {
+			errorMessage += "\n初始化道具出错" + e.getMessage();
+		}
 		
 		//setRecordId();
-		
-		/*查询排行*/
-		queryList();
+		try {
+			/*查询排行*/
+			queryList();
+		} catch (Exception e) {
+			errorMessage += "\n查询排行出错" + e.getMessage();
+		}
 		
 		if(pm.getPropNumsById(65)>0){
 			StateGame.wingplaneMaxNums = 4;
@@ -130,8 +137,12 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 		StateGame.hasTotoro3 = pm.getPropNumsById(61)>0?true:false;
 		StateGame.hasTotoro4 = pm.getPropNumsById(62)>0?true:false;
 		
-		/*读取游戏记录*/
-		readRecord(2);
+		//try {
+			/*读取游戏记录*/
+			readRecord(2);
+		//} catch (Exception e) {
+		//	errorMessage += "\n读取游戏记录出错" + e.getMessage();
+		//}
 	}
 	
 	public void queryList() {
@@ -257,26 +268,33 @@ public class TotoroGameEngine extends GameCanvasEngine implements Common {
 	}*/
 	
 	public int readRecord(int index){
-		ServiceWrapper sw = engine.getServiceWrapper();
-		String data = sw.loadRecord(index);
-		if(data==null){
+		try{
+			ServiceWrapper sw = engine.getServiceWrapper();
+			String data = sw.loadRecord(index);
+			if(data==null){
+				result = -1;
+				return result;
+			}
+			String[] datas = ConvertUtil.split(data, ",");
+			System.out.println("datas:"+datas);
+			System.out.println(datas[0]);
+			String[] d2 = new String[datas.length]; 
+			for(int i=0;i<datas.length;i++){
+				d2[i] = ConvertUtil.split(datas[i], ":")[1];
+			}
+			initRecordInfo(d2);
+			if(index == -1){
+				result = -1;
+			}else{
+				result = sw.getResult();
+			}
+			return result;
+			
+		}catch(Exception e){
+			errorMessage += "\n读取游戏记录出错" + e.getMessage();
 			result = -1;
 			return result;
 		}
-		String[] datas = ConvertUtil.split(data, ",");
-		System.out.println("datas:"+datas);
-		System.out.println(datas[0]);
-		String[] d2 = new String[datas.length]; 
-		for(int i=0;i<datas.length;i++){
-			d2[i] = ConvertUtil.split(datas[i], ":")[1];
-		}
-		initRecordInfo(d2);
-		if(index == -1){
-			result = -1;
-		}else{
-			result = sw.getResult();
-		}
-		return result;
 	}
 	
 	private void initRecordInfo(String[] datas){
